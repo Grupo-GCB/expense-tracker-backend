@@ -4,9 +4,9 @@ services:
   api-solid-pg:
     image: bitnami/postgresql
     ports:
-      - 5432:5432
+      - 5431:5431
     environment:
-      - POSTGRESQL_USERNAME=docker
-      - POSTGRESQL_PASSWORD=docker
-      - POSTGRESQL_DATABASE=authentication-db
+      - POSTGRESQL_USERNAME=academy
+      - POSTGRESQL_PASSWORD=academy
+      - POSTGRESQL_DATABASE=expense-tracker
 
