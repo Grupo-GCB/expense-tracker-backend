@@ -11,8 +11,11 @@ import { UserModule } from './user/user.module';
       username: 'academy',
       password: 'academy',
       database: 'expense-tracker',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      entities: [`${__dirname}/**/*.entity{.ts,.js}`],
+      migrations: [
+        `${__dirname}/shared/infra/database/typeorm/migrations/**/*{.ts,.js}`,
+      ],
     }),
     UserModule,
   ],
