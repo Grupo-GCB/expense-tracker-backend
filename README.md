@@ -22,7 +22,17 @@ O site é composto de 2 páginas diferentes:
 
 As seguintes ferramentas foram usadas neste projeto:
 
+#### Backend:
+
 - [TypeScript](https://www.typescriptlang.org/)
+- [Docker](https://www.docker.com/)
+- [NodeJS](https://nodejs.org/en)
+- [TypeORM](https://typeorm.io/)
+- [NestJS](https://nestjs.com/)
+- [Jest](https://jestjs.io/pt-BR/)
+- [Swagger](https://swagger.io/)
+
+#### Frontend:
 
 ### 🧾 Requisitos
 
