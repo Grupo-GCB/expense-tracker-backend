@@ -55,6 +55,14 @@ Queremos agradecer às seguintes pessoas que contribuíram para este projeto:
         </sub>
       </a>
     </td>
+        <td align="center">
+      <a href="#">
+        <img src="https://avatars.githubusercontent.com/u/104167280?s=400&u=2765013deddc1f9560f94c0bcb5d4cb381359647&v=4" width="100px;" alt="Victor Shimada's photo on GitHub"/><br>
+        <sub>
+          <b>Victor Shimada</b>
+        </sub>
+      </a>
+    </td>
   </tr>
 </table>
 
