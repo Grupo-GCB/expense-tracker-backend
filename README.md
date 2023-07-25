@@ -32,9 +32,7 @@ As seguintes ferramentas foram usadas neste projeto:
 - [Jest](https://jestjs.io/pt-BR/)
 - [Swagger](https://swagger.io/)
 
-
 #### Frontend:
-
 
 ### 🧾 Requisitos
 
