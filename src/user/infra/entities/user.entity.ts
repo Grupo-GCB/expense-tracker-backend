@@ -20,12 +20,6 @@ export class User {
   email: string;
 
   @Column()
-  email_verify: boolean;
-
-  @Column()
-  sub: string;
-
-  @Column()
   picture: string;
 
   @CreateDateColumn()
