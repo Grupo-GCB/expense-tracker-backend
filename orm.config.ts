@@ -3,10 +3,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 export const ormconfig: DataSourceOptions = {
   type: 'postgres',
-  host:
-    process.env.NODE_ENV === 'migration' || process.env.NODE_ENV === 'test'
-      ? 'localhost'
-      : process.env.DB_HOST,
+  host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
