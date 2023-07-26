@@ -1,7 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
-import { Bank } from './bank.entity';
-import { Transaction } from './transaction.entity';
-import { User } from './user.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+
+import { User } from '@/user/infra/entities';
+import { Bank } from '@/bank/infra/entities';
+import { Transaction } from '@/transaction/infra/entities';
 
 @Entity()
 export class Wallet {
@@ -29,12 +36,12 @@ export class Wallet {
   @Column({ type: 'timestamp', nullable: true })
   deleted_at: Date;
 
-  @ManyToOne(() => Bank, bank => bank.wallets)
+  @ManyToOne(() => Bank, (bank) => bank.wallet)
   bank: Bank;
 
-  @ManyToOne(() => User, user => user.wallets)
+  @ManyToOne(() => User, (user) => user.wallet)
   user: User;
 
-  @OneToMany(() => Transaction, transaction => transaction.wallet)
+  @OneToMany(() => Transaction, (transaction) => transaction.wallet)
   transactions: Transaction[];
 }

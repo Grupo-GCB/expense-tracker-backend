@@ -22,5 +22,5 @@ export class Bank {
   deleted_at: Date;
 
   @OneToMany(() => Wallet, (wallet) => wallet.bank)
-  wallets: Wallet[];
+  wallet: Wallet[];
 }

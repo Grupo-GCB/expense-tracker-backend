@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 
 import { BudgetGoal } from '@/budget-goal/infra/entities';
+import { Wallet } from '@/wallet/infra/entities';
 
 @Entity('users')
 export class User {
@@ -35,4 +36,7 @@ export class User {
 
   @OneToMany(() => BudgetGoal, (budgetGoal) => budgetGoal.user)
   budgetGoal: BudgetGoal[];
+
+  @OneToMany(() => Wallet, (wallet) => wallet.user)
+  wallet: Wallet[];
 }
