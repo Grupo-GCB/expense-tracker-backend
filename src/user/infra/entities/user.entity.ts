@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto';
 import {
   Column,
   CreateDateColumn,
@@ -36,8 +35,4 @@ export class User {
 
   @DeleteDateColumn({ default: null })
   deleted_at?: Date;
-
-  constructor() {
-    if (!this.id) this.id = randomUUID();
-  }
 }
