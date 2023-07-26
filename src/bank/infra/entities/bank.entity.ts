@@ -1,43 +1,26 @@
-import { randomUUID } from 'node:crypto';
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
-@Entity('users')
-export class User {
-  @PrimaryColumn()
+import { Wallet } from '@/wallet/infra/entities';
+@Entity()
+export class Bank {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   name: string;
 
-  @Column({ unique: true })
-  email: string;
-
-  @Column()
-  email_verify: boolean;
-
-  @Column()
-  sub: string;
-
   @Column()
   picture: string;
 
-  @CreateDateColumn()
-  created_at?: Date;
+  @Column({ type: 'timestamp' })
+  created_at: Date;
 
-  @UpdateDateColumn({ default: null })
-  updated_at?: Date;
+  @Column({ type: 'timestamp' })
+  updated_at: Date;
 
-  @DeleteDateColumn({ default: null })
-  deleted_at?: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  deleted_at: Date;
 
-  constructor() {
-    if (!this.id) this.id = randomUUID();
-  }
+  @OneToMany(() => Wallet, (wallet) => wallet.bank)
+  wallets: Wallet[];
 }

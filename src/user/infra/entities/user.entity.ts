@@ -1,12 +1,14 @@
-import { randomUUID } from 'node:crypto';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { BudgetGoal } from '@/budget-goal/infra/entities';
 
 @Entity('users')
 export class User {
@@ -31,7 +33,6 @@ export class User {
   @DeleteDateColumn({ default: null })
   deleted_at?: Date;
 
-  constructor() {
-    if (!this.id) this.id = randomUUID();
-  }
+  @OneToMany(() => BudgetGoal, (budgetGoal) => budgetGoal.user)
+  budgetGoal: BudgetGoal[];
 }
