@@ -4,9 +4,9 @@ services:
   expense-tracker:
     image: bitnami/postgresql
     ports:
-      - 5431:5431
+      - ${DB_PORT}:5432
     environment:
-      - POSTGRESQL_USERNAME=academy
-      - POSTGRESQL_PASSWORD=academy
-      - POSTGRESQL_DATABASE=expense-tracker
+      - POSTGRESQL_USERNAME=${DB_USER}
+      - POSTGRESQL_PASSWORD=${DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${DB_NAME}
 
