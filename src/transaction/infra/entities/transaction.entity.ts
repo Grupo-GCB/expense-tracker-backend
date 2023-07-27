@@ -9,31 +9,15 @@ import {
 } from 'typeorm';
 
 import { Wallet } from '../../../wallet/infra/entities';
+import { Categories, TransactionType } from '@/shared/constants';
 
 @Entity()
 export class Transaction {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    type: 'enum',
-    enum: [
-      'Casa',
-      'Eletrônicos',
-      'Educação',
-      'Lazer',
-      'Alimentação',
-      'Saúde',
-      'Supermercado',
-      'Roupas',
-      'Transporte',
-      'Viagem',
-      'Serviços',
-      'Presentes',
-      'Outros',
-    ],
-  })
-  categories: string;
+  @Column()
+  categories: Categories;
 
   @Column()
   description: string;
@@ -41,8 +25,8 @@ export class Transaction {
   @Column('decimal')
   value: number;
 
-  @Column({ type: 'enum', enum: ['income', 'expense'] })
-  type: string;
+  @Column()
+  type: TransactionType;
 
   @Column({ type: 'timestamp' })
   date: Date;

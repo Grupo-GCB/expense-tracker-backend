@@ -1,1 +1,1 @@
-export * from './budget.goal.entity';
+export * from './budget-goal.entity';

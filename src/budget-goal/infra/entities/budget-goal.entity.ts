@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 import { User } from '../../../user/infra/entities';
 
@@ -11,7 +19,7 @@ export class BudgetGoal {
   title: string;
 
   @Column()
-  description: string;
+  description?: string;
 
   @Column()
   goal_value: number;
@@ -19,13 +27,13 @@ export class BudgetGoal {
   @Column({ type: 'timestamp' })
   goal_date: Date;
 
-  @Column()
+  @CreateDateColumn()
   created_at?: Date;
 
-  @Column({ default: null })
+  @UpdateDateColumn({ default: null })
   updated_at?: Date;
 
-  @Column({ default: null })
+  @DeleteDateColumn({ default: null })
   deleted_at?: Date;
 
   @ManyToOne(() => User, (user) => user.budgetGoal)

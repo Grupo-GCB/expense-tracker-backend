@@ -4,11 +4,15 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 
 import { User } from '../../../user/infra/entities';
 import { Bank } from '../../../bank/infra/entities';
 import { Transaction } from '../../../transaction/infra/entities';
+import { AccountType } from '@/shared/constants';
 
 @Entity()
 export class Wallet {
@@ -19,7 +23,7 @@ export class Wallet {
   title: string;
 
   @Column()
-  account_type: string;
+  account_type: AccountType;
 
   @Column()
   description: string;
@@ -27,13 +31,13 @@ export class Wallet {
   @Column()
   verification_code: string;
 
-  @Column({ type: 'timestamp' })
+  @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @Column({ type: 'timestamp' })
+  @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deleted_at: Date;
 
   @ManyToOne(() => Bank, (bank) => bank.wallet)
