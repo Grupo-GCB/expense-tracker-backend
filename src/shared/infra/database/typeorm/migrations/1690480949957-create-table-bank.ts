@@ -5,24 +5,34 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateUserTable1690478202013 implements MigrationInterface {
+export class CreateBankTable1690480949957 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'users',
+        name: 'banks',
         columns: [
           {
             name: 'id',
             type: 'uuid',
             isPrimary: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
           },
           {
-            name: 'email',
+            name: 'name',
             type: 'varchar',
-            isUnique: true,
+          },
+          {
+            name: 'picture',
+            type: 'varchar',
           },
           {
             name: 'created_at',
+            type: 'timestamp',
+            default: 'NOW()',
+          },
+          {
+            name: 'updated_at',
             type: 'timestamp',
             default: 'NOW()',
           },
@@ -38,29 +48,18 @@ export class CreateUserTable1690478202013 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      'budget_goal',
-      new TableForeignKey({
-        columnNames: ['user_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'users',
-        onDelete: 'CASCADE',
-      }),
-    );
-
-    await queryRunner.createForeignKey(
       'wallet',
       new TableForeignKey({
-        columnNames: ['user_id'],
+        columnNames: ['bank_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'users',
+        referencedTableName: 'banks',
         onDelete: 'CASCADE',
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('wallet', 'FK_WALLET_USER');
-    await queryRunner.dropForeignKey('budget_goal', 'FK_BUDGET_GOAL_USER');
-    await queryRunner.dropTable('users');
+    await queryRunner.dropForeignKey('wallet', 'FK_WALLET_BANK');
+    await queryRunner.dropTable('banks');
   }
 }
