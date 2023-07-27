@@ -22,7 +22,7 @@ export class User {
   email: string;
 
   @CreateDateColumn()
-  created_at?: Date;
+  created_at: Date;
 
   @DeleteDateColumn({ default: null })
   deleted_at?: Date;
