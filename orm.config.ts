@@ -9,10 +9,11 @@ export const ormconfig: DataSourceOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   synchronize: true,
-  entities: [__dirname + '/../**/*/*.entity{.ts,.js}'],
+  entities: [`${__dirname} '/../**/*/*.entity{.ts,.js}'`],
   migrations: [
-    __dirname + '/shared/infra/database/typeorm/migrations/*{.ts,.js}',
+    `${__dirname} './shared/infra/database/typeorm/migrations/{.ts,*.js}'`,
   ],
+  migrationsRun: true,
 };
 
 const dataSource = new DataSource(ormconfig);
