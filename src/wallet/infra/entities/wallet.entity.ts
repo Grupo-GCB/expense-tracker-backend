@@ -9,9 +9,9 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
-import { User } from '../../../user/infra/entities';
-import { Bank } from '../../../bank/infra/entities';
-import { Transaction } from '../../../transaction/infra/entities';
+import { User } from '@/user/infra/entities';
+import { Bank } from '@/bank/infra/entities';
+import { Transaction } from '@/transaction/infra/entities';
 import { AccountType } from '@/shared/constants';
 
 @Entity()

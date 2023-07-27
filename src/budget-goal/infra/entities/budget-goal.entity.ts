@@ -8,7 +8,7 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
-import { User } from '../../../user/infra/entities';
+import { User } from '@/user/infra/entities';
 
 @Entity()
 export class BudgetGoal {

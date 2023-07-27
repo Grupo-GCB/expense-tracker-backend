@@ -8,7 +8,7 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
-import { Wallet } from '../../../wallet/infra/entities';
+import { Wallet } from '@/wallet/infra/entities';
 
 @Entity()
 export class Bank {

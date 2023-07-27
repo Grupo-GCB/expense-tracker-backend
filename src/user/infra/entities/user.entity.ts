@@ -7,8 +7,8 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 
-import { BudgetGoal } from '../../../budget-goal/infra/entities/budget-goal.entity';
-import { Wallet } from '../../../wallet/infra/entities/wallet.entity';
+import { BudgetGoal } from '@/budget-goal/infra/entities';
+import { Wallet } from '@/wallet/infra/entities';
 
 @Entity('users')
 export class User {

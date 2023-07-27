@@ -8,7 +8,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
-import { Wallet } from '../../../wallet/infra/entities';
+import { Wallet } from '@/wallet/infra/entities';
 import { Categories, TransactionType } from '@/shared/constants';
 
 @Entity()
