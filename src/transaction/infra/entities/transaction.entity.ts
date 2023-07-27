@@ -32,7 +32,7 @@ export class Transaction {
   date: Date;
 
   @CreateDateColumn({ type: 'timestamp' })
-  created_at?: Date;
+  created_at: Date;
 
   @UpdateDateColumn({ default: null })
   updated_at?: Date;
