@@ -11,8 +11,9 @@ export const ormconfig: DataSourceOptions = {
   synchronize: false,
   entities: [`${__dirname}/**/*.entity{.ts,.js}`],
   migrations: [
-    `${__dirname}/shared/infra/database/typeorm/migrations/**/*{.ts,.js}`,
+    `${__dirname}/shared/infra/database/typeorm/migrations/{.ts,*.js}`,
   ],
+  migrationsRun: true,
 };
 
 const dataSource = new DataSource(ormconfig);
