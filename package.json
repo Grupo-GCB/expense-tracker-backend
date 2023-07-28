@@ -1,6 +1,6 @@
 {
   "name": "expense-tracker",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "A personal finance management platform is typically referred to as a Personal Finance Management or Personal Finance Manager platform",
   "author": "GCB Academy",
   "private": true,
@@ -23,10 +23,14 @@
   "dependencies": {
     "@nestjs/config": "^3.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.1.4",
     "@nestjs/typeorm": "^10.0.0",
+    "class-validator": "^0.14.0",
     "pg": "^8.11.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
