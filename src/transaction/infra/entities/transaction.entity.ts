@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 
 import { Wallet } from '@/wallet/infra/entities';
-import { Categories, TransactionType } from '@/shared/constants';
+import { Categories, TransactionType } from '@/shared/constants/enums';
 
 @Entity()
 export class Transaction {

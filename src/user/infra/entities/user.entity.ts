@@ -29,8 +29,8 @@ export class User {
   deleted_at?: Date;
 
   @OneToMany(() => BudgetGoal, (budget_goal) => budget_goal.user)
-  budget_goal: Relation<BudgetGoal[]>;
+  budget_goal?: Relation<BudgetGoal[]>;
 
   @OneToMany(() => Wallet, (wallet) => wallet.user)
-  wallet: Relation<Wallet[]>;
+  wallet?: Relation<Wallet[]>;
 }
