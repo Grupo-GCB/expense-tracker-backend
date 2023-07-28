@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  Relation,
 } from 'typeorm';
 
 import { User } from '@/user/infra/entities';
@@ -41,11 +42,11 @@ export class Wallet {
   deleted_at: Date;
 
   @ManyToOne(() => Bank, (bank) => bank.wallet)
-  bank: Bank;
+  bank: Relation<Bank>;
 
   @ManyToOne(() => User, (user) => user.wallet)
-  user: User;
+  user: Relation<User>;
 
   @OneToMany(() => Transaction, (transaction) => transaction.wallet)
-  transactions: Transaction[];
+  transactions: Relation<Transaction[]>;
 }

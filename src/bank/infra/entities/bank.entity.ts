@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  Relation,
 } from 'typeorm';
 
 import { Wallet } from '@/wallet/infra/entities';
@@ -15,7 +16,7 @@ export class Bank {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @Column()
@@ -24,12 +25,12 @@ export class Bank {
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date;
+  @UpdateDateColumn({ default: null })
+  updated_at?: Date;
 
-  @DeleteDateColumn({ type: 'timestamp', nullable: true })
-  deleted_at: Date;
+  @DeleteDateColumn({ nullable: true })
+  deleted_at?: Date;
 
   @OneToMany(() => Wallet, (wallet) => wallet.bank)
-  wallet: Wallet[];
+  wallet: Relation<Wallet[]>;
 }

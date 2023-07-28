@@ -27,8 +27,8 @@ export class BudgetGoal {
   @Column({ type: 'timestamp' })
   goal_date: Date;
 
-  @CreateDateColumn()
-  created_at?: Date;
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
 
   @UpdateDateColumn({ default: null })
   updated_at?: Date;
@@ -36,6 +36,6 @@ export class BudgetGoal {
   @DeleteDateColumn({ default: null })
   deleted_at?: Date;
 
-  @ManyToOne(() => User, (user) => user.budgetGoal)
+  @ManyToOne(() => User, (user) => user.budget_goal)
   user: User;
 }
