@@ -1,30 +1,30 @@
 export const HttpExceptionConstants = {
   INVALID_CREDENTIALS: {
     statusCode: 401,
-    message: 'Invalid credentials',
+    message: 'Credenciais inválidas.',
   },
   NOT_FOUND: {
     statusCode: 404,
-    message: 'Not found',
+    message: 'Não encontrado.',
   },
   TOKEN_NOT_FOUND: {
     statusCode: 404,
-    message: 'Token not found',
+    message: 'Token não encontrado.',
   },
   INVALID_REFRESH_TOKEN: {
     statusCode: 401,
-    message: 'Invalid refresh token',
+    message: 'Token de atualização inválido.',
   },
   USER_ALREADY_EXISTS: {
     statusCode: 409,
-    message: 'User already exists',
+    message: 'Usuário já existe.',
   },
   FAILED_TO_CREATE_USER: {
     statusCode: 500,
-    message: 'Failed to create user',
+    message: 'Falha ao criar usuário.',
   },
   USER_NOT_FOUND: {
     statusCode: 404,
-    message: 'User not found',
+    message: 'Usuário não encontrado.',
   },
 };

@@ -19,7 +19,7 @@ describe('Get User', () => {
     listUserUseCase = new ListUserUseCase(userRepository);
   });
 
-  it('should be able to return user when found', async () => {
+  it('should be able to return an user when found', async () => {
     const user: User = {
       id: user_id,
       name: 'John Doe',
@@ -36,10 +36,9 @@ describe('Get User', () => {
     expect(userRepository.findById).toHaveBeenCalledTimes(1);
   });
 
-  it('should be able to throw HttpException when user is not found', async () => {
+  it('should not be able to return user', async () => {
     userRepository.findById.mockResolvedValue(null);
 
-    // Utilizando a função de retorno de erro do expect
     await expect(async () => {
       await listUserUseCase.execute('non_existent_user_id');
     }).rejects.toThrow(
