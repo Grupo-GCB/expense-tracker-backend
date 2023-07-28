@@ -33,6 +33,7 @@ describe('Get User', () => {
 
     expect(result).toEqual(user);
     expect(userRepository.findById).toHaveBeenCalledWith(user_id);
+    expect(userRepository.findById).toHaveBeenCalledTimes(1);
   });
 
   it('should be able to throw HttpException when user is not found', async () => {
