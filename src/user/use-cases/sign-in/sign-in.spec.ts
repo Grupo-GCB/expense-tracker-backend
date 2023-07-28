@@ -43,9 +43,17 @@ describe('Sign In Use Case', () => {
   });
 
   it('should not be able to sign in a user with an invalid token', async () => {
+    const invalidToken = 'invalid-jwt-token';
+    jest
+      .spyOn(jwtService, 'verifyAsync')
+      .mockRejectedValue(new UnauthorizedException());
+
+    await expect(signInUseCase.execute(invalidToken)).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 
-  it.only('should be able to create a new user if the user does not exist', async () => {
+  it('should be able to create a new user if the user does not exist', async () => {
     const token = 'valid-jwt-token';
     const userPayload: SaveUserDTO = {
       id: 'user-id',
