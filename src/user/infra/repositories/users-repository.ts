@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import { SaveUserDTO } from '@/user/dtos';
 import { User } from '@/user/infra/entities';
 import { IUsersRepository } from '@/user/interfaces';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserRepository implements IUsersRepository {
@@ -19,8 +19,6 @@ export class UserRepository implements IUsersRepository {
       email: data.email,
     });
 
-    const createdUser = await this.usersRepository.save(user);
-
-    return createdUser;
+    return this.usersRepository.save(user);
   }
 }
