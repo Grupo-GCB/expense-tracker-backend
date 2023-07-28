@@ -42,4 +42,21 @@ describe('Get User', () => {
       ),
     );
   });
+
+  it('should be able to return user when found', async () => {
+    const fakeUser: User = {
+      id: user_id,
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      created_at: new Date(),
+    };
+
+    userRepository.findById.mockResolvedValue(fakeUser);
+
+    const result = await listUserUseCase.execute(user_id);
+
+    expect(result).toEqual(fakeUser);
+
+    expect(userRepository.findById).toHaveBeenCalledWith(user_id);
+  });
 });
