@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { IUsersRepository } from '@/user/interfaces';
 import { SaveUserDTO } from '@/user/dtos';
 import { User } from '@/user/infra/entities';
-import { IDecodedTokenPayload } from '@/user/interfaces/sign-in';
+import { IDecodedTokenPayload } from '@/user/interfaces';
 
 @Injectable()
 export class SignInUseCase {
@@ -14,30 +14,30 @@ export class SignInUseCase {
   ) {}
 
   private async decodeToken(jwtToken: string): Promise<SaveUserDTO> {
-    const secret = process.env.AUTH0_SECRET;
+    const secret = process.env.AUTH0_CLIENT_SECRET;
 
     try {
       const decodedPayload = (await this.jwtService.verifyAsync(jwtToken, {
         secret,
       })) as IDecodedTokenPayload;
 
-      const user: SaveUserDTO = {
-        id: decodedPayload.user.sub,
-        name: decodedPayload.user.name,
-        email: decodedPayload.user.email,
+      const userPayload: SaveUserDTO = {
+        id: decodedPayload.userPayload.sub,
+        name: decodedPayload.userPayload.name,
+        email: decodedPayload.userPayload.email,
       };
 
-      return user;
+      return userPayload;
     } catch {
       throw new UnauthorizedException();
     }
   }
 
   async execute(token: string): Promise<User> {
-    const user = await this.decodeToken(token);
+    const userPayload = await this.decodeToken(token);
 
-    const checkFirstLogin = await this.usersRepository.findByEmail(user.email);
+    const user = await this.usersRepository.findByEmail(userPayload.email);
 
-    if (!checkFirstLogin) return this.usersRepository.create(user);
+    if (!user) return this.usersRepository.create(userPayload);
   }
 }

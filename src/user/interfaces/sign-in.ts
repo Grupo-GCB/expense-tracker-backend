@@ -15,5 +15,5 @@ interface IUserToken {
 }
 
 export interface IDecodedTokenPayload {
-  user: IUserToken;
+  userPayload: IUserToken;
 }
