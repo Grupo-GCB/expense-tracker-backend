@@ -5,7 +5,7 @@ import {
   Entity,
   OneToMany,
   PrimaryColumn,
-  Relation
+  Relation,
 } from 'typeorm';
 
 import { BudgetGoal } from '@/budget-goal/infra/entities';
@@ -22,15 +22,15 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
   @DeleteDateColumn({ default: null })
   deleted_at?: Date;
 
   @OneToMany(() => BudgetGoal, (budget_goal) => budget_goal.user)
-  budget_goal: Relation[];
+  budget_goal: Relation<BudgetGoal[]>;
 
   @OneToMany(() => Wallet, (wallet) => wallet.user)
-  wallet: Relation[];
+  wallet: Relation<Wallet[]>;
 }
