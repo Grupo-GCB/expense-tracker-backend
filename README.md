@@ -13,11 +13,6 @@ O site é composto de 2 páginas diferentes:
 - **Login:** Os usuários podem fazer o login com o e-mail corporativo e entrar na plataforma.
 - **Home**: Os usuários podem criar suas transações de receita ou despesa, e visualizar as últimas transações.
 
-### 🎯 Etapas
-
-❌ Configuração do Projeto;\
-❌ Finalizado;
-
 ### 💻 Tecnologias
 
 As seguintes ferramentas foram usadas neste projeto:
