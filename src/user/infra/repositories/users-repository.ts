@@ -7,7 +7,7 @@ import { User } from '@/user/infra/entities';
 import { IUsersRepository } from '@/user/interfaces';
 
 @Injectable()
-export class UserRepository implements IUsersRepository {
+export class UsersRepository implements IUsersRepository {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
@@ -20,5 +20,13 @@ export class UserRepository implements IUsersRepository {
     });
 
     return this.usersRepository.save(user);
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    const user = this.usersRepository.findOne({
+      where: { email },
+    });
+
+    return user;
   }
 }
