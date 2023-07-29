@@ -1,1 +1,1 @@
-export * from './list-user/list-user';
+export * from './list-user-by-id/list-user-by-id';
