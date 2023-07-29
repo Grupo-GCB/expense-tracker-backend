@@ -32,5 +32,5 @@ export class User {
   budget_goal?: Relation<BudgetGoal[]>;
 
   @OneToMany(() => Wallet, (wallet) => wallet.user)
-  wallet?: Relation<Wallet[]>;
+  wallet: Relation<Wallet[]>;
 }
