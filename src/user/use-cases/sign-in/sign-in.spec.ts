@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { IDecodedTokenPayload, IUsersRepository } from '@/user/interfaces';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from '@nestjs/common';
+
+import { IDecodedTokenPayload, IUsersRepository } from '@/user/interfaces';
 import { SaveUserDTO } from '@/user/dtos';
 import { User } from '@/user/infra/entities';
 import { SignInUseCase } from './sign-in';
@@ -44,6 +45,18 @@ describe('Sign In Use Case', () => {
     };
   });
 
+  const mockFindByEmail = (user: User | null) => {
+    jest.spyOn(usersRepository, 'findByEmail').mockResolvedValue(user);
+  };
+
+  const mockCreateUser = (user: SaveUserDTO) => {
+    jest.spyOn(usersRepository, 'create').mockResolvedValue(user as User);
+  };
+
+  const mockVerifyAsync = () => {
+    jest.spyOn(jwtService, 'verifyAsync').mockResolvedValue(userPayload);
+  };
+
   it('should be able to sign in an user with a valid token', async () => {
     const token = 'valid-jwt-token';
 
@@ -51,8 +64,9 @@ describe('Sign In Use Case', () => {
       id: 'anyUserId',
       name: 'anyUserName',
     } as User;
-    jest.spyOn(jwtService, 'verifyAsync').mockResolvedValue(userPayload);
-    jest.spyOn(usersRepository, 'findByEmail').mockResolvedValue(expectedUser);
+
+    mockVerifyAsync();
+    mockFindByEmail(expectedUser);
     await signInUseCase.execute(token);
 
     expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
@@ -62,7 +76,7 @@ describe('Sign In Use Case', () => {
 
   it('should be able to decode the JWT token correctly', async () => {
     const token = 'valid-jwt-token';
-    jest.spyOn(jwtService, 'verifyAsync').mockResolvedValue(userPayload);
+    mockVerifyAsync();
 
     const decodedUserPayload = await signInUseCase['decodeToken'](token);
 
@@ -80,13 +94,9 @@ describe('Sign In Use Case', () => {
       name: 'diogo gallina',
       email: 'diogo.gallina@example.com',
     };
-    jest.spyOn(jwtService, 'verifyAsync').mockResolvedValue({
-      userPayload,
-    });
-    jest.spyOn(usersRepository, 'findByEmail').mockResolvedValue(null);
-    jest
-      .spyOn(usersRepository, 'create')
-      .mockResolvedValue(userPayload as User);
+    mockVerifyAsync();
+    mockFindByEmail(null);
+    mockCreateUser(userPayload);
 
     const newUser = await signInUseCase.execute(token);
 
@@ -95,6 +105,8 @@ describe('Sign In Use Case', () => {
       name: userPayload.name,
       email: userPayload.email,
     });
+    expect(usersRepository.create).toHaveBeenCalledTimes(1);
+    expect(usersRepository.create).toHaveBeenCalledWith(userPayload);
   });
 
   it('should not be able to sign in a user with an invalid token', async () => {
