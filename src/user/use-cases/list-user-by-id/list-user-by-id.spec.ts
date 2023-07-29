@@ -24,6 +24,7 @@ describe('Get User', () => {
       name: 'John Doe',
       email: 'johndoe@example.com',
       created_at: new Date(),
+      wallet: [],
     };
 
     userRepository.findById.mockResolvedValue(user);
