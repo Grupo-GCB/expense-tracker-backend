@@ -1,4 +1,4 @@
-interface IUserToken {
+export interface IDecodedTokenPayload {
   nickname: string;
   name: string;
   picture: string;
@@ -12,8 +12,4 @@ interface IUserToken {
   sub: string;
   sid: string;
   nonce: string;
-}
-
-export interface IDecodedTokenPayload {
-  userPayload: IUserToken;
 }
