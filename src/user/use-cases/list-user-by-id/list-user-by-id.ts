@@ -4,7 +4,7 @@ import { User } from '@/user/infra/entities';
 import { IUserRepository } from '@/user/infra/interfaces';
 
 @Injectable()
-export class ListUserUseCase {
+export class ListUserByIdUseCase {
   constructor(private readonly userRepository: IUserRepository) {}
 
   async execute(user_id: string): Promise<User> {

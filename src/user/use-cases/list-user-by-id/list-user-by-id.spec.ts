@@ -1,10 +1,10 @@
 import { NotFoundException } from '@nestjs/common';
 import { User } from '@/user/infra/entities';
-import { ListUserUseCase } from './list-user-by-id';
+import { ListUserByIdUseCase } from './list-user-by-id';
 import { IUserRepository } from '@/user/infra/interfaces';
 
 describe('Get User', () => {
-  let listUserUseCase: ListUserUseCase;
+  let listUserUseCase: ListUserByIdUseCase;
   let userRepository: jest.Mocked<IUserRepository>;
 
   const user_id = '123456';
@@ -15,7 +15,7 @@ describe('Get User', () => {
       findById: jest.fn(),
     } as jest.Mocked<IUserRepository>;
 
-    listUserUseCase = new ListUserUseCase(userRepository);
+    listUserUseCase = new ListUserByIdUseCase(userRepository);
   });
 
   it('should be able to return an user when found', async () => {
