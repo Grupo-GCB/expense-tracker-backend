@@ -1,15 +1,14 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
-
+import { NotFoundException } from '@nestjs/common';
 import { User } from '@/user/infra/entities';
 import { ListUserUseCase } from './list-user';
 import { IUserRepository } from '@/user/infra/interfaces';
-import { HttpExceptionConstants } from '@/shared/constants/http-exception.constants';
 
 describe('Get User', () => {
   let listUserUseCase: ListUserUseCase;
   let userRepository: jest.Mocked<IUserRepository>;
 
   const user_id = '123456';
+  const non_existent_user_id = 'non_existent_user_id';
 
   beforeAll(() => {
     userRepository = {
@@ -36,16 +35,11 @@ describe('Get User', () => {
     expect(userRepository.findById).toHaveBeenCalledTimes(1);
   });
 
-  it('should not be able to return user', async () => {
-    userRepository.findById.mockResolvedValue(null);
+  it('should throw NotFoundException when user is not found', async () => {
+    userRepository.findById.mockResolvedValueOnce(null);
 
-    await expect(async () => {
-      await listUserUseCase.execute('non_existent_user_id');
-    }).rejects.toThrow(
-      new HttpException(
-        HttpExceptionConstants.USER_NOT_FOUND.message,
-        HttpStatus.NOT_FOUND,
-      ),
-    );
+    await expect(
+      listUserUseCase.execute(non_existent_user_id),
+    ).rejects.toThrowError(new NotFoundException('Usuário não encontrado'));
   });
 });
