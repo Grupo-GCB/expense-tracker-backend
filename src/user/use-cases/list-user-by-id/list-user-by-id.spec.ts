@@ -1,6 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
+
 import { User } from '@/user/infra/entities';
-import { ListUserByIdUseCase } from './list-user-by-id';
+import { ListUserByIdUseCase } from '@/user/use-cases';
 import { IUserRepository } from '@/user/infra/interfaces';
 
 describe('Get User', () => {
@@ -18,7 +19,7 @@ describe('Get User', () => {
     listUserUseCase = new ListUserByIdUseCase(userRepository);
   });
 
-  it('should be able to return an user when found', async () => {
+  it('should be able to return an user', async () => {
     const user: User = {
       id: user_id,
       name: 'John Doe',
@@ -31,12 +32,12 @@ describe('Get User', () => {
 
     const result = await listUserUseCase.execute(user_id);
 
-    expect(result).toEqual(user);
+    expect(result.user).toEqual(user);
     expect(userRepository.findById).toHaveBeenCalledWith(user_id);
     expect(userRepository.findById).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw NotFoundException when user is not found', async () => {
+  it('should throw NotFoundException', async () => {
     userRepository.findById.mockResolvedValueOnce(null);
 
     await expect(
