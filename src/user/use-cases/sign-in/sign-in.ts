@@ -17,18 +17,19 @@ export class SignInUseCase {
     const secret = process.env.AUTH0_CLIENT_SECRET;
 
     try {
-      const decodedPayload = (await this.jwtService.verifyAsync(jwtToken, {
-        secret,
-      })) as IDecodedTokenPayload;
+      const { sub, name, email } =
+        await this.jwtService.verifyAsync<IDecodedTokenPayload>(jwtToken, {
+          secret,
+        });
 
       const userPayload: SaveUserDTO = {
-        id: decodedPayload.userPayload.sub,
-        name: decodedPayload.userPayload.name,
-        email: decodedPayload.userPayload.email,
+        id: sub,
+        name,
+        email,
       };
 
       return userPayload;
-    } catch {
+    } catch (err) {
       throw new UnauthorizedException();
     }
   }
