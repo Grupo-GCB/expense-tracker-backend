@@ -7,7 +7,7 @@ import { User } from '@/user/infra/entities';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    JwtModule.register({ secret: 'hard!to-guess_secret' }),
+    JwtModule.register({ secret: process.env.SECRET_KEY }),
   ],
   controllers: [],
 })
