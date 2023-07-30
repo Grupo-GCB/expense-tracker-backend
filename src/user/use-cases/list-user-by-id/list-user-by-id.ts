@@ -1,7 +1,7 @@
 import { NotFoundException, Injectable } from '@nestjs/common';
 
 import { User } from '@/user/infra/entities';
-import { IUserRepository } from '@/user/infra/interfaces';
+import { IUserRepository } from '@/user/interfaces';
 
 @Injectable()
 export class ListUserByIdUseCase {
