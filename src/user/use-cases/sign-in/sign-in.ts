@@ -1,10 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { IUsersRepository } from '@/user/interfaces';
 import { SaveUserDTO } from '@/user/dtos';
 import { User } from '@/user/infra/entities';
-import { IDecodedTokenPayload } from '@/user/interfaces';
+import { IDecodedTokenPayload, IUsersRepository } from '@/user/interfaces';
 
 @Injectable()
 export class SignInUseCase {
