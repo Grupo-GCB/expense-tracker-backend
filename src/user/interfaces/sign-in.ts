@@ -4,7 +4,7 @@ export interface IDecodedTokenPayload {
   picture: string;
   updated_at: Date;
   email: string;
-  email_virified: boolean;
+  email_verified: boolean;
   iss: string;
   aud: string;
   iat: string;
