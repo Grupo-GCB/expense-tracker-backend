@@ -40,8 +40,8 @@ describe('Sign In Use Case', () => {
 
     userPayload = {
       sub: 'user-id',
-      name: 'diogo gallina',
-      email: 'diogo.gallina@example.com',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
     };
   });
 
@@ -57,12 +57,14 @@ describe('Sign In Use Case', () => {
     jest.spyOn(jwtService, 'verifyAsync').mockResolvedValue(userPayload);
   };
 
-  it('should be able to sign in an user with a valid token', async () => {
-    const token = 'valid-jwt-token';
+  const token = 'valid-jwt-token';
+  const invalidToken = 'invalid-jwt-token';
 
+  it('should be able to sign in an user with a valid token', async () => {
     const expectedUser: User = {
       id: 'anyUserId',
       name: 'anyUserName',
+      email: 'anyUaerEmail',
     } as User;
 
     mockVerifyAsync();
@@ -75,7 +77,6 @@ describe('Sign In Use Case', () => {
   });
 
   it('should be able to decode the JWT token correctly', async () => {
-    const token = 'valid-jwt-token';
     mockVerifyAsync();
 
     const decodedUserPayload = await signInUseCase['decodeToken'](token);
@@ -88,11 +89,10 @@ describe('Sign In Use Case', () => {
   });
 
   it('should be able to create a new user if the user does not exist', async () => {
-    const token = 'valid-jwt-token';
     const userPayload: SaveUserDTO = {
       id: 'user-id',
-      name: 'diogo gallina',
-      email: 'diogo.gallina@example.com',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
     };
     mockVerifyAsync();
     mockFindByEmail(null);
@@ -110,7 +110,6 @@ describe('Sign In Use Case', () => {
   });
 
   it('should not be able to sign in a user with an invalid token', async () => {
-    const invalidToken = 'invalid-jwt-token';
     jest
       .spyOn(jwtService, 'verifyAsync')
       .mockRejectedValue(new UnauthorizedException());
