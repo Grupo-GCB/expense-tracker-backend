@@ -42,7 +42,7 @@ describe('Get User', () => {
     expect(userRepository.findById).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw NotFoundException', async () => {
+  it('should not be able to return an user when not found', async () => {
     userRepository.findById.mockResolvedValueOnce(null);
 
     const input: ListUserByIdInput = {
