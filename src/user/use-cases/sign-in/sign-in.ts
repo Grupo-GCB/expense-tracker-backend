@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { SaveUserDTO } from '@/user/dtos';
+import { SaveUserDTO } from '@/user/dto';
 import { IDecodedTokenPayload, IUserRepository } from '@/user/interfaces';
 
 @Injectable()

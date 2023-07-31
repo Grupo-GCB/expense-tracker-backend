@@ -5,7 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { User } from '@/user/infra/entities';
 import { ListUserByIdUseCase } from '@/user/use-cases';
 import { UserRepository } from '@/user/infra/repositories';
-import { IUserRepository } from './interfaces/user.repository';
+import { IUserRepository } from '@/user/interfaces';
 
 @Module({
   imports: [
