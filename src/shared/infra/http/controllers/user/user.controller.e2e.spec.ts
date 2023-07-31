@@ -4,7 +4,7 @@ import * as request from 'supertest';
 
 import { AppModule } from '@/app.module';
 
-describe('User controller e2e test', () => {
+describe('User controller E2E', () => {
   let app: INestApplication;
   let userId: string;
   let nonexistentUserId: string;

@@ -8,6 +8,7 @@ import {
 
 import { User } from '@/user/infra/entities';
 import { ListUserByIdUseCase } from '@/user/use-cases';
+import { ListUserDTO } from '@/user/dto';
 
 @Controller('user')
 export class UserController {
@@ -16,7 +17,7 @@ export class UserController {
   @ApiTags('User')
   @ApiOperation({
     summary: 'Listar um usuário pelo ID.',
-    description: 'Esta rota permite um usuário visualizar seus dados',
+    description: 'Esta rota permite visualizar os dados de um usuário.',
   })
   @ApiOkResponse({
     status: HttpStatus.OK,
@@ -35,8 +36,8 @@ export class UserController {
     description: 'Usuário não encontrado.',
   })
   @Get(':id')
-  async listUser(@Param('id') user_id: string): Promise<User> {
-    const result = await this.listUserUseCase.execute(user_id);
+  async listUser(@Param('id') params: ListUserDTO): Promise<User> {
+    const result = await this.listUserUseCase.execute(params.user_id);
     return result.user;
   }
 }

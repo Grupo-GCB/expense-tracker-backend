@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, Matches } from 'class-validator';
 
-export class GetUserDTO {
+export class ListUserDTO {
   @IsNotEmpty({ message: 'Necessário informar o id' })
   @IsString({ message: 'Id deve ser uma string' })
   @Matches(/^[a-zA-Z0-9|-]+$/, {
