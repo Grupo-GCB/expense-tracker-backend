@@ -11,7 +11,7 @@ export class ListUserByIdUseCase {
     const user = await this.userRepository.findById(user_id);
 
     if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
+      throw new NotFoundException('Usuário não encontrado.');
     }
 
     return { user };

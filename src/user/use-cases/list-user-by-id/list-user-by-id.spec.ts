@@ -8,8 +8,8 @@ describe('Get User', () => {
   let listUserUseCase: ListUserByIdUseCase;
   let userRepository: jest.Mocked<IUserRepository>;
 
-  const user_id = '123456';
-  const non_existent_user_id = 'non_existent_user_id';
+  const userId = '123456';
+  const nonExistentUserId = 'non-existent-user-id';
 
   beforeAll(() => {
     userRepository = {
@@ -21,7 +21,7 @@ describe('Get User', () => {
 
   it('should be able to return an user', async () => {
     const user: User = {
-      id: user_id,
+      id: userId,
       name: 'John Doe',
       email: 'johndoe@example.com',
       created_at: new Date(),
@@ -30,18 +30,18 @@ describe('Get User', () => {
 
     userRepository.findById.mockResolvedValue(user);
 
-    const result = await listUserUseCase.execute(user_id);
+    const result = await listUserUseCase.execute(userId);
 
     expect(result.user).toEqual(user);
-    expect(userRepository.findById).toHaveBeenCalledWith(user_id);
+    expect(userRepository.findById).toHaveBeenCalledWith(userId);
     expect(userRepository.findById).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw NotFoundException', async () => {
+  it('should not be able to return an user', async () => {
     userRepository.findById.mockResolvedValueOnce(null);
 
     await expect(
-      listUserUseCase.execute(non_existent_user_id),
+      listUserUseCase.execute(nonExistentUserId),
     ).rejects.toThrowError(new NotFoundException('Usuário não encontrado'));
   });
 });
