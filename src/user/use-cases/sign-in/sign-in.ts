@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { SaveUserDTO } from '@/user/dtos';
-import { User } from '@/user/infra/entities';
 import { IDecodedTokenPayload, IUsersRepository } from '@/user/interfaces';
 
 @Injectable()
@@ -33,11 +32,11 @@ export class SignInUseCase {
     }
   }
 
-  async execute(token: string): Promise<User> {
+  async execute(token: string): Promise<void> {
     const userPayload = await this.decodeToken(token);
 
     const user = await this.usersRepository.findByEmail(userPayload.email);
 
-    if (!user) return this.usersRepository.create(userPayload);
+    if (!user) await this.usersRepository.create(userPayload);
   }
 }
