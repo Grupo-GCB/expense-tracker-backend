@@ -2,7 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 
 import { User } from '@/user/infra/entities';
 import { ListUserByIdUseCase } from '@/user/use-cases';
-import { IUserRepository } from '@/user/interfaces';
+import { IUserRepository } from '@/user/interfaces/user.repository';
 
 describe('Get User', () => {
   let listUserUseCase: ListUserByIdUseCase;
@@ -14,7 +14,7 @@ describe('Get User', () => {
   beforeAll(() => {
     userRepository = {
       findById: jest.fn(),
-    } as jest.Mocked<IUserRepository>;
+    } as unknown as jest.Mocked<IUserRepository>;
 
     listUserUseCase = new ListUserByIdUseCase(userRepository);
   });
@@ -42,6 +42,6 @@ describe('Get User', () => {
 
     await expect(
       listUserUseCase.execute(nonExistentUserId),
-    ).rejects.toThrowError(new NotFoundException('Usuário não encontrado'));
+    ).rejects.toThrowError(new NotFoundException('Usuário não encontrado.'));
   });
 });

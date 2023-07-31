@@ -2,14 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from '@nestjs/common';
 
-import { IDecodedTokenPayload, IUsersRepository } from '@/user/interfaces';
+import { IDecodedTokenPayload, IUserRepository } from '@/user/interfaces';
 import { SaveUserDTO } from '@/user/dtos';
 import { User } from '@/user/infra/entities';
 import { SignInUseCase } from '@/user/use-cases';
 
 describe('Sign In Use Case', () => {
   let signInUseCase: SignInUseCase;
-  let usersRepository: IUsersRepository;
+  let usersRepository: IUserRepository;
   let jwtService: JwtService;
 
   let userPayload: Pick<IDecodedTokenPayload, 'sub' | 'name' | 'email'>;
@@ -19,7 +19,7 @@ describe('Sign In Use Case', () => {
       providers: [
         SignInUseCase,
         {
-          provide: IUsersRepository,
+          provide: IUserRepository,
           useValue: {
             findByEmail: jest.fn(),
             create: jest.fn(),
@@ -35,7 +35,7 @@ describe('Sign In Use Case', () => {
     }).compile();
 
     signInUseCase = module.get<SignInUseCase>(SignInUseCase);
-    usersRepository = module.get<IUsersRepository>(IUsersRepository);
+    usersRepository = module.get<IUserRepository>(IUserRepository);
     jwtService = module.get<JwtService>(JwtService);
 
     userPayload = {
