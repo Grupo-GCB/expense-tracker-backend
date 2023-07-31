@@ -28,7 +28,7 @@ export class SignInUseCase {
 
       return userPayload;
     } catch (err) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Token inválido.');
     }
   }
 
