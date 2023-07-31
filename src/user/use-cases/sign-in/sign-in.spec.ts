@@ -5,7 +5,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { IDecodedTokenPayload, IUsersRepository } from '@/user/interfaces';
 import { SaveUserDTO } from '@/user/dtos';
 import { User } from '@/user/infra/entities';
-import { SignInUseCase } from './sign-in';
+import { SignInUseCase } from '@/user/use-cases';
 
 describe('Sign In Use Case', () => {
   let signInUseCase: SignInUseCase;
