@@ -24,7 +24,7 @@ export class SaveUserDTO {
 
   @IsNotEmpty({ message: 'Necessário informar o e-mail.' })
   @IsString({ message: 'Email deve ser uma string.' })
-  @IsEmail({}, { message: 'Deve ser e-mail válido.' })
+  @IsEmail({}, { message: 'Deve ser um e-mail válido.' })
   @ApiProperty({
     example: 'john.doe@example.com',
     description: 'Email do usuário',
