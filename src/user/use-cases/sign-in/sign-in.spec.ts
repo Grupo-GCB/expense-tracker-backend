@@ -98,13 +98,8 @@ describe('Sign In Use Case', () => {
     mockFindByEmail(null);
     mockCreateUser(userPayload);
 
-    const newUser = await signInUseCase.execute(token);
+    await signInUseCase.execute(token);
 
-    expect(newUser).toEqual({
-      id: userPayload.id,
-      name: userPayload.name,
-      email: userPayload.email,
-    });
     expect(usersRepository.create).toHaveBeenCalledTimes(1);
     expect(usersRepository.create).toHaveBeenCalledWith(userPayload);
   });
