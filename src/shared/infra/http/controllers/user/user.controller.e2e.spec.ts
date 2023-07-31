@@ -4,7 +4,7 @@ import * as request from 'supertest';
 
 import { AppModule } from '@/app.module';
 
-describe('UserController (e2e)', () => {
+describe('User controller e2e test', () => {
   let app: INestApplication;
   let userId: string;
   let nonexistentUserId: string;
@@ -40,7 +40,7 @@ describe('UserController (e2e)', () => {
       });
     });
 
-    it('should not be able to return an user', async () => {
+    it('should be able to return 404 for a nonexistent user', async () => {
       await request(app.getHttpServer())
         .get(`/user/${nonexistentUserId}`)
 
