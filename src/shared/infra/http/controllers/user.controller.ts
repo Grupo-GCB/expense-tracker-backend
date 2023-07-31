@@ -1,13 +1,13 @@
 import { Controller, Get, HttpStatus, Param } from '@nestjs/common';
-
-import { User } from '@/user/infra/entities';
-import { ListUserByIdUseCase } from '@/user/use-cases';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+
+import { User } from '@/user/infra/entities';
+import { ListUserByIdUseCase } from '@/user/use-cases';
 
 @Controller('user')
 export class UserController {
