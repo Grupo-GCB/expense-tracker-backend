@@ -13,7 +13,7 @@ import {
 import { User } from '@/user/infra/entities';
 import { Bank } from '@/bank/infra/entities';
 import { Transaction } from '@/transaction/infra/entities';
-import { AccountType } from '@/shared/constants';
+import { AccountType } from '@/shared/constants/enums';
 
 @Entity()
 export class Wallet {
