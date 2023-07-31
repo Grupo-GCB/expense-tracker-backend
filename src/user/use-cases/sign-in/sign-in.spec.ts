@@ -45,16 +45,16 @@ describe('Sign In Use Case', () => {
     };
   });
 
+  beforeEach(() => {
+    jest.spyOn(jwtService, 'verifyAsync').mockResolvedValue(userPayload);
+  });
+
   const mockFindByEmail = (user: User | null) => {
     jest.spyOn(usersRepository, 'findByEmail').mockResolvedValue(user);
   };
 
   const mockCreateUser = (user: SaveUserDTO) => {
     jest.spyOn(usersRepository, 'create').mockResolvedValue(user as User);
-  };
-
-  const mockVerifyAsync = () => {
-    jest.spyOn(jwtService, 'verifyAsync').mockResolvedValue(userPayload);
   };
 
   const token = 'valid-jwt-token';
@@ -67,7 +67,6 @@ describe('Sign In Use Case', () => {
       email: 'john.doe@example.com',
     } as User;
 
-    mockVerifyAsync();
     mockFindByEmail(expectedUser);
     await signInUseCase.execute(token);
 
@@ -77,8 +76,6 @@ describe('Sign In Use Case', () => {
   });
 
   it('should be able to decode the JWT token correctly', async () => {
-    mockVerifyAsync();
-
     const decodedUserPayload = await signInUseCase['decodeToken'](token);
 
     expect(decodedUserPayload).toEqual({
@@ -94,7 +91,7 @@ describe('Sign In Use Case', () => {
       name: 'John Doe',
       email: 'john.doe@example.com',
     };
-    mockVerifyAsync();
+
     mockFindByEmail(null);
     mockCreateUser(userPayload);
 
