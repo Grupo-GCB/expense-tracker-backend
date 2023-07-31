@@ -7,7 +7,6 @@ import { BankModule } from '@/bank/bank.module';
 import { BudgetGoal } from '@/budget-goal/infra/entities';
 import { Transaction } from '@/transaction/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
-import { UserController } from './shared/infra/http/controllers/user.controller';
 
 @Module({
   imports: [

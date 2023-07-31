@@ -15,8 +15,8 @@ export class UserController {
 
   @ApiTags('User')
   @ApiOperation({
-    summary: 'List an user by ID',
-    description: 'This route allows user to list your personal data by ID.',
+    summary: 'Listar um usuário pelo ID.',
+    description: 'Esta rota permite um usuário visualizar seus dados',
   })
   @ApiOkResponse({
     status: HttpStatus.OK,
@@ -32,7 +32,7 @@ export class UserController {
   })
   @ApiNotFoundResponse({
     status: HttpStatus.NOT_FOUND,
-    description: 'User not found!',
+    description: 'Usuário não encontrado.',
   })
   @Get(':id')
   async listUser(@Param('id') user_id: string): Promise<User> {
