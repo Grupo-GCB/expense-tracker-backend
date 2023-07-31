@@ -5,7 +5,7 @@ export class SaveUserDTO {
   @IsNotEmpty({ message: 'Necessário informar o id.' })
   @IsString({ message: 'Id deve ser uma string.' })
   @ApiProperty({
-    example: 'oauth2|6546846841681616844168',
+    example: 'auth0|58vfb567d5asdea52bc65ebba',
     description: 'Id do usuário',
     type: 'string',
     required: true,

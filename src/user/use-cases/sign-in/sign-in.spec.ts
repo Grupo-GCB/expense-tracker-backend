@@ -39,7 +39,7 @@ describe('Sign In Use Case', () => {
     jwtService = module.get<JwtService>(JwtService);
 
     userPayload = {
-      sub: 'user-id',
+      sub: 'auth0|58vfb567d5asdea52bc65ebba',
       name: 'John Doe',
       email: 'john.doe@example.com',
     };
@@ -62,9 +62,9 @@ describe('Sign In Use Case', () => {
 
   it('should be able to sign in an user with a valid token', async () => {
     const expectedUser: User = {
-      id: 'anyUserId',
-      name: 'anyUserName',
-      email: 'anyUaerEmail',
+      id: 'auth0|58vfb567d5asdea52bc65ebba',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
     } as User;
 
     mockVerifyAsync();
@@ -90,7 +90,7 @@ describe('Sign In Use Case', () => {
 
   it('should be able to create a new user if the user does not exist', async () => {
     const userPayload: SaveUserDTO = {
-      id: 'user-id',
+      id: 'auth0|58vfb567d5asdea52bc65ebba',
       name: 'John Doe',
       email: 'john.doe@example.com',
     };
