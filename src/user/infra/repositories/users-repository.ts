@@ -12,6 +12,7 @@ export class UsersRepository implements IUsersRepository {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
+
   async create(data: SaveUserDTO): Promise<User> {
     const user: User = this.usersRepository.create({
       id: data.id,
