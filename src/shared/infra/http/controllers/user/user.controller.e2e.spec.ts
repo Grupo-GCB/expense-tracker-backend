@@ -14,8 +14,8 @@ describe('User controller E2E', () => {
       imports: [AppModule],
     }).compile();
 
-    userId = 'af4202bb-a175-49f0-95c0-e5e41537f548';
-    nonexistentUserId = 'af4202bb-a175-49f0-95c0-e5e41537f544';
+    userId = 'google-oauth2|456734566205483104315';
+    nonexistentUserId = 'google-oauth2|456354566205483104315';
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -32,10 +32,10 @@ describe('User controller E2E', () => {
         .expect(HttpStatus.OK);
 
       expect(response.body).toMatchObject({
-        created_at: '2023-07-31T20:33:01.935Z',
+        created_at: '2023-08-01T01:45:57.171Z',
         deleted_at: null,
         email: 'john.doe@example.com',
-        id: 'af4202bb-a175-49f0-95c0-e5e41537f548',
+        id: 'google-oauth2|456734566205483104315',
         name: 'John Doe',
       });
     });
