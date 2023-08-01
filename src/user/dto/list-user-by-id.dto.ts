@@ -10,7 +10,7 @@ export class GetUserDTO {
   })
   @ApiProperty({
     example: 'google-oauth2|456734566205483104315',
-    description: 'Id do usuário',
+    description: 'Id do usuário.',
     type: 'string',
     required: true,
   })
