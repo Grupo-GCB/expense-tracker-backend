@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from '@nestjs/common';
 
 import { IDecodedTokenPayload, IUserRepository } from '@/user/interfaces';
-import { SaveUserDTO } from '@/user/dtos';
+import { SaveUserDTO } from '@/user/dto';
 import { User } from '@/user/infra/entities';
 import { SignInUseCase } from '@/user/use-cases';
 
@@ -11,6 +11,9 @@ describe('Sign In Use Case', () => {
   let signInUseCase: SignInUseCase;
   let usersRepository: IUserRepository;
   let jwtService: JwtService;
+  let findByEmailMock: jest.SpyInstance;
+  let createUserMock: jest.SpyInstance;
+  let verifyAsyncMock: jest.SpyInstance;
 
   let userPayload: Pick<IDecodedTokenPayload, 'sub' | 'name' | 'email'>;
 
@@ -43,19 +46,15 @@ describe('Sign In Use Case', () => {
       name: 'John Doe',
       email: 'john.doe@example.com',
     };
+
+    findByEmailMock = jest.spyOn(usersRepository, 'findByEmail');
+    createUserMock = jest.spyOn(usersRepository, 'create');
+    verifyAsyncMock = jest.spyOn(jwtService, 'verifyAsync');
   });
 
   beforeEach(() => {
-    jest.spyOn(jwtService, 'verifyAsync').mockResolvedValue(userPayload);
+    verifyAsyncMock.mockReturnValue(userPayload);
   });
-
-  const mockFindByEmail = (user: User | null) => {
-    jest.spyOn(usersRepository, 'findByEmail').mockResolvedValue(user);
-  };
-
-  const mockCreateUser = (user: SaveUserDTO) => {
-    jest.spyOn(usersRepository, 'create').mockResolvedValue(user as User);
-  };
 
   const token = 'valid-jwt-token';
   const invalidToken = 'invalid-jwt-token';
@@ -67,7 +66,7 @@ describe('Sign In Use Case', () => {
       email: 'john.doe@example.com',
     } as User;
 
-    mockFindByEmail(expectedUser);
+    findByEmailMock.mockResolvedValue(expectedUser);
     await signInUseCase.execute(token);
 
     expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
@@ -92,8 +91,8 @@ describe('Sign In Use Case', () => {
       email: 'john.doe@example.com',
     };
 
-    mockFindByEmail(null);
-    mockCreateUser(userPayload);
+    findByEmailMock.mockResolvedValue(null);
+    createUserMock.mockResolvedValue(userPayload);
 
     await signInUseCase.execute(token);
 
