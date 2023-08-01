@@ -1,19 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from '@nestjs/common';
 
 import { IDecodedTokenPayload, IUserRepository } from '@/user/interfaces';
 import { SaveUserDTO } from '@/user/dto';
-import { User } from '@/user/infra/entities';
 import { SignInUseCase } from '@/user/use-cases';
+import { JwtAuthProvider } from '@/auth/providers';
 
 describe('Sign In Use Case', () => {
   let signInUseCase: SignInUseCase;
   let usersRepository: IUserRepository;
-  let jwtService: JwtService;
+  let jwtAuthProvider: JwtAuthProvider;
   let findByEmailMock: jest.SpyInstance;
   let createUserMock: jest.SpyInstance;
-  let verifyAsyncMock: jest.SpyInstance;
+  let decodeTokenMock: jest.SpyInstance;
 
   let userPayload: Pick<IDecodedTokenPayload, 'sub' | 'name' | 'email'>;
 
@@ -29,9 +28,9 @@ describe('Sign In Use Case', () => {
           },
         },
         {
-          provide: JwtService,
+          provide: JwtAuthProvider,
           useValue: {
-            verifyAsync: jest.fn(),
+            decodeToken: jest.fn(),
           },
         },
       ],
@@ -39,7 +38,7 @@ describe('Sign In Use Case', () => {
 
     signInUseCase = module.get<SignInUseCase>(SignInUseCase);
     usersRepository = module.get<IUserRepository>(IUserRepository);
-    jwtService = module.get<JwtService>(JwtService);
+    jwtAuthProvider = module.get<JwtAuthProvider>(JwtAuthProvider);
 
     userPayload = {
       sub: 'auth0|58vfb567d5asdea52bc65ebba',
@@ -49,64 +48,59 @@ describe('Sign In Use Case', () => {
 
     findByEmailMock = jest.spyOn(usersRepository, 'findByEmail');
     createUserMock = jest.spyOn(usersRepository, 'create');
-    verifyAsyncMock = jest.spyOn(jwtService, 'verifyAsync');
+    decodeTokenMock = jest.spyOn(jwtAuthProvider, 'decodeToken');
   });
 
   beforeEach(() => {
-    verifyAsyncMock.mockReturnValue(userPayload);
+    decodeTokenMock.mockReturnValue(userPayload);
   });
 
   const token = 'valid-jwt-token';
   const invalidToken = 'invalid-jwt-token';
 
-  it('should be able to sign in an user with a valid token', async () => {
-    const expectedUser: User = {
-      id: 'auth0|58vfb567d5asdea52bc65ebba',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-    } as User;
+  it('Should return 200 if user already exists', async () => {
+    findByEmailMock.mockResolvedValue(userPayload.email);
 
-    findByEmailMock.mockResolvedValue(expectedUser);
-    await signInUseCase.execute(token);
+    const result = await signInUseCase.execute(token);
 
+    expect(result).toEqual({
+      status: 200,
+      message: 'Usuário logado com sucesso.',
+    });
     expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
     expect(usersRepository.create).not.toHaveBeenCalled();
   });
 
-  it('should be able to decode the JWT token correctly', async () => {
-    const decodedUserPayload = await signInUseCase['decodeToken'](token);
-
-    expect(decodedUserPayload).toEqual({
+  it('should be able to create a new user if the user does not exist', async () => {
+    const createdUser: SaveUserDTO = {
       id: userPayload.sub,
       name: userPayload.name,
       email: userPayload.email,
-    });
-  });
-
-  it('should be able to create a new user if the user does not exist', async () => {
-    const userPayload: SaveUserDTO = {
-      id: 'auth0|58vfb567d5asdea52bc65ebba',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
     };
 
     findByEmailMock.mockResolvedValue(null);
-    createUserMock.mockResolvedValue(userPayload);
+    createUserMock.mockResolvedValue(createdUser);
 
-    await signInUseCase.execute(token);
+    const result = await signInUseCase.execute(token);
 
+    expect(result).toEqual({
+      status: 201,
+      message: 'Usuário criado com sucesso.',
+    });
+    expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
+    expect(usersRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
     expect(usersRepository.create).toHaveBeenCalledTimes(1);
     expect(usersRepository.create).toHaveBeenCalledWith(userPayload);
   });
 
-  it('should not be able to sign in a user with an invalid token', async () => {
-    jest
-      .spyOn(jwtService, 'verifyAsync')
-      .mockRejectedValue(new UnauthorizedException());
+  it('Should return 200 if user already exists', async () => {
+    decodeTokenMock.mockRejectedValue(UnauthorizedException);
 
-    await expect(signInUseCase.execute(invalidToken)).rejects.toThrow(
+    await expect(signInUseCase.execute(invalidToken)).rejects.toBeInstanceOf(
       UnauthorizedException,
     );
+    expect(usersRepository.findByEmail).not.toHaveBeenCalled();
+    expect(usersRepository.create).not.toHaveBeenCalled();
   });
 });
