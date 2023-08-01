@@ -1,6 +1,5 @@
 import { SaveUserDTO } from '@/user/dto';
 import { JwtService } from '@nestjs/jwt';
-import { UnauthorizedException } from '@nestjs/common';
 import * as jwksRsa from 'jwks-rsa';
 
 import { IDecodedTokenPayload } from '@/user/interfaces';
@@ -8,39 +7,32 @@ import { IAuthProvider } from '@/auth/interfaces';
 
 export class JwtAuthProvider extends JwtService implements IAuthProvider {
   async decodeToken(jwtToken: string): Promise<SaveUserDTO> {
-    try {
-      const decodedHeader = this.decode(jwtToken, {
-        complete: true,
-      });
+    const decodedHeader = this.decode(jwtToken, {
+      complete: true,
+    });
 
-      if (typeof decodedHeader === 'string') {
-        throw new UnauthorizedException('Cabeçalho de token inválido.');
-      }
+    if (typeof decodedHeader === 'string')
+      throw new Error('Cabeçalho de token inválido.');
 
-      const jwksClient = jwksRsa({
-        jwksUri: 'https://gcb-academy.us.auth0.com/.well-known/jwks.json',
-      });
+    const jwksClient = jwksRsa({
+      jwksUri: 'https://gcb-academy.us.auth0.com/.well-known/jwks.json',
+    });
 
-      const signingKey = await jwksClient.getSigningKey(
-        decodedHeader.header.kid,
-      );
-      const publicKey = signingKey.getPublicKey();
+    const signingKey = await jwksClient.getSigningKey(decodedHeader.header.kid);
+    const publicKey = signingKey.getPublicKey();
 
-      const { sub, name, email } = await this.verifyAsync<IDecodedTokenPayload>(
-        jwtToken,
-        {
-          publicKey,
-          algorithms: ['RS256'],
-        },
-      );
+    const { sub, name, email } = await this.verifyAsync<IDecodedTokenPayload>(
+      jwtToken,
+      {
+        publicKey,
+        algorithms: ['RS256'],
+      },
+    );
 
-      return {
-        id: sub,
-        name,
-        email,
-      };
-    } catch {
-      throw new UnauthorizedException('Token inválido.');
-    }
+    return {
+      id: sub,
+      name,
+      email,
+    };
   }
 }
