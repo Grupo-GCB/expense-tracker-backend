@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from '@nestjs/common';
 
 import { IDecodedTokenPayload, IUserRepository } from '@/user/interfaces';
-import { SaveUserDTO } from '@/user/dtos';
+import { SaveUserDTO } from '@/user/dto';
 import { User } from '@/user/infra/entities';
 import { SignInUseCase } from '@/user/use-cases';
 

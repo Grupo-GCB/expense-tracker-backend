@@ -6,13 +6,14 @@ import { User } from '@/user/infra/entities';
 import { ListUserByIdUseCase } from '@/user/use-cases';
 import { UserRepository } from '@/user/infra/repositories';
 import { IUserRepository } from '@/user/interfaces';
+import { UserController } from '@/shared/infra/http/controllers';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({ secret: process.env.SECRET_KEY }),
   ],
-  controllers: [],
+  controllers: [UserController],
   providers: [
     ListUserByIdUseCase,
     {

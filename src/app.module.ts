@@ -32,7 +32,6 @@ import { Wallet } from '@/wallet/infra/entities';
     Transaction,
     Wallet,
   ],
-  controllers: [],
   providers: [],
 })
 export class AppModule {}
