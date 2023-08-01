@@ -15,8 +15,11 @@ export class SignInUseCase {
     let userPayload: SaveUserDTO;
     try {
       userPayload = await this.jwtAuthProvider.decodeToken(token);
-    } catch {
-      throw new UnauthorizedException('Token inválido.');
+    } catch (err: any) {
+      throw new UnauthorizedException({
+        message: 'Token inválido.',
+        reason: err.message,
+      });
     }
     const user = await this.usersRepository.findByEmail(userPayload.email);
 
