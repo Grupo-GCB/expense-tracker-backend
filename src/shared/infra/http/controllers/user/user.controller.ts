@@ -8,7 +8,6 @@ import {
 
 import { User } from '@/user/infra/entities';
 import { ListUserByIdUseCase } from '@/user/use-cases';
-import { ListUserDTO } from '@/user/dto';
 
 @Controller('user')
 export class UserController {
@@ -36,8 +35,8 @@ export class UserController {
     description: 'Usuário não encontrado.',
   })
   @Get(':id')
-  async listUser(@Param('id') params: ListUserDTO): Promise<User> {
-    const result = await this.listUserUseCase.execute(params.user_id);
+  async listUser(@Param('id') user_id: string): Promise<User> {
+    const result = await this.listUserUseCase.execute(user_id);
     return result.user;
   }
 }
