@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
+import { Controller, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import {
   ApiOperation,
   ApiBody,
@@ -9,6 +9,7 @@ import {
 
 import { SignInUseCase } from '@/user/use-cases/sign-in/sign-in';
 import { UserTokenDTO } from '@/user/dto';
+import { Request, Response } from 'express';
 
 @ApiTags('User')
 @Controller('user')
@@ -38,7 +39,9 @@ export class UserController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  create(@Body() { token }: UserTokenDTO) {
-    return this.signInUseCase.execute(token);
+  async create(@Req() { body }: Request, @Res() res: Response) {
+    const { token } = body as UserTokenDTO;
+    const { status, message } = await this.signInUseCase.execute(token);
+    return res.status(status).json({ message });
   }
 }
