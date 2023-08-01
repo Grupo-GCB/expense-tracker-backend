@@ -1,24 +1,24 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtModule } from '@nestjs/jwt';
 
 import { User } from '@/user/infra/entities';
-import { ListUserByIdUseCase } from '@/user/use-cases';
+import { ListUserByIdUseCase, SignInUseCase } from '@/user/use-cases';
 import { UserRepository } from '@/user/infra/repositories';
 import { IUserRepository } from '@/user/interfaces';
+import { UserController } from '@/shared/infra/http/controllers';
+import { AuthModule } from '@/auth/auth.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User]),
-    JwtModule.register({ secret: process.env.SECRET_KEY }),
-  ],
-  controllers: [],
+  imports: [TypeOrmModule.forFeature([User, UserRepository]), AuthModule],
+  controllers: [UserController],
   providers: [
     ListUserByIdUseCase,
+    SignInUseCase,
     {
       provide: IUserRepository,
       useClass: UserRepository,
     },
   ],
+  exports: [],
 })
 export class UserModule {}
