@@ -6,7 +6,10 @@ import { IAuthProvider } from './interfaces';
 @Module({
   providers: [
     JwtAuthProvider,
-    { provide: IAuthProvider, useClass: JwtAuthProvider },
+    {
+      provide: IAuthProvider,
+      useClass: JwtAuthProvider,
+    },
   ],
   exports: [JwtAuthProvider],
 })
