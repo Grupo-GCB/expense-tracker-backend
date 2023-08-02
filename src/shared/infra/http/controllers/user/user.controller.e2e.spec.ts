@@ -4,14 +4,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from '@/app.module';
 import * as request from 'supertest';
 
+import { AppModule } from '@/app.module';
 import { IUserRepository, IDecodedTokenPayload } from '@/user/interfaces';
-import { SignInUseCase } from '@/user/use-cases';
 import { JwtAuthProvider } from '@/auth/providers';
 
-describe('UserController (E2E)', () => {
+describe('User Controller (E2E)', () => {
   let app: INestApplication;
   let usersRepository: IUserRepository;
   let jwtAuthProvider: JwtAuthProvider;
@@ -26,6 +25,14 @@ describe('UserController (E2E)', () => {
   };
 
   beforeAll(async () => {
+    app = await createTestApp();
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  async function createTestApp(): Promise<INestApplication> {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
@@ -40,7 +47,6 @@ describe('UserController (E2E)', () => {
       })
       .compile();
 
-    app = moduleFixture.createNestApplication();
     usersRepository = moduleFixture.get<IUserRepository>(IUserRepository);
     jwtAuthProvider = moduleFixture.get<JwtAuthProvider>(JwtAuthProvider);
 
@@ -48,14 +54,14 @@ describe('UserController (E2E)', () => {
     createUserMock = jest.spyOn(usersRepository, 'create');
     decodeTokenMock = jest.spyOn(jwtAuthProvider, 'decodeToken');
 
-    await app.init();
+    return moduleFixture.createNestApplication();
+  }
+
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
-
-  it('/user/login (POST) - Should return 200 if user already exists', async () => {
+  it('should be able to return 200 if user already exists', async () => {
     findByEmailMock.mockResolvedValue(userPayload.email);
     decodeTokenMock.mockReturnValue(userPayload);
 
@@ -72,7 +78,7 @@ describe('UserController (E2E)', () => {
     expect(usersRepository.create).not.toHaveBeenCalled();
   });
 
-  it('/user/login (POST) - Should return 201 and create a new user if the user does not exist', async () => {
+  it('should be able to return 201 and create a new user if the user does not exist', async () => {
     findByEmailMock.mockResolvedValue(null);
     createUserMock.mockResolvedValue(userPayload);
     decodeTokenMock.mockReturnValue(userPayload);
@@ -91,9 +97,9 @@ describe('UserController (E2E)', () => {
     expect(usersRepository.create).toHaveBeenCalledWith(userPayload);
   });
 
-  it('/user/login (POST) - Should return 401 if token is invalid', async () => {
+  it('should be able to return 401 if token is invalid', async () => {
     decodeTokenMock.mockImplementation(() => {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException('Token Inválido.');
     });
 
     await request(app.getHttpServer())
