@@ -10,7 +10,7 @@ import { AppModule } from '@/app.module';
 import { IUserRepository, IDecodedTokenPayload } from '@/user/interfaces';
 import { JwtAuthProvider } from '@/auth/providers';
 
-describe('User Controller (E2E)', () => {
+describe('UserController (E2E)', () => {
   let app: INestApplication;
   let usersRepository: IUserRepository;
   let jwtAuthProvider: JwtAuthProvider;
@@ -25,14 +25,6 @@ describe('User Controller (E2E)', () => {
   };
 
   beforeAll(async () => {
-    app = await createTestApp();
-  });
-
-  afterAll(async () => {
-    await app.close();
-  });
-
-  async function createTestApp(): Promise<INestApplication> {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
@@ -47,6 +39,7 @@ describe('User Controller (E2E)', () => {
       })
       .compile();
 
+    app = moduleFixture.createNestApplication();
     usersRepository = moduleFixture.get<IUserRepository>(IUserRepository);
     jwtAuthProvider = moduleFixture.get<JwtAuthProvider>(JwtAuthProvider);
 
@@ -54,57 +47,64 @@ describe('User Controller (E2E)', () => {
     createUserMock = jest.spyOn(usersRepository, 'create');
     decodeTokenMock = jest.spyOn(jwtAuthProvider, 'decodeToken');
 
-    return moduleFixture.createNestApplication();
-  }
-
-  beforeEach(() => {
-    jest.clearAllMocks();
+    await app.init();
   });
 
-  it('should be able to return 200 if user already exists', async () => {
-    findByEmailMock.mockResolvedValue(userPayload.email);
-    decodeTokenMock.mockReturnValue(userPayload);
-
-    const response = await request(app.getHttpServer())
-      .post('/user/login')
-      .send({ token: 'valid-jwt-token' })
-      .expect(HttpStatus.OK);
-
-    expect(response.body).toEqual({
-      message: 'Usuário logado com sucesso.',
-    });
-    expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
-    expect(usersRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
-    expect(usersRepository.create).not.toHaveBeenCalled();
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('should be able to return 201 and create a new user if the user does not exist', async () => {
-    findByEmailMock.mockResolvedValue(null);
-    createUserMock.mockResolvedValue(userPayload);
-    decodeTokenMock.mockReturnValue(userPayload);
+  describe('/user/login (POST)', () => {
+    it('should be able to return 200 if user already exists', async () => {
+      findByEmailMock.mockResolvedValue(userPayload.email);
+      decodeTokenMock.mockReturnValue(userPayload);
 
-    const response = await request(app.getHttpServer())
-      .post('/user/login')
-      .send({ token: 'valid-jwt-token' })
-      .expect(HttpStatus.CREATED);
+      const response = await request(app.getHttpServer())
+        .post('/user/login')
+        .send({ token: 'valid-jwt-token' })
+        .expect(HttpStatus.OK);
 
-    expect(response.body).toEqual({
-      message: 'Usuário criado com sucesso.',
-    });
-    expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
-    expect(usersRepository.findByEmail).toHaveBeenCalledWith(userPayload.email);
-    expect(usersRepository.create).toHaveBeenCalledTimes(1);
-    expect(usersRepository.create).toHaveBeenCalledWith(userPayload);
-  });
-
-  it('should be able to return 401 if token is invalid', async () => {
-    decodeTokenMock.mockImplementation(() => {
-      throw new UnauthorizedException('Token Inválido.');
+      expect(response.body).toEqual({
+        message: 'Usuário logado com sucesso.',
+      });
+      expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
+      expect(usersRepository.findByEmail).toHaveBeenCalledWith(
+        userPayload.email,
+      );
+      expect(usersRepository.create).not.toHaveBeenCalled();
     });
 
-    await request(app.getHttpServer())
-      .post('/user/login')
-      .send({ token: 'invalid-jwt-token' })
-      .expect(HttpStatus.UNAUTHORIZED);
+    it('should be able to return 201 and create a new user if the user does not exist', async () => {
+      findByEmailMock.mockResolvedValue(null);
+      createUserMock.mockResolvedValue(userPayload);
+      decodeTokenMock.mockReturnValue(userPayload);
+
+      const response = await request(app.getHttpServer())
+        .post('/user/login')
+        .send({ token: 'valid-jwt-token' })
+        .expect(HttpStatus.CREATED);
+
+      expect(response.body).toEqual({
+        message: 'Usuário criado com sucesso.',
+      });
+      expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
+      expect(usersRepository.findByEmail).toHaveBeenCalledWith(
+        userPayload.email,
+      );
+      expect(usersRepository.create).toHaveBeenCalledTimes(1);
+      expect(usersRepository.create).toHaveBeenCalledWith(userPayload);
+    });
+
+    it('should be able to return 401 if token is invalid', async () => {
+      decodeTokenMock.mockImplementation(() => {
+        throw new UnauthorizedException('Token Inválido.');
+      });
+
+      await request(app.getHttpServer())
+        .post('/user/login')
+        .send({ token: 'invalid-jwt-token' })
+
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
   });
 });
