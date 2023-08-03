@@ -12,8 +12,8 @@ export class JwtAuthProvider extends JwtService implements IAuthProvider {
     });
 
     const signingKey = await jwksClient.getSigningKey(kid);
-    const publicKey = signingKey.getPublicKey();
-    return publicKey;
+
+    return signingKey.getPublicKey();
   }
 
   private decodeJwtHeader(jwtToken: string): IJwtHeader {
