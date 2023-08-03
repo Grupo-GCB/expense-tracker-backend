@@ -1,9 +1,7 @@
 import { UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { SaveUserDTO } from '@/user/dto';
-import { User } from '@/user/infra/entities';
 import { IDecodedTokenPayload, IUserRepository } from '@/user/interfaces';
 import { SignInUseCase } from '@/user/use-cases';
 import { JwtAuthProvider } from '@/auth/providers';
