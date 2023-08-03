@@ -11,9 +11,7 @@ export class JwtAuthProvider extends JwtService implements IAuthProvider {
       jwksUri: process.env.JWKS_URI,
     });
 
-    const signingKey = await jwksClient.getSigningKey(kid);
-
-    return signingKey.getPublicKey();
+    return (await jwksClient.getSigningKey(kid)).getPublicKey();
   }
 
   private decodeJwtHeader(jwtToken: string): IJwtHeader {
@@ -21,10 +19,7 @@ export class JwtAuthProvider extends JwtService implements IAuthProvider {
       complete: true,
     }) as IJwtHeader;
 
-    const isDecodedHeaderValid =
-      !decodedHeader || !decodedHeader.header || !decodedHeader.header.kid;
-
-    if (isDecodedHeaderValid) {
+    if (!decodedHeader || !decodedHeader.header || !decodedHeader.header.kid) {
       throw new Error('Cabeçalho de token inválido.');
     }
 
@@ -39,7 +34,6 @@ export class JwtAuthProvider extends JwtService implements IAuthProvider {
       jwtToken,
       {
         publicKey,
-        algorithms: ['RS256'],
       },
     );
 
