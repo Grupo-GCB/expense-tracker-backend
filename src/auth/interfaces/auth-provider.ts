@@ -1,5 +1,5 @@
 import { SaveUserDTO } from '@/user/dto';
 
-export interface IAuthProvider {
-  decodeToken(token: string): Promise<SaveUserDTO>;
+export abstract class IJwtAuthProvider {
+  abstract decodeToken(token: string): Promise<SaveUserDTO>;
 }
