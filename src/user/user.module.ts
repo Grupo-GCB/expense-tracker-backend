@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { UserController } from '@/shared/infra/http/controllers';
 import { User } from '@/user/infra/entities';
 import { ListUserByIdUseCase, SignInUseCase } from '@/user/use-cases';
 import { UserRepository } from '@/user/infra/repositories';

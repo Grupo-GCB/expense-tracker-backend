@@ -1,19 +1,19 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
   ManyToOne,
   OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
+  PrimaryGeneratedColumn,
   Relation,
+  UpdateDateColumn,
 } from 'typeorm';
 
-import { User } from '@/user/infra/entities';
 import { Bank } from '@/bank/infra/entities';
-import { Transaction } from '@/transaction/infra/entities';
 import { AccountType } from '@/shared/constants/enums';
+import { Transaction } from '@/transaction/infra/entities';
+import { User } from '@/user/infra/entities';
 
 @Entity()
 export class Wallet {
@@ -35,11 +35,11 @@ export class Wallet {
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date;
+  @UpdateDateColumn({ default: null })
+  updated_at?: Date;
 
-  @DeleteDateColumn({ type: 'timestamp', nullable: true })
-  deleted_at: Date;
+  @DeleteDateColumn({ default: null })
+  deleted_at?: Date;
 
   @ManyToOne(() => Bank, (bank) => bank.wallet)
   bank: Relation<Bank>;

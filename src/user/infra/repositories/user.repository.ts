@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { SaveUserDTO } from '@/user/dto';
 import { User } from '@/user/infra/entities';
 import { IUserRepository } from '@/user/interfaces';
-import { SaveUserDTO } from '@/user/dto';
 
 @Injectable()
 export class UserRepository implements IUserRepository {

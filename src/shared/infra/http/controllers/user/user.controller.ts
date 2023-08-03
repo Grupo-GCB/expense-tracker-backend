@@ -76,7 +76,7 @@ export class UserController {
   })
   @Get(':id')
   async listUser(@Param('id') user_id: string): Promise<User> {
-    const result = await this.listUserUseCase.execute(user_id);
-    return result.user;
+    const { user } = await this.listUserUseCase.execute(user_id);
+    return user;
   }
 }
