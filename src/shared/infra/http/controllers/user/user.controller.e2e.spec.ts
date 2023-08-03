@@ -25,7 +25,7 @@ describe('UserController (E2E)', () => {
   };
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
       .overrideProvider(IUserRepository)
@@ -39,9 +39,9 @@ describe('UserController (E2E)', () => {
       })
       .compile();
 
-    app = moduleFixture.createNestApplication();
-    usersRepository = moduleFixture.get<IUserRepository>(IUserRepository);
-    jwtAuthProvider = moduleFixture.get<JwtAuthProvider>(JwtAuthProvider);
+    app = module.createNestApplication();
+    usersRepository = module.get<IUserRepository>(IUserRepository);
+    jwtAuthProvider = module.get<JwtAuthProvider>(JwtAuthProvider);
 
     findByEmailMock = jest.spyOn(usersRepository, 'findByEmail');
     createUserMock = jest.spyOn(usersRepository, 'create');
