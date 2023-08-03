@@ -1,4 +1,4 @@
-import { NotFoundException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { User } from '@/user/infra/entities';
 import { IUserRepository } from '@/user/interfaces';

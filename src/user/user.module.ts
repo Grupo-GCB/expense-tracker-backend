@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { UserController } from '@/shared/infra/http/controllers';
 import { User } from '@/user/infra/entities';
-import { ListUserByIdUseCase } from '@/user/use-cases';
 import { UserRepository } from '@/user/infra/repositories';
 import { IUserRepository } from '@/user/interfaces';
-import { UserController } from '@/shared/infra/http/controllers';
+import { ListUserByIdUseCase } from '@/user/use-cases';
 
 @Module({
   imports: [
