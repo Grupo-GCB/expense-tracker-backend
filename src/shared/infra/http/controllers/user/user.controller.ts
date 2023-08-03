@@ -5,11 +5,12 @@ import {
   ApiCreatedResponse,
   ApiTags,
   ApiUnauthorizedResponse,
+  ApiOkResponse,
 } from '@nestjs/swagger';
-
-import { SignInUseCase } from '@/user/use-cases/sign-in/sign-in';
-import { UserTokenDTO } from '@/user/dto';
 import { Request, Response } from 'express';
+
+import { SignInUseCase } from '@/user/use-cases';
+import { UserTokenDTO } from '@/user/dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -34,6 +35,10 @@ export class UserController {
   @ApiCreatedResponse({
     status: HttpStatus.CREATED,
     description: 'Created',
+  })
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    description: 'Ok',
   })
   @ApiUnauthorizedResponse({
     status: HttpStatus.UNAUTHORIZED,
