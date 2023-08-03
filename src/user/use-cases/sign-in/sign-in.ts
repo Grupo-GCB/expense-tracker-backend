@@ -13,6 +13,7 @@ export class SignInUseCase {
 
   async execute(token: string): Promise<{ status: number; message: string }> {
     let userPayload: SaveUserDTO;
+
     try {
       userPayload = await this.jwtAuthProvider.decodeToken(token);
     } catch (err: any) {
@@ -21,6 +22,7 @@ export class SignInUseCase {
         reason: err.message,
       });
     }
+
     const user = await this.usersRepository.findByEmail(userPayload.email);
 
     if (!user) {
