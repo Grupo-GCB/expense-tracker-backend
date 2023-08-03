@@ -22,10 +22,6 @@ export class CreateTableWallet1690480983766 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'description',
-            type: 'varchar',
-          },
-          {
             name: 'created_at',
             type: 'timestamp',
             default: 'NOW()',
