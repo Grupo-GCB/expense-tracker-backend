@@ -3,9 +3,11 @@ import { JwtService } from '@nestjs/jwt';
 import * as jwksRsa from 'jwks-rsa';
 
 import { IDecodedTokenPayload } from '@/user/interfaces';
-import { IAuthProvider, IJwtHeader } from '@/auth/interfaces';
+import { IJwtAuthProvider, IJwtHeader } from '@/auth/interfaces';
+import { Injectable } from '@nestjs/common';
 
-export class JwtAuthProvider extends JwtService implements IAuthProvider {
+@Injectable()
+export class JwtAuthProvider extends JwtService implements IJwtAuthProvider {
   async decodeToken(jwtToken: string): Promise<SaveUserDTO> {
     const decodedHeader = this.decodeJwtHeader(jwtToken);
     const publicKey = await this.getPublicKey(decodedHeader.header.kid);
