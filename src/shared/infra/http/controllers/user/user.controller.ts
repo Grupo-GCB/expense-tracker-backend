@@ -25,8 +25,8 @@ import { User } from '@/user/infra/entities';
 @Controller('user')
 export class UserController {
   constructor(
-    private signInUseCase: SignInUseCase,
-    private listUserUseCase: ListUserByIdUseCase,
+    private readonly signInUseCase: SignInUseCase,
+    private readonly listUserUseCase: ListUserByIdUseCase,
   ) {}
 
   @Post('login')
@@ -47,7 +47,7 @@ export class UserController {
     @Req() { body }: Request<{}, {}, UserTokenDTO>,
     @Res() res: Response,
   ) {
-    const { token } = body as UserTokenDTO;
+    const { token } = body;
     const { status, message } = await this.signInUseCase.execute(token);
     return res.status(status).json({ message });
   }
