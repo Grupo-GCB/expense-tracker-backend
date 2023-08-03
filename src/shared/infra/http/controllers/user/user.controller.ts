@@ -15,7 +15,10 @@ import { UserTokenDTO } from '@/user/dto';
 @ApiTags('User')
 @Controller('user')
 export class UserController {
-  constructor(private signInUseCase: SignInUseCase) {}
+  constructor(
+    private signInUseCase: SignInUseCase,
+    private listUserUseCase: ListUserByIdUseCase,
+  ) {}
 
   @Post('login')
   @ApiOperation({ summary: 'Login do usuário' })
@@ -48,5 +51,32 @@ export class UserController {
     const { token } = body as UserTokenDTO;
     const { status, message } = await this.signInUseCase.execute(token);
     return res.status(status).json({ message });
+  }
+
+  @ApiTags('User')
+  @ApiOperation({
+    summary: 'Listar um usuário pelo ID.',
+    description: 'Esta rota permite visualizar os dados de um usuário.',
+  })
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    schema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          example: 'google-oauth2|456734566205483104315',
+        },
+      },
+    },
+  })
+  @ApiNotFoundResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Usuário não encontrado.',
+  })
+  @Get(':id')
+  async listUser(@Param('id') user_id: string): Promise<User> {
+    const result = await this.listUserUseCase.execute(user_id);
+    return result.user;
   }
 }
