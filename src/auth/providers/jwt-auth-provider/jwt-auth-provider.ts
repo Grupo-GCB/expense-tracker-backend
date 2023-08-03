@@ -19,7 +19,7 @@ export class JwtAuthProvider extends JwtService implements IAuthProvider {
       complete: true,
     }) as IJwtHeader;
 
-    if (!decodedHeader || !decodedHeader.header || !decodedHeader.header.kid) {
+    if (!decodedHeader?.header?.kid) {
       throw new Error('Cabeçalho de token inválido.');
     }
 
