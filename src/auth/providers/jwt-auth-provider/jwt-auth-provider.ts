@@ -21,7 +21,10 @@ export class JwtAuthProvider extends JwtService implements IAuthProvider {
       complete: true,
     }) as IJwtHeader;
 
-    if (!decodedHeader || !decodedHeader.header || !decodedHeader.header.kid) {
+    const isDecodedHeaderValid =
+      !decodedHeader || !decodedHeader.header || !decodedHeader.header.kid;
+
+    if (isDecodedHeaderValid) {
       throw new Error('Cabeçalho de token inválido.');
     }
 
