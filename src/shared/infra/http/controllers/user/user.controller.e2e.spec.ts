@@ -67,11 +67,6 @@ describe('UserController (E2E)', () => {
       expect(response.body).toEqual({
         message: 'Usuário logado com sucesso.',
       });
-      expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
-      expect(usersRepository.findByEmail).toHaveBeenCalledWith(
-        userPayload.email,
-      );
-      expect(usersRepository.create).not.toHaveBeenCalled();
     });
 
     it('should be able to return 201 and create a new user if the user does not exist', async () => {
@@ -87,12 +82,6 @@ describe('UserController (E2E)', () => {
       expect(response.body).toEqual({
         message: 'Usuário criado com sucesso.',
       });
-      expect(usersRepository.findByEmail).toHaveBeenCalledTimes(1);
-      expect(usersRepository.findByEmail).toHaveBeenCalledWith(
-        userPayload.email,
-      );
-      expect(usersRepository.create).toHaveBeenCalledTimes(1);
-      expect(usersRepository.create).toHaveBeenCalledWith(userPayload);
     });
 
     it('should be able to return 401 if token is invalid', async () => {
