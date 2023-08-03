@@ -15,7 +15,7 @@ export class JwtAuthProvider extends JwtService implements IAuthProvider {
       throw new Error('Cabeçalho de token inválido.');
 
     const jwksClient = jwksRsa({
-      jwksUri: 'https://gcb-academy.us.auth0.com/.well-known/jwks.json',
+      jwksUri: process.env.JWKS_URI,
     });
 
     const signingKey = await jwksClient.getSigningKey(decodedHeader.header.kid);
