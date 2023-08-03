@@ -9,7 +9,7 @@ import { IUserRepository } from '@/user/interfaces';
 import { AuthModule } from '@/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, UserRepository]), AuthModule],
+  imports: [TypeOrmModule.forFeature([User]), AuthModule],
   controllers: [UserController],
   providers: [
     ListUserByIdUseCase,
