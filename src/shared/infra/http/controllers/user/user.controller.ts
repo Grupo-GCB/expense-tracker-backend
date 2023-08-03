@@ -43,8 +43,7 @@ export class UserController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  async create(@Req() { body }: Request, @Res() res: Response) {
-    const { token } = body as UserTokenDTO;
+  async create(@Req() { token }: UserTokenDTO, @Res() res: Response) {
     const { status, message } = await this.signInUseCase.execute(token);
     return res.status(status).json({ message });
   }
