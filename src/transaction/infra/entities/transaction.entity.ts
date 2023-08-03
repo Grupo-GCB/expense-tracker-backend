@@ -1,16 +1,16 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
-  UpdateDateColumn,
-  DeleteDateColumn,
   CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
   Relation,
+  UpdateDateColumn,
 } from 'typeorm';
 
-import { Wallet } from '@/wallet/infra/entities';
 import { Categories, TransactionType } from '@/shared/constants/enums';
+import { Wallet } from '@/wallet/infra/entities';
 
 @Entity()
 export class Transaction {

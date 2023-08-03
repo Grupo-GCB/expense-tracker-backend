@@ -1,10 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
 
-import { IDecodedTokenPayload, IUserRepository } from '@/user/interfaces';
 import { SaveUserDTO } from '@/user/dto';
 import { User } from '@/user/infra/entities';
+import { IDecodedTokenPayload, IUserRepository } from '@/user/interfaces';
 import { SignInUseCase } from '@/user/use-cases';
 
 describe('Sign In Use Case', () => {
