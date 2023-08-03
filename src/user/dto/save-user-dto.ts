@@ -6,7 +6,7 @@ export class SaveUserDTO {
   @IsString({ message: 'Id deve ser uma string.' })
   @ApiProperty({
     example: 'auth0|58vfb567d5asdea52bc65ebba',
-    description: 'Id do usuário',
+    description: 'Id do usuário.',
     type: 'string',
     required: true,
   })
@@ -16,7 +16,7 @@ export class SaveUserDTO {
   @IsString({ message: 'Nome deve ser uma string.' })
   @ApiProperty({
     example: 'John Doe',
-    description: 'Nome do usuário',
+    description: 'Nome do usuário.',
     type: 'string',
     required: true,
   })
@@ -27,7 +27,7 @@ export class SaveUserDTO {
   @IsEmail({}, { message: 'Deve ser um e-mail válido.' })
   @ApiProperty({
     example: 'john.doe@example.com',
-    description: 'Email do usuário',
+    description: 'Email do usuário.',
     type: 'string',
     required: true,
   })

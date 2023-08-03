@@ -1,42 +1,33 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 
-import { SaveUserDTO } from '@/user/dto';
-import { IDecodedTokenPayload, IUserRepository } from '@/user/interfaces';
+import { IUserRepository } from '@/user/interfaces';
+import { IJwtAuthProvider } from '@/auth/interfaces';
+import { ISignInResponse } from '@/user/interfaces/sign-in-response';
 
 @Injectable()
 export class SignInUseCase {
   constructor(
     private usersRepository: IUserRepository,
-    private jwtService: JwtService,
+    private jwtAuthProvider: IJwtAuthProvider,
   ) {}
 
-  private async decodeToken(jwtToken: string): Promise<SaveUserDTO> {
-    const secret = process.env.AUTH0_CLIENT_SECRET;
-
+  async execute(token: string): Promise<ISignInResponse> {
     try {
-      const { sub, name, email } =
-        await this.jwtService.verifyAsync<IDecodedTokenPayload>(jwtToken, {
-          secret,
-        });
+      const userPayload = await this.jwtAuthProvider.decodeToken(token);
 
-      const userPayload: SaveUserDTO = {
-        id: sub,
-        name,
-        email,
-      };
+      const user = await this.usersRepository.findByEmail(userPayload.email);
 
-      return userPayload;
-    } catch (err) {
-      throw new UnauthorizedException('Token inválido.');
+      if (!user) {
+        await this.usersRepository.create(userPayload);
+        return { status: 201, message: 'Usuário criado com sucesso.' };
+      }
+
+      return { status: 200, message: 'Usuário logado com sucesso.' };
+    } catch (err: any) {
+      throw new UnauthorizedException({
+        message: 'Token inválido.',
+        reason: err.message,
+      });
     }
-  }
-
-  async execute(token: string): Promise<void> {
-    const userPayload = await this.decodeToken(token);
-
-    const user = await this.usersRepository.findByEmail(userPayload.email);
-
-    if (!user) await this.usersRepository.create(userPayload);
   }
 }

@@ -9,6 +9,7 @@ const config: Config.InitialOptions = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  clearMocks: true,
 };
 
 export default config;

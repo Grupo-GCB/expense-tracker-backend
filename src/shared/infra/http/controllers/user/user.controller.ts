@@ -1,17 +1,56 @@
-import { Controller, Get, HttpStatus, Param } from '@nestjs/common';
 import {
-  ApiNotFoundResponse,
-  ApiOkResponse,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
+import {
   ApiOperation,
+  ApiCreatedResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
+  ApiOkResponse,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger';
+import { Request, Response } from 'express';
 
+import { ListUserByIdUseCase, SignInUseCase } from '@/user/use-cases';
+import { UserTokenDTO } from '@/user/dto';
 import { User } from '@/user/infra/entities';
-import { ListUserByIdUseCase } from '@/user/use-cases';
 
+@ApiTags('User')
 @Controller('user')
 export class UserController {
-  constructor(private readonly listUserUseCase: ListUserByIdUseCase) {}
+  constructor(
+    private readonly signInUseCase: SignInUseCase,
+    private readonly listUserUseCase: ListUserByIdUseCase,
+  ) {}
+
+  @Post('login')
+  @ApiOperation({ summary: 'Login do usuário' })
+  @ApiCreatedResponse({
+    status: HttpStatus.CREATED,
+    description: 'Created',
+  })
+  @ApiOkResponse({
+    status: HttpStatus.OK,
+    description: 'Ok',
+  })
+  @ApiUnauthorizedResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized',
+  })
+  async signIn(
+    @Req() { body }: Request<{}, {}, UserTokenDTO>,
+    @Res() res: Response,
+  ) {
+    const { token } = body;
+    const { status, message } = await this.signInUseCase.execute(token);
+    return res.status(status).json({ message });
+  }
 
   @ApiTags('User')
   @ApiOperation({
