@@ -1,16 +1,25 @@
-import { Controller, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
 import {
   ApiOperation,
-  ApiBody,
   ApiCreatedResponse,
   ApiTags,
   ApiUnauthorizedResponse,
   ApiOkResponse,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
-import { SignInUseCase } from '@/user/use-cases';
+import { ListUserByIdUseCase, SignInUseCase } from '@/user/use-cases';
 import { UserTokenDTO } from '@/user/dto';
+import { User } from '@/user/infra/entities';
 
 @ApiTags('User')
 @Controller('user')
@@ -22,19 +31,6 @@ export class UserController {
 
   @Post('login')
   @ApiOperation({ summary: 'Login do usuário' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        token: {
-          type: 'string',
-          example:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI56465xMjM0NTY3ODkAsdASAdasbdwIiwibmFtZSI6IkpsasSsefguiefhvj0JAShghfgpR23457HgaFG34934IV9SDV3sssADTNHYNÇGHv&TIF45TJ56I7TVI7ISXAAWFcasxcatjAcx3vaG4gRG9GJK5667lIitrrtFASDFku5wiaWFsdfsdc0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
-        },
-      },
-      required: ['token'],
-    },
-  })
   @ApiCreatedResponse({
     status: HttpStatus.CREATED,
     description: 'Created',
