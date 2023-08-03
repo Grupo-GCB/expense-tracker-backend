@@ -1,16 +1,17 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { IUserRepository } from '@/user/interfaces';
-import { JwtAuthProvider } from '@/auth/providers';
+import { IJwtAuthProvider } from '@/auth/interfaces';
+import { ISignInResponse } from '@/user/interfaces/sign-in-response';
 
 @Injectable()
 export class SignInUseCase {
   constructor(
     private usersRepository: IUserRepository,
-    private jwtAuthProvider: JwtAuthProvider,
+    private jwtAuthProvider: IJwtAuthProvider,
   ) {}
 
-  async execute(token: string): Promise<{ status: number; message: string }> {
+  async execute(token: string): Promise<ISignInResponse> {
     try {
       const userPayload = await this.jwtAuthProvider.decodeToken(token);
 
