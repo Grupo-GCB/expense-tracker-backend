@@ -58,7 +58,7 @@ describe('Sign In Use Case', () => {
   const token = 'valid-jwt-token';
   const invalidToken = 'invalid-jwt-token';
 
-  it('should return 200 if user already exists', async () => {
+  it('should be able to return a success response if user already exists.', async () => {
     findByEmailMock.mockResolvedValue(userPayload.email);
 
     const result = await signInUseCase.execute(token);
