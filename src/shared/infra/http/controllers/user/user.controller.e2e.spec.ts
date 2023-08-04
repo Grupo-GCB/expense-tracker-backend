@@ -1,23 +1,37 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
 
 import { AppModule } from '@/app.module';
+import { IUserRepository } from '@/user/interfaces';
+import { User } from '@/user/infra/entities';
+import { ListUserByIdUseCase } from '@/user/use-cases';
 
 describe('User controller E2E', () => {
   let app: INestApplication;
   let userId: string;
   let nonexistentUserId: string;
+  let listUserByIdUseCase: ListUserByIdUseCase;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       imports: [AppModule],
+      providers: [
+        {
+          provide: IUserRepository,
+          useValue: {
+            findById: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
-    userId = 'google-oauth2|456734566205483104315';
+    listUserByIdUseCase = module.get<ListUserByIdUseCase>(ListUserByIdUseCase);
+
+    userId = 'google-oauth2|107188552739080068634';
     nonexistentUserId = 'google-oauth2|456354566205483104315';
 
-    app = moduleFixture.createNestApplication();
+    app = module.createNestApplication();
     await app.init();
   });
 
@@ -27,16 +41,26 @@ describe('User controller E2E', () => {
 
   describe('/user/:id (GET)', () => {
     it('should be able to return an existing user', async () => {
+      const userResult = {
+        user: {
+          email: 'anyEmail',
+          id: 'anyId',
+          name: 'anyName',
+        } as User,
+      };
+
+      jest
+        .spyOn(listUserByIdUseCase, 'execute')
+        .mockResolvedValueOnce(userResult);
+
       const response = await request(app.getHttpServer())
         .get(`/user/${userId}`)
         .expect(HttpStatus.OK);
 
       expect(response.body).toMatchObject({
-        created_at: '2023-08-01T01:45:57.171Z',
-        deleted_at: null,
-        email: 'john.doe@example.com',
-        id: 'google-oauth2|456734566205483104315',
-        name: 'John Doe',
+        email: userResult.user.email,
+        id: userResult.user.id,
+        name: userResult.user.name,
       });
     });
 

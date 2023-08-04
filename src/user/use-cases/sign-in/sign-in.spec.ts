@@ -4,12 +4,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SaveUserDTO } from '@/user/dto';
 import { IDecodedTokenPayload, IUserRepository } from '@/user/interfaces';
 import { SignInUseCase } from '@/user/use-cases';
-import { JwtAuthProvider } from '@/auth/providers';
+import { IJwtAuthProvider } from '@/auth/interfaces';
 
 describe('Sign In Use Case', () => {
   let signInUseCase: SignInUseCase;
   let usersRepository: IUserRepository;
-  let jwtAuthProvider: JwtAuthProvider;
+  let jwtAuthProvider: IJwtAuthProvider;
   let findByEmailMock: jest.SpyInstance;
   let createUserMock: jest.SpyInstance;
   let decodeTokenMock: jest.SpyInstance;
@@ -28,7 +28,7 @@ describe('Sign In Use Case', () => {
           },
         },
         {
-          provide: JwtAuthProvider,
+          provide: IJwtAuthProvider,
           useValue: {
             decodeToken: jest.fn(),
           },
@@ -38,7 +38,7 @@ describe('Sign In Use Case', () => {
 
     signInUseCase = module.get<SignInUseCase>(SignInUseCase);
     usersRepository = module.get<IUserRepository>(IUserRepository);
-    jwtAuthProvider = module.get<JwtAuthProvider>(JwtAuthProvider);
+    jwtAuthProvider = module.get<IJwtAuthProvider>(IJwtAuthProvider);
 
     userPayload = {
       sub: 'auth0|58vfb567d5asdea52bc65ebba',
