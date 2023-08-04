@@ -56,7 +56,6 @@ describe('User controller E2E', () => {
       const response = await request(app.getHttpServer())
         .get(`/user/${userId}`)
         .expect(HttpStatus.OK);
-      console.log(userResult);
 
       expect(response.body).toMatchObject({
         email: userResult.user.email,
