@@ -17,6 +17,8 @@ describe('UserController (E2E)', () => {
   let findByEmailMock: jest.SpyInstance;
   let createUserMock: jest.SpyInstance;
   let decodeTokenMock: jest.SpyInstance;
+  let userId: string;
+  let nonexistentUserId: string;
 
   const userPayload: Pick<IDecodedTokenPayload, 'sub' | 'name' | 'email'> = {
     sub: 'auth0|58vfb567d5asdea52bc65ebba',
@@ -38,6 +40,9 @@ describe('UserController (E2E)', () => {
         decodeToken: jest.fn(),
       })
       .compile();
+
+    userId = 'google-oauth2|456734566205483104315';
+    nonexistentUserId = 'google-oauth2|456354566205483104315';
 
     app = module.createNestApplication();
     usersRepository = module.get<IUserRepository>(IUserRepository);
@@ -94,6 +99,29 @@ describe('UserController (E2E)', () => {
         .send({ token: 'invalid-jwt-token' })
 
         .expect(HttpStatus.UNAUTHORIZED);
+    });
+  });
+
+  describe('/user/:id (GET)', () => {
+    it('should be able to return an existing user', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/user/${userId}`)
+        .expect(HttpStatus.OK);
+
+      expect(response.body).toMatchObject({
+        created_at: '2023-08-01T01:45:57.171Z',
+        deleted_at: null,
+        email: 'john.doe@example.com',
+        id: 'google-oauth2|456734566205483104315',
+        name: 'John Doe',
+      });
+    });
+
+    it('should be able to return 404 for a nonexistent user', async () => {
+      await request(app.getHttpServer())
+        .get(`/user/${nonexistentUserId}`)
+
+        .expect(HttpStatus.NOT_FOUND);
     });
   });
 });

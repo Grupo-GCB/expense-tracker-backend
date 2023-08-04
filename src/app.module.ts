@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserModule } from '@/user/user.module';
 import { BankModule } from '@/bank/bank.module';
 import { BudgetGoal } from '@/budget-goal/infra/entities';
 import { Transaction } from '@/transaction/infra/entities';
+import { UserModule } from '@/user/user.module';
 import { Wallet } from '@/wallet/infra/entities';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -30,9 +31,9 @@ import { Wallet } from '@/wallet/infra/entities';
     BankModule,
     BudgetGoal,
     Transaction,
+    AuthModule,
     Wallet,
   ],
-  controllers: [],
   providers: [],
 })
 export class AppModule {}

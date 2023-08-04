@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
 
-import { JwtAuthProvider } from './providers/jwt-auth-provider/jwt-auth-provider';
-import { IAuthProvider } from './interfaces';
+import { JwtAuthProvider } from '@/auth/providers';
+import { IJwtAuthProvider } from '@/auth/interfaces';
 
 @Module({
   providers: [
-    JwtAuthProvider,
-    { provide: IAuthProvider, useClass: JwtAuthProvider },
+    {
+      provide: IJwtAuthProvider,
+      useClass: JwtAuthProvider,
+    },
   ],
-  exports: [JwtAuthProvider],
+  exports: [IJwtAuthProvider],
 })
 export class AuthModule {}

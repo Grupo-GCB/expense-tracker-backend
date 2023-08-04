@@ -3,29 +3,19 @@ import { JwtService } from '@nestjs/jwt';
 import * as jwksRsa from 'jwks-rsa';
 
 import { IDecodedTokenPayload } from '@/user/interfaces';
-import { IAuthProvider } from '@/auth/interfaces';
+import { IJwtAuthProvider, IJwtHeader } from '@/auth/interfaces';
+import { Injectable } from '@nestjs/common';
 
-export class JwtAuthProvider extends JwtService implements IAuthProvider {
+@Injectable()
+export class JwtAuthProvider extends JwtService implements IJwtAuthProvider {
   async decodeToken(jwtToken: string): Promise<SaveUserDTO> {
-    const decodedHeader = this.decode(jwtToken, {
-      complete: true,
-    });
-
-    if (typeof decodedHeader === 'string')
-      throw new Error('Cabeçalho de token inválido.');
-
-    const jwksClient = jwksRsa({
-      jwksUri: 'https://gcb-academy.us.auth0.com/.well-known/jwks.json',
-    });
-
-    const signingKey = await jwksClient.getSigningKey(decodedHeader.header.kid);
-    const publicKey = signingKey.getPublicKey();
+    const decodedHeader = this.decodeJwtHeader(jwtToken);
+    const publicKey = await this.getPublicKey(decodedHeader.header.kid);
 
     const { sub, name, email } = await this.verifyAsync<IDecodedTokenPayload>(
       jwtToken,
       {
         publicKey,
-        algorithms: ['RS256'],
       },
     );
 
@@ -34,5 +24,27 @@ export class JwtAuthProvider extends JwtService implements IAuthProvider {
       name,
       email,
     };
+  }
+
+  private decodeJwtHeader(jwtToken: string): IJwtHeader {
+    const decodedHeader = this.decode(jwtToken, {
+      complete: true,
+    }) as IJwtHeader;
+
+    if (!decodedHeader?.header?.kid) {
+      throw new Error('Cabeçalho de token inválido.');
+    }
+
+    return decodedHeader;
+  }
+
+  private async getPublicKey(kid: string): Promise<string> {
+    const jwksClient = jwksRsa({
+      jwksUri: process.env.JWKS_URI,
+    });
+
+    const signInKey = await jwksClient.getSigningKey(kid);
+
+    return signInKey.getPublicKey();
   }
 }

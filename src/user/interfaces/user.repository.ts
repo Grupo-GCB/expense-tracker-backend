@@ -1,5 +1,5 @@
-import { User } from '@/user/infra/entities';
 import { SaveUserDTO } from '@/user/dto';
+import { User } from '@/user/infra/entities';
 
 export abstract class IUserRepository {
   abstract create(data: SaveUserDTO): Promise<User>;
