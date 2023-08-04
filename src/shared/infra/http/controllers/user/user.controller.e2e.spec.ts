@@ -4,12 +4,14 @@ import * as request from 'supertest';
 
 import { AppModule } from '@/app.module';
 import { IUserRepository } from '@/user/interfaces';
+import { User } from '@/user/infra/entities';
+import { ListUserByIdUseCase } from '@/user/use-cases';
 
 describe('User controller E2E', () => {
   let app: INestApplication;
   let userId: string;
   let nonexistentUserId: string;
-  let usersRepository: IUserRepository;
+  let listUserByIdUseCase: ListUserByIdUseCase;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -24,7 +26,7 @@ describe('User controller E2E', () => {
       ],
     }).compile();
 
-    usersRepository = module.get<IUserRepository>(IUserRepository);
+    listUserByIdUseCase = module.get<ListUserByIdUseCase>(ListUserByIdUseCase);
 
     userId = 'google-oauth2|107188552739080068634';
     nonexistentUserId = 'google-oauth2|456354566205483104315';
@@ -39,16 +41,27 @@ describe('User controller E2E', () => {
 
   describe('/user/:id (GET)', () => {
     it('should be able to return an existing user', async () => {
+      const userResult = {
+        user: {
+          email: 'anyEmail',
+          id: 'anyId',
+          name: 'anyName',
+        } as User,
+      };
+
+      jest
+        .spyOn(listUserByIdUseCase, 'execute')
+        .mockResolvedValueOnce(userResult);
+
       const response = await request(app.getHttpServer())
         .get(`/user/${userId}`)
         .expect(HttpStatus.OK);
-
-      const userResult = await usersRepository.findById(userId);
+      console.log(userResult);
 
       expect(response.body).toMatchObject({
-        email: userResult.email,
-        id: userResult.id,
-        name: userResult.name,
+        email: userResult.user.email,
+        id: userResult.user.id,
+        name: userResult.user.name,
       });
     });
 
