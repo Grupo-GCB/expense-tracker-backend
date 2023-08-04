@@ -5,11 +5,12 @@ const config: Config.InitialOptions = {
   testEnvironment: 'node',
   testMatch: ['**/*.spec.ts'],
   collectCoverage: true,
-  coverageReporters: ['lcov', 'text'],
+  coverageReporters: ['lcov', 'text', 'text-summary'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   clearMocks: true,
+  displayName: 'expense-tracker-backend',
 };
 
 export default config;
