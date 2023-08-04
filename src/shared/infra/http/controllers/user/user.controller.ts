@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  HttpCode,
   HttpStatus,
   Param,
   Post,
@@ -9,7 +10,6 @@ import {
 } from '@nestjs/common';
 import {
   ApiOperation,
-  ApiCreatedResponse,
   ApiTags,
   ApiUnauthorizedResponse,
   ApiOkResponse,
@@ -31,16 +31,13 @@ export class UserController {
 
   @Post('login')
   @ApiOperation({ summary: 'Login do usuário' })
-  @ApiCreatedResponse({
-    status: HttpStatus.CREATED,
-    description: 'Created',
-  })
+  @HttpCode(HttpStatus.CREATED)
   @ApiOkResponse({
-    status: HttpStatus.OK,
-    description: 'Ok',
+    schema: { type: 'object', properties: { message: { type: 'string' } } },
   })
   @ApiUnauthorizedResponse({
     status: HttpStatus.UNAUTHORIZED,
+
     description: 'Unauthorized',
   })
   async signIn(
