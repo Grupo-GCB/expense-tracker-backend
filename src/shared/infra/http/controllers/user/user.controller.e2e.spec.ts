@@ -43,9 +43,9 @@ describe('User controller E2E', () => {
     it('should be able to return an existing user', async () => {
       const userResult = {
         user: {
-          email: 'anyEmail',
-          id: 'anyId',
-          name: 'anyName',
+          id: 'auth0|58vfb567d5asdea52bc65ebba',
+          name: 'John Doe',
+          email: 'john.doe@example.com',
         } as User,
       };
 
