@@ -8,12 +8,12 @@ import * as request from 'supertest';
 
 import { AppModule } from '@/app.module';
 import { IUserRepository, IDecodedTokenPayload } from '@/user/interfaces';
-import { JwtAuthProvider } from '@/auth/providers';
+import { IJwtAuthProvider } from '@/auth/interfaces';
 
 describe('UserController (E2E)', () => {
   let app: INestApplication;
   let usersRepository: IUserRepository;
-  let jwtAuthProvider: JwtAuthProvider;
+  let jwtAuthProvider: IJwtAuthProvider;
   let findByEmailMock: jest.SpyInstance;
   let createUserMock: jest.SpyInstance;
   let decodeTokenMock: jest.SpyInstance;
@@ -34,8 +34,9 @@ describe('UserController (E2E)', () => {
       .useValue({
         findByEmail: jest.fn(),
         create: jest.fn(),
+        findById: jest.fn(),
       })
-      .overrideProvider(JwtAuthProvider)
+      .overrideProvider(IJwtAuthProvider)
       .useValue({
         decodeToken: jest.fn(),
       })
@@ -46,7 +47,7 @@ describe('UserController (E2E)', () => {
 
     app = module.createNestApplication();
     usersRepository = module.get<IUserRepository>(IUserRepository);
-    jwtAuthProvider = module.get<JwtAuthProvider>(JwtAuthProvider);
+    jwtAuthProvider = module.get<IJwtAuthProvider>(IJwtAuthProvider);
 
     findByEmailMock = jest.spyOn(usersRepository, 'findByEmail');
     createUserMock = jest.spyOn(usersRepository, 'create');
