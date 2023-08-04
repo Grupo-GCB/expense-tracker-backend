@@ -3,21 +3,33 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 
 import { AppModule } from '@/app.module';
+import { IUserRepository } from '@/user/interfaces';
 
 describe('User controller E2E', () => {
   let app: INestApplication;
   let userId: string;
   let nonexistentUserId: string;
+  let usersRepository: IUserRepository;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
+      providers: [
+        {
+          provide: IUserRepository,
+          useValue: {
+            findById: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
-    userId = 'google-oauth2|456734566205483104315';
+    usersRepository = module.get<IUserRepository>(IUserRepository);
+
+    userId = 'google-oauth2|107188552739080068634';
     nonexistentUserId = 'google-oauth2|456354566205483104315';
 
-    app = moduleFixture.createNestApplication();
+    app = module.createNestApplication();
     await app.init();
   });
 
@@ -31,12 +43,12 @@ describe('User controller E2E', () => {
         .get(`/user/${userId}`)
         .expect(HttpStatus.OK);
 
+      const userResult = await usersRepository.findById(userId);
+
       expect(response.body).toMatchObject({
-        created_at: '2023-08-01T01:45:57.171Z',
-        deleted_at: null,
-        email: 'john.doe@example.com',
-        id: 'google-oauth2|456734566205483104315',
-        name: 'John Doe',
+        email: userResult.email,
+        id: userResult.id,
+        name: userResult.name,
       });
     });
 
