@@ -12,4 +12,10 @@ export class SaveWalletDTO {
 
   @IsNotEmpty({ message: 'Necessário informar a descrição.' })
   description: string;
+
+  @IsNotEmpty({ message: 'Necessário informar o id do banco.' })
+  bankId: string;
+
+  @IsNotEmpty({ message: 'Necessário informar o id do usuário.' })
+  userId: string;
 }
