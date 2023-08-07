@@ -9,7 +9,7 @@ import { Transaction } from '@/transaction/infra/entities';
 import { UserModule } from '@/user/user.module';
 import { Wallet } from '@/wallet/infra/entities';
 import { AuthModule } from '@/auth/auth.module';
-import databaseConfig from '@/shared/ultils/database-config';
+import databaseConfig from '@/shared/utils/database-config';
 
 @Module({
   imports: [
