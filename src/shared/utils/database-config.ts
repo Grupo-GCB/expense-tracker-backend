@@ -1,5 +1,6 @@
-import { IDatabaseConfig } from '@/shared/interfaces';
 import 'dotenv/config';
+
+import { IDatabaseConfig } from '@/shared/interfaces';
 
 const env = process.env.NODE_ENV;
 let databaseConfig: IDatabaseConfig;
