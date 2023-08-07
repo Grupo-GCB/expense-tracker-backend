@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  expense-tracker-dev:
+    image: bitnami/postgresql
+    ports:
+      - ${DB_PORT_DEV}:5432
+    environment:
+      - POSTGRESQL_USERNAME=${DB_USER_DEV}
+      - POSTGRESQL_PASSWORD=${DB_PASSWORD_DEV}
+      - POSTGRESQL_DATABASE=${DB_NAME_DEV}
+
+
+
+# sudo docker run --name expense-tracker-dev-pg 
+# -e POSTGRESQL_USERNAME=academy-dev 
+# -e POSTGRESQL_PASSWORD=academy-dev 
+# -e POSTGRESQL_DATABASE=expense-tracker-dev 
+# -p 5431:5432 bitnami/postgresql 
