@@ -1,4 +1,4 @@
-import { IDatabaseConfig } from '../interfaces';
+import { IDatabaseConfig } from '@/shared/interfaces';
 import 'dotenv/config';
 
 const env = process.env.NODE_ENV;
