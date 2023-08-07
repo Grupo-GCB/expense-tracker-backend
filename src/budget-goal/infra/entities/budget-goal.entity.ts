@@ -1,18 +1,18 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  PrimaryColumn,
 } from 'typeorm';
 
 import { User } from '@/user/infra/entities';
 
 @Entity()
 export class BudgetGoal {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
 
   @Column()

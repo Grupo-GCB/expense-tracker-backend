@@ -1,19 +1,19 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
   Relation,
+  PrimaryColumn,
 } from 'typeorm';
 
 import { Wallet } from '@/wallet/infra/entities';
 
 @Entity()
 export class Bank {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
 
   @Column({ unique: true })

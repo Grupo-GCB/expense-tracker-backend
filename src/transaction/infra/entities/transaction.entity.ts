@@ -1,12 +1,12 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   ManyToOne,
   UpdateDateColumn,
   DeleteDateColumn,
   CreateDateColumn,
   Relation,
+  PrimaryColumn,
 } from 'typeorm';
 
 import { Wallet } from '@/wallet/infra/entities';
@@ -14,7 +14,7 @@ import { Categories, TransactionType } from '@/shared/constants';
 
 @Entity()
 export class Transaction {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
 
   @Column()

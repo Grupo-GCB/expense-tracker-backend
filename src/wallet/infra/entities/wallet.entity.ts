@@ -1,6 +1,5 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   ManyToOne,
   OneToMany,
@@ -8,6 +7,7 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   Relation,
+  PrimaryColumn,
 } from 'typeorm';
 
 import { User } from '@/user/infra/entities';
@@ -17,7 +17,7 @@ import { AccountType } from '@/shared/constants';
 
 @Entity()
 export class Wallet {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
 
   @Column()
