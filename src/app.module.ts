@@ -7,7 +7,8 @@ import { BudgetGoal } from '@/budget-goal/infra/entities';
 import { Transaction } from '@/transaction/infra/entities';
 import { UserModule } from '@/user/user.module';
 import { Wallet } from '@/wallet/infra/entities';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from '@/auth/auth.module';
+import { WalletModule } from '@/wallet/wallet.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AuthModule } from './auth/auth.module';
       migrationsRun: true,
     }),
     UserModule,
+    WalletModule,
     BankModule,
     BudgetGoal,
     Transaction,
