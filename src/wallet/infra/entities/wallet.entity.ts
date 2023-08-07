@@ -29,9 +29,6 @@ export class Wallet {
   @Column()
   description: string;
 
-  @Column()
-  verification_code: string;
-
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
