@@ -7,4 +7,4 @@ import { BudgetGoal } from '@/budget-goal/infra/entities';
   imports: [TypeOrmModule.forFeature([BudgetGoal])],
   controllers: [],
 })
-export class BankModule {}
+export class BudgetGoalModule {}

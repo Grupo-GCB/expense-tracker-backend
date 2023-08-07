@@ -7,4 +7,4 @@ import { Transaction } from '@/transaction/infra/entities';
   imports: [TypeOrmModule.forFeature([Transaction])],
   controllers: [],
 })
-export class UserModule {}
+export class TransactionModule {}
