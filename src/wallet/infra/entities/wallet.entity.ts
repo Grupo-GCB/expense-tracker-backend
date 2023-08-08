@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -38,11 +39,13 @@ export class Wallet {
   @DeleteDateColumn({ default: null })
   deleted_at?: Date;
 
-  @ManyToOne(() => Bank, (bank) => bank.wallet)
-  bank: Relation<Bank>;
+  @ManyToOne(() => Bank)
+  @JoinColumn({ name: 'bank_id' })
+  bank: Bank;
 
-  @ManyToOne(() => User, (user) => user.wallet)
-  user: Relation<User>;
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @OneToMany(() => Transaction, (transaction) => transaction.wallet)
   transactions: Relation<Transaction[]>;
