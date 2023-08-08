@@ -3,9 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Bank } from '@/bank/infra/entities';
 import { BankController } from '@/shared/infra/http/controllers';
-import { FindBankByIdUseCase } from './use-cases';
-import { IBankRepository } from './interfaces';
-import { BankRepository } from './infra/repositories';
+import { FindBankByIdUseCase } from '@/bank/use-cases';
+import { IBankRepository } from '@/bank/interfaces';
+import { BankRepository } from '@/bank/infra/repositories';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Bank])],
