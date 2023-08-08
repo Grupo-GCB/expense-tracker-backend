@@ -4,13 +4,14 @@ import {
   ApiOperation,
   ApiOkResponse,
   ApiBadRequestResponse,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger';
 
 import { RegisterWalletUseCase } from '@/wallet/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 import { SaveWalletDTO } from '@/wallet/dto';
 
-import { API_RESPONSE_OK, API_NOT_FOUND_RESPONSE } from '@/shared/constants/';
+import { API_RESPONSES } from '@/shared/constants/';
 
 @ApiTags('Wallet')
 @Controller('wallet')
@@ -22,14 +23,10 @@ export class WalletController {
     summary: 'Registrar uma carteira.',
     description: 'Esta rota permite registrar uma carteira de um usuário.',
   })
-  @ApiOkResponse({
-    ...API_RESPONSE_OK,
-    type: Wallet,
-  })
-  @ApiBadRequestResponse({
-    ...API_NOT_FOUND_RESPONSE,
-    ...API_NOT_FOUND_RESPONSE,
-  })
+  @ApiOkResponse(API_RESPONSES.OK)
+  @ApiBadRequestResponse(API_RESPONSES.BAD_REQUEST)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async createWallet(@Body() walletData: SaveWalletDTO): Promise<Wallet> {
     return this.walletUseCase.createWallet(walletData);
   }

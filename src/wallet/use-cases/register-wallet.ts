@@ -1,10 +1,15 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { IWalletRepository } from '@/wallet/interfaces';
 import { SaveWalletDTO } from '@/wallet/dto';
 import { Wallet } from '@/wallet/infra/entities';
 import { ListUserByIdUseCase } from '@/user/use-cases';
 import { FindBankByIdUseCase } from '@/bank/use-cases/';
+import { AccountType } from '@/shared/constants';
 
 @Injectable()
 export class RegisterWalletUseCase {
@@ -14,15 +19,22 @@ export class RegisterWalletUseCase {
     private readonly findBankByIdUseCase: FindBankByIdUseCase,
   ) {}
 
-  async createWallet(data: SaveWalletDTO): Promise<Wallet> {
-    const user = await this.listUserByIdUseCase.execute(data.user_id);
-    if (!user) throw new BadRequestException('Usuário não encontrado.');
+  async createWallet({ user_id, bank_id }): Promise<Wallet> {
+    const user = await this.listUserByIdUseCase.execute(user_id);
+    if (!user) throw new NotFoundException('Usuário não encontrado.');
 
-    const bank = await this.findBankByIdUseCase.execute(data.bank_id);
-    if (!bank) throw new BadRequestException('Banco não encontrado.');
+    const bank = await this.findBankByIdUseCase.execute(bank_id);
+    if (!bank) throw new NotFoundException('Banco não encontrado.');
+
+    const saveWalletDTO: SaveWalletDTO = {
+      user_id,
+      bank_id,
+      account_type: AccountType.CHECKING_ACCOUNT,
+      description: 'Descrição da carteira',
+    };
 
     try {
-      return this.walletRepository.create(data);
+      return this.walletRepository.create(saveWalletDTO);
     } catch {
       throw new BadRequestException('Erro ao criar a carteira.');
     }

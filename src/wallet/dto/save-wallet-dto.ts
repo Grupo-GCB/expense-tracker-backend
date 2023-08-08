@@ -27,14 +27,14 @@ export class SaveWalletDTO {
 
   @ApiProperty({
     example: '4e8b5d94-6b16-4a42-b6d1-dc58b553d109',
-    description: 'ID do banco associado à carteira.',
+    description: 'Id do banco associado à carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id do banco.' })
   bank_id: string;
 
   @ApiProperty({
     example: 'auth0|58vfb567d5asdea52bc65ebba',
-    description: 'ID do usuário proprietário da carteira.',
+    description: 'Id do usuário proprietário da carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id do usuário.' })
   user_id: string;
