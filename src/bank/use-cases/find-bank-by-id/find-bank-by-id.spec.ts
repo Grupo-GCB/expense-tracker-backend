@@ -39,4 +39,12 @@ describe('Find Bank by Id', () => {
     expect(bankRepository.findById).toHaveBeenCalledWith(bankId);
     expect(bankRepository.findById).toHaveBeenCalledTimes(1);
   });
+
+  it('should not be able to return a bank', async () => {
+    bankRepository.findById.mockResolvedValueOnce(null);
+
+    await expect(
+      findBankById.execute(nonExistentBankId),
+    ).rejects.toBeInstanceOf(NotFoundException);
+  });
 });
