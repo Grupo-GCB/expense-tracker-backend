@@ -10,9 +10,7 @@ export class GetBankByIdUseCase {
   async execute(id: string): Promise<{ bank: Bank }> {
     const bank = await this.bankRepository.findById(id);
 
-    if (!bank) {
-      throw new Error('Banco não encontrado.');
-    }
+    if (!bank) throw new Error('Banco não encontrado.');
 
     return { bank };
   }
