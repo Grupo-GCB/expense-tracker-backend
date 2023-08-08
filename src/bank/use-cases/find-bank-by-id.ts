@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { Bank } from '@/bank/infra/entities';
 import { IBankRepository } from '@/bank/interfaces';
@@ -11,7 +11,7 @@ export class GetBankByIdUseCase {
     const bank = await this.bankRepository.findById(id);
 
     if (!bank) {
-      throw new NotFoundException('Banco não encontrado.');
+      throw new Error('Banco não encontrado.');
     }
 
     return { bank };
