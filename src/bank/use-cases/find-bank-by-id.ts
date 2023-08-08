@@ -4,7 +4,7 @@ import { Bank } from '@/bank/infra/entities';
 import { IBankRepository } from '@/bank/interfaces';
 
 @Injectable()
-export class GetBankByIdUseCase {
+export class FindBankByIdUseCase {
   constructor(private readonly bankRepository: IBankRepository) {}
 
   async execute(id: string): Promise<{ bank: Bank }> {
