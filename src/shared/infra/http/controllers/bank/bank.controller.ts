@@ -49,8 +49,8 @@ export class BankController {
     description: 'Banco não encontrado.',
   })
   @Get(':id')
-  async listUser(@Param('id') bankId: string): Promise<Bank> {
-    const { bank } = await this.findBankById.execute(bankId);
+  async listUser(@Param('id') bank_id: string): Promise<Bank> {
+    const { bank } = await this.findBankById.execute(bank_id);
     return bank;
   }
 }
