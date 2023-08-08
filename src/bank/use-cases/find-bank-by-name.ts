@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Bank } from '@/bank/infra/entities';
-import { FindBankByNameDTO } from '../dto';
+import { FindBankByNameDTO } from '@/bank/dto';
 
 @Injectable()
 export class BankService {
