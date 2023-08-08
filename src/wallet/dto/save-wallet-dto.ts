@@ -5,13 +5,6 @@ import { AccountType } from '@/shared/constants/enums';
 
 export class SaveWalletDTO {
   @ApiProperty({
-    example: 'Banco Itáu',
-    description: 'Título da carteira.',
-  })
-  @IsNotEmpty({ message: 'Necessário informar o título.' })
-  title: string;
-
-  @ApiProperty({
     enum: AccountType,
     description: 'Tipo de conta da carteira.',
   })
@@ -37,12 +30,12 @@ export class SaveWalletDTO {
     description: 'ID do banco associado à carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id do banco.' })
-  bankId: string;
+  bank_id: string;
 
   @ApiProperty({
     example: 'auth0|58vfb567d5asdea52bc65ebba',
     description: 'ID do usuário proprietário da carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id do usuário.' })
-  userId: string;
+  user_id: string;
 }

@@ -22,9 +22,6 @@ export class Wallet {
   id: string;
 
   @Column()
-  title: string;
-
-  @Column()
   account_type: AccountType;
 
   @Column()

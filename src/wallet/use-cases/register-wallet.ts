@@ -15,10 +15,10 @@ export class RegisterWalletUseCase {
   ) {}
 
   async createWallet(data: SaveWalletDTO): Promise<Wallet> {
-    const user = await this.listUserByIdUseCase.execute(data.userId);
+    const user = await this.listUserByIdUseCase.execute(data.user_id);
     if (!user) throw new BadRequestException('Usuário não encontrado.');
 
-    const bank = await this.findBankByIdUseCase.execute(data.bankId);
+    const bank = await this.findBankByIdUseCase.execute(data.bank_id);
     if (!bank) throw new BadRequestException('Banco não encontrado.');
 
     try {
