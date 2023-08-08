@@ -1,23 +1,22 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { User } from '@/user/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
+import { Bank } from '@/bank/infra/entities';
 import { WalletController } from '@/shared/infra/http/controllers';
 import { RegisterWalletUseCase } from '@/wallet/use-cases';
-import { IWalletRepository } from '@/wallet/interfaces';
-import { WalletRepository } from '@/wallet/infra/repositories';
 import { ListUserByIdUseCase } from '@/user/use-cases';
 import { FindBankByIdUseCase } from '@/bank/use-cases';
-import { Bank } from '@/bank/infra/entities';
 import { IBankRepository } from '@/bank/interfaces';
 import { BankRepository } from '@/bank/infra/repositories';
 import { IUserRepository } from '@/user/interfaces';
 import { UserRepository } from '@/user/infra/repositories';
-import { User } from '@/user/infra/entities';
+import { IWalletRepository } from '@/wallet/interfaces';
+import { WalletRepository } from '@/wallet/infra/repositories';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Wallet, Bank, User])],
-  controllers: [WalletController],
   providers: [
     RegisterWalletUseCase,
     ListUserByIdUseCase,
@@ -35,5 +34,6 @@ import { User } from '@/user/infra/entities';
       useClass: UserRepository,
     },
   ],
+  controllers: [WalletController],
 })
 export class WalletModule {}

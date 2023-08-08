@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Bank } from '@/bank/infra/entities';
-import { IBankRepository } from './interfaces';
+import { IBankRepository } from '@/bank/interfaces';
 import { BankRepository } from '@/bank/infra/repositories';
 import { FindBankByIdUseCase } from '@/bank/use-cases';
 
