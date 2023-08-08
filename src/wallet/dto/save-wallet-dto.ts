@@ -17,7 +17,8 @@ export class SaveWalletDTO {
   })
   @IsNotEmpty({ message: 'Necessário ser um enum.' })
   @IsEnum({
-    message: 'Tipo de conta inválido. Deve ser um valor válido de AccountType.',
+    message:
+      'Insira um dos seguintes tipos: Conta-Corrente, Conta-Poupança, Investimento, Dinheiro e Outros',
   })
   account_type: AccountType;
 
