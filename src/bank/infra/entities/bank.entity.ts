@@ -4,7 +4,6 @@ import {
   Column,
   OneToMany,
   CreateDateColumn,
-  UpdateDateColumn,
   DeleteDateColumn,
   Relation,
 } from 'typeorm';
@@ -20,7 +19,7 @@ export class Bank {
   name: string;
 
   @Column()
-  picture: string;
+  logo_url: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
