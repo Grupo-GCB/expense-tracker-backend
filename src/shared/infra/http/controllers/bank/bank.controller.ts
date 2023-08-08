@@ -25,8 +25,22 @@ export class BankController {
       properties: {
         id: {
           type: 'string',
-          example: 'google-oauth2|456734566205483104315',
+          example: '097d340a-2298-5146-b0f4-77f1e3a0ecl9',
         },
+        name: {
+          type: 'string',
+          example: 'PicPay',
+        },
+        picture: {
+          type: 'string',
+          example:
+            'https://gcb-academy-expense-tracker.s3.sa-east-1.amazonaws.com/picpay.webp',
+        },
+        created_at: {
+          type: 'string',
+          example: '2023-08-08T15:26:43.441Z',
+        },
+        deleted_at: null,
       },
     },
   })
