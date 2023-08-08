@@ -25,9 +25,6 @@ export class Bank {
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
-  @UpdateDateColumn({ default: null })
-  updated_at?: Date;
-
   @DeleteDateColumn({ nullable: true })
   deleted_at?: Date;
 
