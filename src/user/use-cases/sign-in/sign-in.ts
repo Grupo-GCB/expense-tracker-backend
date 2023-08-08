@@ -7,8 +7,8 @@ import { ISignInResponse } from '@/user/interfaces/sign-in-response';
 @Injectable()
 export class SignInUseCase {
   constructor(
-    private usersRepository: IUserRepository,
-    private jwtAuthProvider: IJwtAuthProvider,
+    private readonly usersRepository: IUserRepository,
+    private readonly jwtAuthProvider: IJwtAuthProvider,
   ) {}
 
   async execute(token: string): Promise<ISignInResponse> {
