@@ -10,7 +10,7 @@ import { RegisterWalletUseCase } from '@/wallet/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 import { SaveWalletDTO } from '@/wallet/dto';
 
-import { API_RESPONSE_OK, API_BAD_REQUEST_RESPONSE } from '@/shared/constants/';
+import { API_RESPONSE_OK, API_NOT_FOUND_RESPONSE } from '@/shared/constants/';
 
 @ApiTags('Wallet')
 @Controller('wallet')
@@ -27,7 +27,8 @@ export class WalletController {
     type: Wallet,
   })
   @ApiBadRequestResponse({
-    ...API_BAD_REQUEST_RESPONSE,
+    ...API_NOT_FOUND_RESPONSE,
+    ...API_NOT_FOUND_RESPONSE,
   })
   async createWallet(@Body() walletData: SaveWalletDTO): Promise<Wallet> {
     return this.walletUseCase.createWallet(walletData);
