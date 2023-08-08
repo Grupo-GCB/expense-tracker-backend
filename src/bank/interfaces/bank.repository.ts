@@ -1,5 +1,5 @@
 import { Bank } from '@/bank/infra/entities';
 
-export interface IBankRepository {
-  findById(id: string): Promise<Bank>;
+export abstract class IBankRepository {
+  abstract findById(id: string): Promise<Bank>;
 }

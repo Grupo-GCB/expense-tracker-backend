@@ -5,11 +5,9 @@ import 'dotenv/config';
 
 import { BankModule } from '@/bank/bank.module';
 import { UserModule } from '@/user/user.module';
-import { AuthModule } from '@/auth/auth.module';
 import { WalletModule } from '@/wallet/wallet.module';
 import { BudgetGoalModule } from '@/budget-goal/budget-goal.module';
 import { TransactionModule } from '@/transaction/transaction.module';
-import { Wallet } from '@/wallet/infra/entities';
 import { AuthModule } from '@/auth/auth.module';
 import databaseConfig from '@/shared/utils/database-config';
 
