@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty } from 'class-validator';
 
 import { AccountType } from '@/shared/constants/enums';
 
@@ -16,6 +16,10 @@ export class SaveWalletDTO {
     description: 'Tipo de conta da carteira.',
   })
   @IsNotEmpty({
+    message:
+      'Insira um dos seguintes tipos: Conta-Corrente, Conta-Poupança, Investimento, Dinheiro e Outros',
+  })
+  @IsEnum(AccountType, {
     message:
       'Insira um dos seguintes tipos: Conta-Corrente, Conta-Poupança, Investimento, Dinheiro e Outros',
   })

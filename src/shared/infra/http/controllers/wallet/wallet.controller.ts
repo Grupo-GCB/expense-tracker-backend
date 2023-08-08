@@ -10,6 +10,8 @@ import { RegisterWalletUseCase } from '@/wallet/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 import { SaveWalletDTO } from '@/wallet/dto';
 
+import { API_RESPONSE_OK, API_BAD_REQUEST_RESPONSE } from '@/shared/constants/';
+
 @ApiTags('Wallet')
 @Controller('wallet')
 export class WalletController {
@@ -21,14 +23,13 @@ export class WalletController {
     description: 'Esta rota permite registrar uma carteira de um usuário.',
   })
   @ApiOkResponse({
-    description: 'Carteira registrada com sucesso.',
+    ...API_RESPONSE_OK,
     type: Wallet,
   })
   @ApiBadRequestResponse({
-    description:
-      'Erro de validação. Veja a mensagem de erro para mais detalhes.',
+    ...API_BAD_REQUEST_RESPONSE,
   })
   async createWallet(@Body() walletData: SaveWalletDTO): Promise<Wallet> {
-    return await this.walletUseCase.createWallet(walletData);
+    return this.walletUseCase.createWallet(walletData);
   }
 }
