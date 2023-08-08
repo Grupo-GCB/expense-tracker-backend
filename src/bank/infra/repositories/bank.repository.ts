@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 
 import { Bank } from '@/bank/infra/entities';
 import { IBankRepository } from '@/bank/interfaces';
-import { FindBankByNameDTO } from '@/bank/dto/find-bank-by-name-dto';
 
 @Injectable()
 export class BankRepository implements IBankRepository {
@@ -13,9 +12,7 @@ export class BankRepository implements IBankRepository {
     private bankRepository: Repository<Bank>,
   ) {}
 
-  async findByName(data: FindBankByNameDTO): Promise<Bank[]> {
-    return this.bankRepository.find({
-      where: { name: data.name },
-    });
+  async findById(id: string): Promise<Bank> {
+    return this.bankRepository.findOne({ where: { id } });
   }
 }
