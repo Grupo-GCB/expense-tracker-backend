@@ -29,7 +29,6 @@ export class WalletController {
       'Erro de validação. Veja a mensagem de erro para mais detalhes.',
   })
   async createWallet(@Body() walletData: SaveWalletDTO): Promise<Wallet> {
-    const createdWallet = await this.walletUseCase.createWallet(walletData);
-    return createdWallet;
+    return await this.walletUseCase.createWallet(walletData);
   }
 }

@@ -1,4 +1,4 @@
-import { SaveWalletDTO } from '../dto';
+import { SaveWalletDTO } from '@/wallet/dto';
 import { Wallet } from '@/wallet/infra/entities';
 
 export abstract class IWalletRepository {

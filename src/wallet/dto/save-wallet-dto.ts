@@ -16,7 +16,9 @@ export class SaveWalletDTO {
     description: 'Tipo de conta da carteira.',
   })
   @IsNotEmpty({ message: 'Necessário ser um enum.' })
-  @IsEnum(AccountType)
+  @IsEnum(AccountType, {
+    message: 'Tipo de conta inválido. Deve ser um valor válido de AccountType.',
+  })
   account_type: AccountType;
 
   @ApiProperty({

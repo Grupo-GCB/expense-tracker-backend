@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Wallet } from '@/wallet/infra/entities';
-import { WalletController } from '@/shared/infra/http/controllers/wallet/wallet.controller';
+import { WalletController } from '@/shared/infra/http/controllers';
 import { RegisterWalletUseCase } from '@/wallet/use-cases';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { WalletRepository } from '@/wallet/infra/repositories';
