@@ -15,8 +15,8 @@ export class BankController {
   constructor(private readonly findBankById: FindBankByIdUseCase) {}
 
   @ApiOperation({
-    summary: 'Listar um usuário pelo ID.',
-    description: 'Esta rota permite visualizar os dados de um usuário.',
+    summary: 'Listar um banco pelo ID.',
+    description: 'Esta rota permite visualizar os dados de um banco.',
   })
   @ApiOkResponse({
     status: HttpStatus.OK,
