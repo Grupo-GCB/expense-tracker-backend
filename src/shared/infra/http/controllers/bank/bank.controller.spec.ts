@@ -65,7 +65,6 @@ describe('Bank controller E2E', () => {
     it('should be able to return 404 for a nonexistent bank', async () => {
       await request(app.getHttpServer())
         .get(`/bank/${nonExistentBankId}`)
-
         .expect(HttpStatus.NOT_FOUND);
     });
   });
