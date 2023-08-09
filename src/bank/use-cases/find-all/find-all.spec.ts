@@ -1,17 +1,31 @@
 import { IBankRepository } from '@/bank/interfaces';
 import { FindAllBanksUseCase } from '@/bank/use-cases';
 import { Bank } from '@/bank/infra/entities';
+import { Test } from '@nestjs/testing';
+
+jest.mock('@/bank/interfaces');
+const mockBankRepository = IBankRepository as jest.Mocked<
+  typeof IBankRepository
+>;
 
 describe('Find Bank by Id', () => {
   let findAll: FindAllBanksUseCase;
   let bankRepository: jest.Mocked<IBankRepository>;
 
-  beforeAll(() => {
-    bankRepository = {
-      findAll: jest.fn(),
-    } as unknown as jest.Mocked<IBankRepository>;
+  beforeAll(async () => {
+    const module = await Test.createTestingModule({
+      providers: [
+        FindAllBanksUseCase,
+        { provide: IBankRepository, useValue: mockBankRepository },
+      ],
+    }).compile();
+    bankRepository = module.get(IBankRepository);
+    findAll = module.get(FindAllBanksUseCase);
+  });
 
-    findAll = new FindAllBanksUseCase(bankRepository);
+  it('should be defined', () => {
+    expect(bankRepository).toBeDefined();
+    expect(findAll).toBeDefined();
   });
 
   it('should be able to return all banks', async () => {
