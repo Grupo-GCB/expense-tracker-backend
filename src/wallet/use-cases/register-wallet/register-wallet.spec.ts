@@ -1,14 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 import { RegisterWalletUseCase } from '@/wallet/use-cases';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { SaveWalletDTO } from '@/wallet/dto';
 import { AccountType } from '@/shared/constants/enums';
+import { ListUserByIdUseCase } from '@/user/use-cases';
+import { FindBankByIdUseCase } from '@/bank/use-cases';
+import { Wallet } from '@/wallet/infra/entities';
 
 describe('RegisterWalletUseCase', () => {
   let registerWalletUseCase: RegisterWalletUseCase;
   let walletRepository: IWalletRepository;
+  let listUserByIdUseCase: ListUserByIdUseCase;
+  let findBankByIdUseCase: FindBankByIdUseCase;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,6 +25,18 @@ describe('RegisterWalletUseCase', () => {
             create: jest.fn(),
           },
         },
+        {
+          provide: ListUserByIdUseCase,
+          useValue: {
+            execute: jest.fn(),
+          },
+        },
+        {
+          provide: FindBankByIdUseCase,
+          useValue: {
+            execute: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -27,47 +44,60 @@ describe('RegisterWalletUseCase', () => {
       RegisterWalletUseCase,
     );
     walletRepository = module.get<IWalletRepository>(IWalletRepository);
+    listUserByIdUseCase = module.get<ListUserByIdUseCase>(ListUserByIdUseCase);
+    findBankByIdUseCase = module.get<FindBankByIdUseCase>(FindBankByIdUseCase);
   });
 
-  describe('createWallet', () => {
-    /*it('should create a new wallet', async () => {
-      const walletData: SaveWalletDTO = {
-        title: 'Minha Carteira',
-        account_type: AccountType.CHECKING_ACCOUNT,
-        description: 'Descrição da carteira',
-        bankId: '4e8b5d94-6b16-4a42-b6d1-dc58b553d109',
-        userId: 'auth0|58vfb567d5asdea52bc65ebba',
-      };
+  it('should create wallet successfully', async () => {
+    listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
+    findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
+    walletRepository.create = jest.fn().mockResolvedValue({} as Wallet);
 
-      const createdWallet: Wallet = {
-        id: 'b14948da-1e67-4f72-bcc6-f30dd5c42b9f',
-        ...walletData,
-        created_at: new Date(),
-      };
+    const saveWalletDTO: SaveWalletDTO = {
+      user_id: 'user_id',
+      bank_id: 'bank_id',
+      account_type: AccountType.CHECKING_ACCOUNT,
+      description: 'Descrição da carteira',
+    };
 
-      walletRepository.create = jest.fn().mockResolvedValue(createdWallet);
+    const result = await registerWalletUseCase.createWallet(saveWalletDTO);
 
-      const result = await registerWalletUseCase.createWallet(walletData);
+    expect(result).toBeDefined();
+    expect(walletRepository.create).toHaveBeenCalledWith(saveWalletDTO);
+  });
 
-      expect(result).toEqual(createdWallet);
-      expect(walletRepository.create).toHaveBeenCalledWith(walletData);
-    }); */
+  it('should not be able to return wallet', async () => {
+    listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce(null);
 
-    it('should not be able to create a wallet', async () => {
-      const walletData: SaveWalletDTO = {
-        account_type: AccountType.CHECKING_ACCOUNT,
-        description: 'Descrição da carteira',
-        bank_id: '4e8b5d94-6b16-4a42-b6d1-dc58b553d109',
-        user_id: 'auth0|58vfb567d5asdea52bc65ebba',
-      };
+    const saveWalletDTO: SaveWalletDTO = {
+      user_id: 'user_id',
+      bank_id: 'bank_id',
+      account_type: AccountType.CHECKING_ACCOUNT,
+      description: 'Descrição da carteira',
+    };
 
-      walletRepository.create = jest
-        .fn()
-        .mockRejectedValue(new BadRequestException('Failed to create wallet'));
+    await expect(
+      registerWalletUseCase.createWallet(saveWalletDTO),
+    ).rejects.toThrowError(NotFoundException);
+  });
 
-      await expect(
-        registerWalletUseCase.createWallet(walletData),
-      ).rejects.toThrowError(BadRequestException);
-    });
+  it('should throw BadRequestException if wallet creation fails', async () => {
+    listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
+    findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
+
+    walletRepository.create = jest
+      .fn()
+      .mockRejectedValue(new BadRequestException('Erro ao criar a carteira.'));
+
+    const saveWalletDTO: SaveWalletDTO = {
+      user_id: 'user_id',
+      bank_id: 'bank_id',
+      account_type: AccountType.CHECKING_ACCOUNT,
+      description: 'Wallet description',
+    };
+
+    await expect(
+      registerWalletUseCase.createWallet(saveWalletDTO),
+    ).rejects.toThrowError(BadRequestException);
   });
 });
