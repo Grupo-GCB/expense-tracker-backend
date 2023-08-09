@@ -9,12 +9,11 @@ export class SaveWalletDTO {
     description: 'Tipo de conta da carteira.',
   })
   @IsNotEmpty({
-    message:
-      'Insira um dos seguintes tipos: Conta-Corrente, Conta-Poupança, Investimento, Dinheiro e Outros',
+    message: 'INecessário informar um tipo de conta',
   })
   @IsEnum(AccountType, {
     message:
-      'Insira um dos seguintes tipos: Conta-Corrente, Conta-Poupança, Investimento, Dinheiro e Outros',
+      'Insira um dos seguintes tipos: Conta-Corrente, Conta-Poupança, Investimento, Dinheiro ou Outros.',
   })
   account_type: AccountType;
 
