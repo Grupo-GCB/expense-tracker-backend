@@ -10,7 +10,6 @@ import {
 import { RegisterWalletUseCase } from '@/wallet/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 import { SaveWalletDTO } from '@/wallet/dto';
-
 import { API_RESPONSES } from '@/shared/constants';
 
 @ApiTags('Wallet')
