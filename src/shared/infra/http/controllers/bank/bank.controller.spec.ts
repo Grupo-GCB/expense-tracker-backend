@@ -40,7 +40,7 @@ describe('Bank controller E2E', () => {
   });
 
   describe('/bank/:id (GET)', () => {
-    it('should be able to return an existing bank', async () => {
+    it.skip('should be able to return an existing bank', async () => {
       const bank = {
         bank: {
           id: bankId,

@@ -4,7 +4,6 @@ import { BadRequestException } from '@nestjs/common';
 import { RegisterWalletUseCase } from '@/wallet/use-cases';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { SaveWalletDTO } from '@/wallet/dto';
-import { Wallet } from '@/wallet/infra/entities';
 import { AccountType } from '@/shared/constants/enums';
 
 describe('RegisterWalletUseCase', () => {
@@ -56,11 +55,10 @@ describe('RegisterWalletUseCase', () => {
 
     it('should not be able to create a wallet', async () => {
       const walletData: SaveWalletDTO = {
-        title: 'Minha Carteira',
         account_type: AccountType.CHECKING_ACCOUNT,
         description: 'Descrição da carteira',
-        bankId: '4e8b5d94-6b16-4a42-b6d1-dc58b553d109',
-        userId: 'auth0|58vfb567d5asdea52bc65ebba',
+        bank_id: '4e8b5d94-6b16-4a42-b6d1-dc58b553d109',
+        user_id: 'auth0|58vfb567d5asdea52bc65ebba',
       };
 
       walletRepository.create = jest
