@@ -48,7 +48,7 @@ describe('RegisterWalletUseCase', () => {
     findBankByIdUseCase = module.get<FindBankByIdUseCase>(FindBankByIdUseCase);
   });
 
-  it('should create wallet successfully', async () => {
+  it('should be able to register a new wallet', async () => {
     listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
     findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
     walletRepository.create = jest.fn().mockResolvedValue({} as Wallet);
@@ -66,14 +66,15 @@ describe('RegisterWalletUseCase', () => {
     expect(walletRepository.create).toHaveBeenCalledWith(saveWalletDTO);
   });
 
-  it('should not be able to return wallet', async () => {
-    listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce(null);
+  it('should not be able to return a wallet when bank id do not exists', async () => {
+    listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
+    findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce(null);
 
     const saveWalletDTO: SaveWalletDTO = {
       user_id: 'user_id',
       bank_id: 'bank_id',
       account_type: AccountType.CHECKING_ACCOUNT,
-      description: 'Descrição da carteira',
+      description: 'Wallet description',
     };
 
     await expect(
@@ -81,7 +82,23 @@ describe('RegisterWalletUseCase', () => {
     ).rejects.toThrowError(NotFoundException);
   });
 
-  it('should throw BadRequestException if wallet creation fails', async () => {
+  it('should not be able to return a wallet when user id do not exists', async () => {
+    listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce(undefined);
+    findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
+
+    const saveWalletDTO: SaveWalletDTO = {
+      user_id: 'user_id',
+      bank_id: 'bank_id',
+      account_type: AccountType.CHECKING_ACCOUNT,
+      description: 'Wallet description',
+    };
+
+    await expect(
+      registerWalletUseCase.createWallet(saveWalletDTO),
+    ).rejects.toThrowError(NotFoundException);
+  });
+
+  it('should not be able to return a wallet if wallet register fails', async () => {
     listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
     findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
 
