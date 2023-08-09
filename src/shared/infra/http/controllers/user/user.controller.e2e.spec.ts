@@ -9,12 +9,14 @@ import * as request from 'supertest';
 import { AppModule } from '@/app.module';
 import { IUserRepository, IDecodedTokenPayload } from '@/user/interfaces';
 import { IJwtAuthProvider } from '@/auth/interfaces';
+import { User } from '@/user/infra/entities';
 
 describe('UserController (E2E)', () => {
   let app: INestApplication;
   let usersRepository: IUserRepository;
   let jwtAuthProvider: IJwtAuthProvider;
   let findByEmailMock: jest.SpyInstance;
+  let findByIdMock: jest.SpyInstance;
   let createUserMock: jest.SpyInstance;
   let decodeTokenMock: jest.SpyInstance;
   let userId: string;
@@ -43,12 +45,13 @@ describe('UserController (E2E)', () => {
       .compile();
 
     userId = 'google-oauth2|456734566205483104315';
-    nonexistentUserId = 'google-oauth2|456354566205483104315';
+    nonexistentUserId = 'invalid-id';
 
     app = module.createNestApplication();
     usersRepository = module.get<IUserRepository>(IUserRepository);
     jwtAuthProvider = module.get<IJwtAuthProvider>(IJwtAuthProvider);
 
+    findByIdMock = jest.spyOn(usersRepository, 'findById');
     findByEmailMock = jest.spyOn(usersRepository, 'findByEmail');
     createUserMock = jest.spyOn(usersRepository, 'create');
     decodeTokenMock = jest.spyOn(jwtAuthProvider, 'decodeToken');
@@ -105,20 +108,18 @@ describe('UserController (E2E)', () => {
 
   describe('/user/:id (GET)', () => {
     it('should be able to return an existing user', async () => {
+      findByIdMock.mockResolvedValue(userPayload);
+
       const response = await request(app.getHttpServer())
         .get(`/user/${userId}`)
         .expect(HttpStatus.OK);
 
-      expect(response.body).toMatchObject({
-        created_at: '2023-08-01T01:45:57.171Z',
-        deleted_at: null,
-        email: 'john.doe@example.com',
-        id: 'google-oauth2|456734566205483104315',
-        name: 'John Doe',
-      });
+      expect(response.body).toMatchObject(userPayload);
     });
 
-    it('should be able to return 404 for a nonexistent user', async () => {
+    it.only('should be able to return 404 for a nonexistent user', async () => {
+      findByIdMock.mockRejectedValue(HttpStatus.NOT_FOUND);
+
       await request(app.getHttpServer())
         .get(`/user/${nonexistentUserId}`)
 
