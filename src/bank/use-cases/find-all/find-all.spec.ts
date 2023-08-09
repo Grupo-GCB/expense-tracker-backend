@@ -45,7 +45,7 @@ describe('Find Bank by Id', () => {
     expect(bankRepository.findAll).toHaveBeenCalledTimes(1);
   });
 
-  it('should be able to return empty list', async () => {
+  it('should be able to return an empty list when no banks were found', async () => {
     bankRepository.findAll.mockResolvedValue([]);
 
     const result = await findAll.execute();
