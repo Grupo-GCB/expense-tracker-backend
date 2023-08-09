@@ -1,1 +1,2 @@
-export * from './find-bank-by-id/find-bank-by-id';
+export * from './find-by-id/find-by-id';
+export * from './find-all/find-all';

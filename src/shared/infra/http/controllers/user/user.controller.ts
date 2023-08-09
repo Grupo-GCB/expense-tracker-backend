@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  Post,
-  Req,
-  Res,
-} from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import {
   ApiOperation,
   ApiCreatedResponse,

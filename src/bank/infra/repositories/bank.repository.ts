@@ -15,4 +15,8 @@ export class BankRepository implements IBankRepository {
   async findById(id: string): Promise<Bank> {
     return this.bankRepository.findOne({ where: { id } });
   }
+
+  async findAll(): Promise<Bank[]> {
+    return this.bankRepository.find();
+  }
 }
