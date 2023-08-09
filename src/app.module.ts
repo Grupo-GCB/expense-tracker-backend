@@ -4,10 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import 'dotenv/config';
 
 import { BankModule } from '@/bank/bank.module';
-import { BudgetGoal } from '@/budget-goal/infra/entities';
-import { Transaction } from '@/transaction/infra/entities';
 import { UserModule } from '@/user/user.module';
-import { Wallet } from '@/wallet/infra/entities';
+import { WalletModule } from '@/wallet/wallet.module';
+import { BudgetGoalModule } from '@/budget-goal/budget-goal.module';
+import { TransactionModule } from '@/transaction/transaction.module';
 import { AuthModule } from '@/auth/auth.module';
 import databaseConfig from '@/shared/utils/database-config';
 
@@ -30,11 +30,11 @@ import databaseConfig from '@/shared/utils/database-config';
       migrationsRun: true,
     }),
     UserModule,
+    WalletModule,
     BankModule,
-    BudgetGoal,
-    Transaction,
+    BudgetGoalModule,
+    TransactionModule,
     AuthModule,
-    Wallet,
   ],
   providers: [],
 })

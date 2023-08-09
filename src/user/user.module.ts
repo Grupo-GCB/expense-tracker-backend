@@ -10,7 +10,6 @@ import { AuthModule } from '@/auth/auth.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), AuthModule],
-  controllers: [UserController],
   providers: [
     ListUserByIdUseCase,
     SignInUseCase,
@@ -19,6 +18,13 @@ import { AuthModule } from '@/auth/auth.module';
       useClass: UserRepository,
     },
   ],
-  exports: [],
+  exports: [
+    ListUserByIdUseCase,
+    {
+      provide: IUserRepository,
+      useClass: UserRepository,
+    },
+  ],
+  controllers: [UserController],
 })
 export class UserModule {}

@@ -9,8 +9,15 @@ import { BankRepository } from '@/bank/infra/repositories';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Bank])],
-  controllers: [BankController],
   providers: [
+    BankRepository,
+    FindBankByIdUseCase,
+    {
+      provide: IBankRepository,
+      useClass: BankRepository,
+    },
+  ],
+  exports: [
     FindBankByIdUseCase,
     {
       provide: IBankRepository,
