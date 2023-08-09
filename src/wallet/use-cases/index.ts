@@ -1,1 +1,1 @@
-export * from './register-wallet';
+export * from './register-wallet/register-wallet';
