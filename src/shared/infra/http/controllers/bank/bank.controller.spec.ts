@@ -51,7 +51,7 @@ describe('Bank controller E2E', () => {
   });
 
   describe('/bank/all (GET)', () => {
-    it('should be able return all banks', async () => {
+    it('should be able to return a list with banks', async () => {
       const banks = [mockBank, mockBank];
       jest.spyOn(findAllUseCase, 'execute').mockResolvedValue({ banks });
 
@@ -62,7 +62,7 @@ describe('Bank controller E2E', () => {
       expect(response.body).toEqual(banks);
     });
 
-    it('should return an empty list for a nonexistent bank', async () => {
+    it('should be able to return an empty list when no banks were found', async () => {
       jest.spyOn(findAllUseCase, 'execute').mockResolvedValue({ banks: [] });
 
       const response = await request(app.getHttpServer())
@@ -74,7 +74,7 @@ describe('Bank controller E2E', () => {
   });
 
   describe('/bank/:id (GET)', () => {
-    it('should be able return an existing bank', async () => {
+    it('should be able to return data from a database when id exists in the database', async () => {
       const bankResponse = { bank: mockBank };
       jest
         .spyOn(findBankByIdUseCase, 'execute')
