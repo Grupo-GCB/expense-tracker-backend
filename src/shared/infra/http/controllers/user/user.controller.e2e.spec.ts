@@ -101,29 +101,25 @@ describe('UserController (E2E)', () => {
       await request(app.getHttpServer())
         .post('/user/login')
         .send({ token: 'invalid-jwt-token' })
-
         .expect(HttpStatus.UNAUTHORIZED);
     });
   });
 
   describe('/user/:id (GET)', () => {
-    it('should be able to return an existing user', async () => {
-      findByIdMock.mockResolvedValue(userPayload);
-
-      const response = await request(app.getHttpServer())
-        .get(`/user/${userId}`)
-        .expect(HttpStatus.OK);
-
-      expect(response.body).toMatchObject(userPayload);
-    });
-
-    it.only('should be able to return 404 for a nonexistent user', async () => {
-      findByIdMock.mockRejectedValue(HttpStatus.NOT_FOUND);
-
+    it('should be able to return 404 for a nonexistent user', async () => {
       await request(app.getHttpServer())
         .get(`/user/${nonexistentUserId}`)
-
         .expect(HttpStatus.NOT_FOUND);
     });
+  });
+
+  it('should be able to return an existing user', async () => {
+    findByIdMock.mockResolvedValue(userPayload);
+
+    const response = await request(app.getHttpServer())
+      .get(`/user/${userId}`)
+      .expect(HttpStatus.OK);
+
+    expect(response.body).toMatchObject(userPayload);
   });
 });
