@@ -62,7 +62,7 @@ describe('Bank controller E2E', () => {
       expect(response.body).toEqual(banks);
     });
 
-    it('should be able to return an empty list when no banks were found', async () => {
+    it('should be able to return an empty list', async () => {
       jest.spyOn(findAllUseCase, 'execute').mockResolvedValue({ banks: [] });
 
       const response = await request(app.getHttpServer())
