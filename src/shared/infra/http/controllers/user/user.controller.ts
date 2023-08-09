@@ -20,6 +20,7 @@ import { Request, Response } from 'express';
 import { ListUserByIdUseCase, SignInUseCase } from '@/user/use-cases';
 import { UserTokenDTO } from '@/user/dto';
 import { User } from '@/user/infra/entities';
+import { API_RESPONSES } from '@/shared/constants';
 
 @ApiTags('User')
 @Controller('user')
@@ -31,18 +32,9 @@ export class UserController {
 
   @Post('login')
   @ApiOperation({ summary: 'Login do usuário' })
-  @ApiCreatedResponse({
-    status: HttpStatus.CREATED,
-    description: 'Created',
-  })
-  @ApiOkResponse({
-    status: HttpStatus.OK,
-    description: 'Ok',
-  })
-  @ApiUnauthorizedResponse({
-    status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized',
-  })
+  @ApiCreatedResponse(API_RESPONSES.CREATED)
+  @ApiOkResponse(API_RESPONSES.OK)
+  @ApiUnauthorizedResponse(API_RESPONSES.UNAUTHORIZED)
   async signIn(
     @Req() { body }: Request<{}, {}, UserTokenDTO>,
     @Res() res: Response,
@@ -57,22 +49,8 @@ export class UserController {
     summary: 'Listar um usuário pelo ID.',
     description: 'Esta rota permite visualizar os dados de um usuário.',
   })
-  @ApiOkResponse({
-    status: HttpStatus.OK,
-    schema: {
-      type: 'object',
-      properties: {
-        id: {
-          type: 'string',
-          example: 'google-oauth2|456734566205483104315',
-        },
-      },
-    },
-  })
-  @ApiNotFoundResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Usuário não encontrado.',
-  })
+  @ApiOkResponse(API_RESPONSES.OK)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   @Get(':id')
   async listUser(@Param('id') user_id: string): Promise<User> {
     const { user } = await this.listUserUseCase.execute(user_id);
