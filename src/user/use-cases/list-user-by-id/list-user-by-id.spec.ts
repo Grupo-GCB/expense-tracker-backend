@@ -4,7 +4,7 @@ import { User } from '@/user/infra/entities';
 import { IUserRepository } from '@/user/interfaces';
 import { ListUserByIdUseCase } from '@/user/use-cases';
 
-describe('Get User', () => {
+describe('List User By Id', () => {
   let listUserUseCase: ListUserByIdUseCase;
   let userRepository: jest.Mocked<IUserRepository>;
 
