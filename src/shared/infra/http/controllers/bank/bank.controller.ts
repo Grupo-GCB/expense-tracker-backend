@@ -19,7 +19,7 @@ export class BankController {
   ) {}
 
   @ApiOperation({
-    summary: 'Listar um todos bancos.',
+    summary: 'Listar todos bancos.',
     description: 'Esta rota permite visualizar todos os bancos.',
   })
   @ApiOkResponse(API_RESPONSES.OK)
