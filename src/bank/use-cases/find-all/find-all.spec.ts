@@ -3,11 +3,6 @@ import { FindAllBanksUseCase } from '@/bank/use-cases';
 import { Bank } from '@/bank/infra/entities';
 import { Test } from '@nestjs/testing';
 
-jest.mock('@/bank/interfaces');
-const mockBankRepository = IBankRepository as jest.Mocked<
-  typeof IBankRepository
->;
-
 describe('Find Bank by Id', () => {
   let findAll: FindAllBanksUseCase;
   let bankRepository: jest.Mocked<IBankRepository>;
@@ -16,7 +11,7 @@ describe('Find Bank by Id', () => {
     const module = await Test.createTestingModule({
       providers: [
         FindAllBanksUseCase,
-        { provide: IBankRepository, useValue: mockBankRepository },
+        { provide: IBankRepository, useValue: { findAll: jest.fn() } },
       ],
     }).compile();
     bankRepository = module.get(IBankRepository);
