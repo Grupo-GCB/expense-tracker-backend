@@ -74,7 +74,7 @@ describe('Register Wallet Use Case', () => {
       user_id: 'user_id',
       bank_id: 'bank_id',
       account_type: AccountType.CHECKING_ACCOUNT,
-      description: 'Wallet description',
+      description: 'Descrição da carteira',
     };
 
     await expect(
@@ -90,7 +90,7 @@ describe('Register Wallet Use Case', () => {
       user_id: 'user_id',
       bank_id: 'bank_id',
       account_type: AccountType.CHECKING_ACCOUNT,
-      description: 'Wallet description',
+      description: 'Descrição da carteira',
     };
 
     await expect(
@@ -110,7 +110,7 @@ describe('Register Wallet Use Case', () => {
       user_id: 'user_id',
       bank_id: 'bank_id',
       account_type: AccountType.CHECKING_ACCOUNT,
-      description: 'Wallet description',
+      description: 'Descrição da carteira',
     };
 
     await expect(

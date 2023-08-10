@@ -20,7 +20,7 @@ describe('Wallet Controller E2E', () => {
     user_id: 'auth0|58vfb567d5asdea52bc65ebba',
     bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d4',
     account_type: AccountType.CHECKING_ACCOUNT,
-    description: 'Wallet description',
+    description: 'Descrição da carteira',
   };
 
   beforeAll(async () => {
