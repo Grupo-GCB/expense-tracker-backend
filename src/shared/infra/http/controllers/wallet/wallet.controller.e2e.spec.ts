@@ -87,5 +87,10 @@ describe('Wallet Controller E2E', () => {
         .send(dtoWithNonExistingUser)
         .expect(HttpStatus.NOT_FOUND);
     });
+
+    it('should be defined', () => {
+      expect(walletRepository).toBeDefined();
+      expect(createWalletMock).toBeDefined();
+    });
   });
 });
