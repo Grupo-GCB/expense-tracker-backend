@@ -14,6 +14,7 @@ import { IUserRepository } from '@/user/interfaces';
 import { UserRepository } from '@/user/infra/repositories';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { WalletRepository } from '@/wallet/infra/repositories';
+import { UpdateWalletUseCase } from '@/wallet/use-cases';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Wallet, Bank, User])],
@@ -21,6 +22,7 @@ import { WalletRepository } from '@/wallet/infra/repositories';
     RegisterWalletUseCase,
     ListUserByIdUseCase,
     FindBankByIdUseCase,
+    UpdateWalletUseCase,
     {
       provide: IWalletRepository,
       useClass: WalletRepository,
