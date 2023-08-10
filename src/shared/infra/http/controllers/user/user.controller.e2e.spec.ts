@@ -1,9 +1,9 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import {
   HttpStatus,
   INestApplication,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 
 import { AppModule } from '@/app.module';
@@ -28,7 +28,7 @@ describe('User Controller (E2E)', () => {
   };
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       imports: [AppModule],
     })
       .overrideProvider(IUserRepository)
