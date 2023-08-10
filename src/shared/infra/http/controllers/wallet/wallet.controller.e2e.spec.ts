@@ -1,26 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, HttpStatus } from '@nestjs/common';
+import {
+  INestApplication,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import * as request from 'supertest';
 
 import { AppModule } from '@/app.module';
 import { SaveWalletDTO } from '@/wallet/dto';
 import { AccountType } from '@/shared/constants/enums';
+import { IWalletRepository } from '@/wallet/interfaces';
 
 describe('Wallet Controller E2E', () => {
   let app: INestApplication;
-
-  beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
-
-  afterAll(async () => {
-    await app.close();
-  });
+  let walletRepository: IWalletRepository;
+  let createWalletMock: jest.SpyInstance;
 
   const validSaveWalletDTO: SaveWalletDTO = {
     user_id: 'auth0|58vfb567d5asdea52bc65ebba',
@@ -29,19 +23,46 @@ describe('Wallet Controller E2E', () => {
     description: 'Wallet description',
   };
 
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    })
+      .overrideProvider(IWalletRepository)
+      .useValue({
+        create: jest.fn(),
+      })
+      .compile();
+
+    app = module.createNestApplication();
+    walletRepository = module.get<IWalletRepository>(IWalletRepository);
+
+    createWalletMock = jest.spyOn(walletRepository, 'create');
+
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
   describe('/wallet (POST)', () => {
     it('should create a wallet', async () => {
+      createWalletMock.mockResolvedValue(validSaveWalletDTO);
+
       const response = await request(app.getHttpServer())
         .post('/wallet')
         .send(validSaveWalletDTO)
         .expect(HttpStatus.CREATED);
 
-      expect(response.body).toHaveProperty('id');
+      expect(response.body).toHaveProperty('user_id');
+      expect(response.body).toHaveProperty('bank_id');
       expect(response.body.account_type).toBe(AccountType.CHECKING_ACCOUNT);
-      expect(response.body.description).toBe('Descrição da carteira');
+      expect(response.body.description).toBe('Wallet description');
     });
 
-    it('should not be able to register a wallet if bankreturn 404 if bank does not exist', async () => {
+    it('should not be able to register a wallet if bank does not exist', async () => {
+      createWalletMock.mockRejectedValue(new NotFoundException());
+
       const dtoWithNonExistingBank: SaveWalletDTO = {
         ...validSaveWalletDTO,
         bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d5',
@@ -54,6 +75,8 @@ describe('Wallet Controller E2E', () => {
     });
 
     it('should not be able to register a wallet if user does not exist', async () => {
+      createWalletMock.mockRejectedValue(new NotFoundException());
+
       const dtoWithNonExistingUser: SaveWalletDTO = {
         ...validSaveWalletDTO,
         user_id: 'non_existing_user_id',
