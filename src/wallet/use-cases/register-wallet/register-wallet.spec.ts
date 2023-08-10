@@ -9,7 +9,7 @@ import { ListUserByIdUseCase } from '@/user/use-cases';
 import { FindBankByIdUseCase } from '@/bank/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 
-describe('RegisterWalletUseCase', () => {
+describe('Register Wallet Use Case', () => {
   let registerWalletUseCase: RegisterWalletUseCase;
   let walletRepository: IWalletRepository;
   let listUserByIdUseCase: ListUserByIdUseCase;
