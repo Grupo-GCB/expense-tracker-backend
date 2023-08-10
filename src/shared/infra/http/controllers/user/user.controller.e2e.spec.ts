@@ -40,7 +40,7 @@ describe('User controller E2E', () => {
   });
 
   describe('/user/:id (GET)', () => {
-    it.skip('should be able to return an existing user', async () => {
+    it('should be able to return an existing user', async () => {
       const userResult = {
         user: {
           email: 'anyEmail',
