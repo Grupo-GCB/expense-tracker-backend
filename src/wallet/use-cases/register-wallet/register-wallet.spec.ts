@@ -67,7 +67,7 @@ describe('Register Wallet Use Case', () => {
     expect(walletRepository.create).toHaveBeenCalledWith(createdUser);
   });
 
-  it('should not be able to return a wallet when bank id do not exist', async () => {
+  it('should not be able to return a wallet when bank id does not exist', async () => {
     listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
     findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce(null);
 
@@ -76,7 +76,7 @@ describe('Register Wallet Use Case', () => {
     ).rejects.toThrowError(NotFoundException);
   });
 
-  it('should not be able to return a wallet when user id do not exist', async () => {
+  it('should not be able to return a wallet when user id does not exist', async () => {
     listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce(undefined);
     findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
 
