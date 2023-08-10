@@ -16,7 +16,7 @@ describe('Wallet Controller E2E', () => {
   let walletRepository: IWalletRepository;
   let createWalletMock: jest.SpyInstance;
 
-  const validSaveWalletDTO: SaveWalletDTO = {
+  const createdUser: SaveWalletDTO = {
     user_id: 'auth0|58vfb567d5asdea52bc65ebba',
     bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d4',
     account_type: AccountType.CHECKING_ACCOUNT,
@@ -47,24 +47,24 @@ describe('Wallet Controller E2E', () => {
 
   describe('/wallet (POST)', () => {
     it('should create a wallet', async () => {
-      createWalletMock.mockResolvedValue(validSaveWalletDTO);
+      createWalletMock.mockResolvedValue(createdUser);
 
       const response = await request(app.getHttpServer())
         .post('/wallet')
-        .send(validSaveWalletDTO)
+        .send(createdUser)
         .expect(HttpStatus.CREATED);
 
       expect(response.body).toHaveProperty('user_id');
       expect(response.body).toHaveProperty('bank_id');
       expect(response.body.account_type).toBe(AccountType.CHECKING_ACCOUNT);
-      expect(response.body.description).toBe('Wallet description');
+      expect(response.body.description).toBe('Descrição da carteira');
     });
 
     it('should not be able to register a wallet if bank does not exist', async () => {
       createWalletMock.mockRejectedValue(new NotFoundException());
 
       const dtoWithNonExistingBank: SaveWalletDTO = {
-        ...validSaveWalletDTO,
+        ...createdUser,
         bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d5',
       };
 
@@ -78,7 +78,7 @@ describe('Wallet Controller E2E', () => {
       createWalletMock.mockRejectedValue(new NotFoundException());
 
       const dtoWithNonExistingUser: SaveWalletDTO = {
-        ...validSaveWalletDTO,
+        ...createdUser,
         user_id: 'non_existing_user_id',
       };
 
