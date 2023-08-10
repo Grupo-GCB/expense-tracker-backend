@@ -9,9 +9,8 @@ import * as request from 'supertest';
 import { AppModule } from '@/app.module';
 import { IUserRepository, IDecodedTokenPayload } from '@/user/interfaces';
 import { IJwtAuthProvider } from '@/auth/interfaces';
-import { User } from '@/user/infra/entities';
 
-describe('UserController (E2E)', () => {
+describe('User Controller (E2E)', () => {
   let app: INestApplication;
   let usersRepository: IUserRepository;
   let jwtAuthProvider: IJwtAuthProvider;
