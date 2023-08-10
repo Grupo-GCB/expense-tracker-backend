@@ -66,7 +66,7 @@ describe('RegisterWalletUseCase', () => {
     expect(walletRepository.create).toHaveBeenCalledWith(saveWalletDTO);
   });
 
-  it('should not be able to return a wallet when bank id do not exists', async () => {
+  it('should not be able to return a wallet when bank id do not exist', async () => {
     listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
     findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce(null);
 
@@ -82,7 +82,7 @@ describe('RegisterWalletUseCase', () => {
     ).rejects.toThrowError(NotFoundException);
   });
 
-  it('should not be able to return a wallet when user id do not exists', async () => {
+  it('should not be able to return a wallet when user id do not exist', async () => {
     listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce(undefined);
     findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
 
