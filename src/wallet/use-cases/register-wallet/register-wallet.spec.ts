@@ -98,7 +98,7 @@ describe('Register Wallet Use Case', () => {
     ).rejects.toThrowError(NotFoundException);
   });
 
-  it('should not be able to return a wallet if wallet register fails', async () => {
+  it('should not be able to return a wallet if the wallet register fails', async () => {
     listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
     findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
 
