@@ -17,4 +17,8 @@ export class WalletRepository implements IWalletRepository {
     const wallet = this.walletRepository.create(data);
     return this.walletRepository.save(wallet);
   }
+
+  async findAll(): Promise<Wallet[]> {
+    return this.walletRepository.find();
+  }
 }
