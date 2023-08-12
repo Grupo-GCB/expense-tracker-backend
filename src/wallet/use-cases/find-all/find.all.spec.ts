@@ -29,7 +29,7 @@ describe('Find All Wallets', () => {
       {
         id: '01',
         account_type: AccountType.CHECKING_ACCOUNT,
-        description: 'First Wallet Description.',
+        description: 'Primeira Descrição de carteira.',
         created_at: new Date(),
         updated_at: new Date(),
         deleted_at: null,
@@ -40,7 +40,7 @@ describe('Find All Wallets', () => {
       {
         id: '02',
         account_type: AccountType.CASH,
-        description: 'Second Wallet Description.',
+        description: 'Segunda Descrição de carteira.',
         created_at: new Date(),
         updated_at: new Date(),
         deleted_at: null,

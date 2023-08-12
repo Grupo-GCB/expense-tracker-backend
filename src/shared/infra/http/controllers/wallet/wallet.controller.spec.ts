@@ -16,7 +16,7 @@ describe('Wallet Controller E2E', () => {
   const mockWallet: Wallet = {
     id: '01',
     account_type: AccountType.CHECKING_ACCOUNT,
-    description: 'First Wallet Description.',
+    description: 'Descrição da carteira.',
     created_at: new Date(),
     updated_at: new Date(),
     deleted_at: null,
