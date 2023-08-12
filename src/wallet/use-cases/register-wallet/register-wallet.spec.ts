@@ -48,9 +48,9 @@ describe('Register Wallet Use Case', () => {
     listUserByIdUseCase = module.get<ListUserByIdUseCase>(ListUserByIdUseCase);
     findBankByIdUseCase = module.get<FindBankByIdUseCase>(FindBankByIdUseCase);
 
-    listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
-    findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce({});
     walletRepository.create = jest.fn().mockResolvedValue({} as Wallet);
+    listUserByIdUseCase.execute = jest.fn().mockResolvedValue({});
+    findBankByIdUseCase.execute = jest.fn().mockResolvedValue({});
 
     walletData = {
       user_id: 'user_id',
@@ -68,7 +68,7 @@ describe('Register Wallet Use Case', () => {
   });
 
   it('should not be able to return a wallet when bank id does not exist', async () => {
-    findBankByIdUseCase.execute = jest.fn().mockResolvedValueOnce(null);
+    findBankByIdUseCase.execute = jest.fn().mockResolvedValue(null);
 
     await expect(
       registerWalletUseCase.createWallet(walletData),
@@ -76,7 +76,7 @@ describe('Register Wallet Use Case', () => {
   });
 
   it('should not be able to return a wallet when user id does not exist', async () => {
-    listUserByIdUseCase.execute = jest.fn().mockResolvedValueOnce(undefined);
+    listUserByIdUseCase.execute = jest.fn().mockResolvedValue(undefined);
 
     await expect(
       registerWalletUseCase.createWallet(walletData),
