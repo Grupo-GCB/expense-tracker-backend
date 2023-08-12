@@ -57,7 +57,7 @@ Queremos agradecer às seguintes pessoas que contribuíram para este projeto:
 <table>
   <tr>
     <td align="center">
-      <a href="#">
+      <a href="https://github.com/Kayke-Fujinaka">
         <img src="https://avatars.githubusercontent.com/u/98772000?s=400&u=80de9af672be7f75cc7a546838552cf63d5b82fe&v=4" width="100px;" alt="Kayke Fujinaka's photo on GitHub"/><br>
         <sub>
           <b>Kayke Fujinaka</b>
@@ -65,7 +65,7 @@ Queremos agradecer às seguintes pessoas que contribuíram para este projeto:
       </a>
     </td>
         <td align="center">
-      <a href="#">
+      <a href="https://github.com/shimarrudz">
         <img src="https://avatars.githubusercontent.com/u/104167280?s=400&u=2765013deddc1f9560f94c0bcb5d4cb381359647&v=4" width="100px;" border-radius='50%' alt="Victor Shimada's photo on GitHub"/><br>
         <sub>
           <b>Victor Shimada</b>
@@ -73,7 +73,7 @@ Queremos agradecer às seguintes pessoas que contribuíram para este projeto:
       </a>
     </td>
         <td align="center">
-      <a href="#">
+      <a href="https://github.com/Diogo-gallina">
         <img src="https://avatars.githubusercontent.com/u/88459755?v=4" width="100px;" border-radius='50%' alt="Diogo Gallina's photo on GitHub"/><br>
         <sub>
           <b>Diogo Gallina</b>
