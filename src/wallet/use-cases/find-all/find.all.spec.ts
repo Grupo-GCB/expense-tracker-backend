@@ -4,6 +4,7 @@ import { Wallet } from '@/wallet/infra/entities';
 import { FindAllWalletsUseCase } from '@/wallet/use-cases';
 import { Bank } from '@/bank/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
+import { AccountType } from '@/shared/constants';
 
 describe('Find All Wallets', () => {
   let findAll: FindAllWalletsUseCase;
@@ -29,11 +30,25 @@ describe('Find All Wallets', () => {
     const wallets = [
       {
         id: '01',
-        account_type: 'anyAccountType',
-        description: 'Wallet Description',
-        created_at: 'anyData',
-        updated_at: 'anyData',
+        account_type: AccountType.CHECKING_ACCOUNT,
+        description: 'First Wallet Description.',
+        created_at: new Date(),
+        updated_at: new Date(),
         deleted_at: null,
+        bank: null,
+        user: null,
+        transactions: null,
+      },
+      {
+        id: '02',
+        account_type: AccountType.CASH,
+        description: 'Second Wallet Description.',
+        created_at: new Date(),
+        updated_at: new Date(),
+        deleted_at: null,
+        bank: null,
+        user: null,
+        transactions: null,
       },
     ];
 
@@ -43,5 +58,13 @@ describe('Find All Wallets', () => {
 
     expect(result.wallets).toEqual(wallets);
     expect(walletRepository.findAll).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not be able to return wallets if they have not been found', async () => {
+    walletRepository.findAll.mockResolvedValue([]);
+
+    const result = await findAll.execute();
+
+    expect(result).toEqual({ wallets: [] });
   });
 });
