@@ -74,10 +74,15 @@ describe('Register Wallet Use Case', () => {
     await expect(
       registerWalletUseCase.createWallet(walletData),
     ).rejects.toThrowError(NotFoundException);
+
     expect(listUserByIdUseCase.execute).toHaveBeenCalledTimes(1);
     expect(listUserByIdUseCase.execute).toHaveBeenCalledWith(
       walletData.user_id,
     );
+
+    await expect(
+      async () => await registerWalletUseCase.createWallet(walletData),
+    ).rejects.toThrowErrorMatchingSnapshot();
   });
 
   it('should not be able to return a wallet when bank id does not exist', async () => {
@@ -86,10 +91,15 @@ describe('Register Wallet Use Case', () => {
     await expect(
       registerWalletUseCase.createWallet(walletData),
     ).rejects.toThrowError(NotFoundException);
+
     expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
     expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
       walletData.bank_id,
     );
+
+    await expect(
+      async () => await registerWalletUseCase.createWallet(walletData),
+    ).rejects.toThrowErrorMatchingSnapshot();
   });
 
   it('should not be able to return a wallet if the wallet register fails', async () => {
