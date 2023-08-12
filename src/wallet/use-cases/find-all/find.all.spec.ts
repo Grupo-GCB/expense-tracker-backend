@@ -1,8 +1,6 @@
 import { Test } from '@nestjs/testing';
 
-import { Wallet } from '@/wallet/infra/entities';
 import { FindAllWalletsUseCase } from '@/wallet/use-cases';
-import { Bank } from '@/bank/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { AccountType } from '@/shared/constants';
 
