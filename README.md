@@ -19,17 +19,18 @@ O site é composto de 4 páginas diferentes:
 
 As seguintes ferramentas foram usadas neste projeto:
 
-#### Backend:
-
+- [Node.js](https://nodejs.org/en)
 - [TypeScript](https://www.typescriptlang.org/)
-- [Docker](https://www.docker.com/)
-- [NodeJS](https://nodejs.org/en)
-- [TypeORM](https://typeorm.io/)
 - [NestJS](https://nestjs.com/)
+- [TypeORM](https://typeorm.io/)
+- [Class Validator](https://github.com/typestack/class-validator)
 - [Jest](https://jestjs.io/pt-BR/)
+- [Supertest](https://www.npmjs.com/package/supertest)
+- [JWKS RA](https://github.com/auth0/node-jwks-rsa)
 - [Swagger](https://swagger.io/)
-
-#### Frontend:
+- [Docker](https://www.docker.com/)
+- [Eslint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
 
 ### 🧾 Requisitos
 
@@ -43,10 +44,10 @@ $ git clone https://github.com/Grupo-GCB/expense-tracker-backend
 # Acesse
 $ cd expense-tracker-backend
 # Instale as dependências
-$ yarn or npm
+$ yarn or npm install
 # Execute o projeto
 $ yarn start or npm start
-# O servidor irá iniciar em <http://localhost:3000>
+# O servidor irá iniciar em <http://localhost:${PORT}>
 ```
 
 ### 🤝 Colaboradores
