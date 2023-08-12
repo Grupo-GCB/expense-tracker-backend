@@ -36,7 +36,13 @@ export class WalletController {
     return this.walletUseCase.createWallet(walletData);
   }
 
-  @Get()
+  @Get('all')
+  @ApiOkResponse(API_RESPONSES.OK)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
+  @ApiOperation({
+    summary: 'Listar todas as carteiras.',
+    description: 'Esta rota permite visualizar todas as carteiras.',
+  })
   async listAllWallets(): Promise<Wallet[]> {
     const { wallets } = await this.findAllWallets.execute();
     return wallets;
