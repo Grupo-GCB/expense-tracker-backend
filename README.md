@@ -10,8 +10,10 @@ O expense tracker é um aplicativo de gestão de finanças pessoais que tem como
 
 O site é composto de 2 páginas diferentes:
 
+- **Landing Page**: Os usuários podem conhecer a plataforma, ou se cadastrar e fazer login.
 - **Login:** Os usuários podem fazer o login com o e-mail corporativo e entrar na plataforma.
 - **Home**: Os usuários podem criar suas transações de receita ou despesa, e visualizar as últimas transações.
+- **Wallet**: Os usuários pode criar carteiras ilimitadas, afim de organizar suas transaçãoes em geral.
 
 ### 💻 Tecnologias
 
