@@ -46,6 +46,11 @@ describe('Wallet Controller E2E', () => {
   });
 
   describe('/wallet (POST)', () => {
+    it('should be defined', () => {
+      expect(walletRepository).toBeDefined();
+      expect(createWalletMock).toBeDefined();
+    });
+
     it('should create a wallet', async () => {
       createWalletMock.mockResolvedValue(walletData);
 
@@ -86,11 +91,6 @@ describe('Wallet Controller E2E', () => {
         .post('/wallet')
         .send(dtoWithNonExistingBank)
         .expect(HttpStatus.NOT_FOUND);
-    });
-
-    it('should be defined', () => {
-      expect(walletRepository).toBeDefined();
-      expect(createWalletMock).toBeDefined();
     });
   });
 });
