@@ -60,20 +60,6 @@ describe('Wallet Controller E2E', () => {
       expect(response.body.description).toBe('Descrição da carteira');
     });
 
-    it('should not be able to register a wallet if bank does not exist', async () => {
-      createWalletMock.mockRejectedValue(new NotFoundException());
-
-      const dtoWithNonExistingBank: SaveWalletDTO = {
-        ...walletData,
-        bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d5',
-      };
-
-      await request(app.getHttpServer())
-        .post('/wallet')
-        .send(dtoWithNonExistingBank)
-        .expect(HttpStatus.NOT_FOUND);
-    });
-
     it('should not be able to register a wallet if user does not exist', async () => {
       createWalletMock.mockRejectedValue(new NotFoundException());
 
@@ -85,6 +71,20 @@ describe('Wallet Controller E2E', () => {
       await request(app.getHttpServer())
         .post('/wallet')
         .send(dtoWithNonExistingUser)
+        .expect(HttpStatus.NOT_FOUND);
+    });
+
+    it('should not be able to register a wallet if bank does not exist', async () => {
+      createWalletMock.mockRejectedValue(new NotFoundException());
+
+      const dtoWithNonExistingBank: SaveWalletDTO = {
+        ...walletData,
+        bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d5',
+      };
+
+      await request(app.getHttpServer())
+        .post('/wallet')
+        .send(dtoWithNonExistingBank)
         .expect(HttpStatus.NOT_FOUND);
     });
 
