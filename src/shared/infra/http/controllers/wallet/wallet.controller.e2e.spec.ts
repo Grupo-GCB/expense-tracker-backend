@@ -59,8 +59,12 @@ describe('Wallet Controller E2E', () => {
         .send(walletData)
         .expect(HttpStatus.CREATED);
 
-      expect(response.body).toHaveProperty('user_id');
-      expect(response.body).toHaveProperty('bank_id');
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          user_id: expect.any(String),
+          bank_id: expect.any(String),
+        }),
+      );
       expect(response.body.account_type).toBe(AccountType.CHECKING_ACCOUNT);
       expect(response.body.description).toBe('Descrição da carteira');
     });

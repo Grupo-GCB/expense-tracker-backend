@@ -64,15 +64,8 @@ describe('Register Wallet Use Case', () => {
     const result = await registerWalletUseCase.createWallet(walletData);
 
     expect(result).toBeDefined();
+    expect(walletRepository.create).toHaveBeenCalledTimes(1);
     expect(walletRepository.create).toHaveBeenCalledWith(walletData);
-  });
-
-  it('should not be able to return a wallet when bank id does not exist', async () => {
-    findBankByIdUseCase.execute = jest.fn().mockResolvedValue(null);
-
-    await expect(
-      registerWalletUseCase.createWallet(walletData),
-    ).rejects.toThrowError(NotFoundException);
   });
 
   it('should not be able to return a wallet when user id does not exist', async () => {
@@ -81,6 +74,22 @@ describe('Register Wallet Use Case', () => {
     await expect(
       registerWalletUseCase.createWallet(walletData),
     ).rejects.toThrowError(NotFoundException);
+    expect(listUserByIdUseCase.execute).toHaveBeenCalledTimes(1);
+    expect(listUserByIdUseCase.execute).toHaveBeenCalledWith(
+      walletData.user_id,
+    );
+  });
+
+  it('should not be able to return a wallet when bank id does not exist', async () => {
+    findBankByIdUseCase.execute = jest.fn().mockResolvedValue(null);
+
+    await expect(
+      registerWalletUseCase.createWallet(walletData),
+    ).rejects.toThrowError(NotFoundException);
+    expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
+    expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
+      walletData.bank_id,
+    );
   });
 
   it('should not be able to return a wallet if the wallet register fails', async () => {
@@ -93,5 +102,7 @@ describe('Register Wallet Use Case', () => {
     await expect(
       registerWalletUseCase.createWallet(walletData),
     ).rejects.toThrowError(BadRequestException);
+    expect(walletRepository.create).toHaveBeenCalledTimes(1);
+    expect(walletRepository.create).toHaveBeenCalledWith(walletData);
   });
 });
