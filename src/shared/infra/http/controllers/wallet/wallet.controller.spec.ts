@@ -8,7 +8,7 @@ import { AppModule } from '@/app.module';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { FindAllWalletsUseCase } from '@/wallet/use-cases';
 
-describe('Wallet Controller E2E', () => {
+describe('Wallet Controller (E2E)', () => {
   let app: INestApplication;
   let findAllWalletsUseCase: FindAllWalletsUseCase;
   let testModule: TestingModule;

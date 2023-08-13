@@ -7,7 +7,7 @@ import { IUserRepository } from '@/user/interfaces';
 import { User } from '@/user/infra/entities';
 import { ListUserByIdUseCase } from '@/user/use-cases';
 
-describe('User controller E2E', () => {
+describe('User controller (E2E)', () => {
   let app: INestApplication;
   let userId: string;
   let nonexistentUserId: string;

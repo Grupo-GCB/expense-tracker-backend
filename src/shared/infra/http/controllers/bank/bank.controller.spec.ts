@@ -7,7 +7,7 @@ import { IBankRepository } from '@/bank/interfaces';
 import { FindAllBanksUseCase, FindBankByIdUseCase } from '@/bank/use-cases';
 import { Bank } from '@/bank/infra/entities';
 
-describe('Bank controller E2E', () => {
+describe('Bank controller (E2E)', () => {
   let app: INestApplication;
   let bankId: string;
   let nonExistentBankId: string;
