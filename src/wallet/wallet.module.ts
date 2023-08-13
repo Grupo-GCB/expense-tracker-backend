@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import {
   FindAllWalletsUseCase,
+  FindWalletByIdUseCase,
   RegisterWalletUseCase,
 } from '@/wallet/use-cases';
 import { ListUserByIdUseCase } from '@/user/use-cases';
@@ -25,6 +26,7 @@ import { WalletRepository } from '@/wallet/infra/repositories';
     ListUserByIdUseCase,
     FindBankByIdUseCase,
     FindAllWalletsUseCase,
+    FindWalletByIdUseCase,
     {
       provide: IWalletRepository,
       useClass: WalletRepository,
