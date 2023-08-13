@@ -5,6 +5,7 @@ import {
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiNotFoundResponse,
+  ApiResponse,
 } from '@nestjs/swagger';
 
 import {
@@ -51,6 +52,12 @@ export class WalletController {
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Listar uma carteira pelo ID.',
+    description: 'Esta rota permite visualizar os dados de uma carteira.',
+  })
+  @ApiResponse(API_RESPONSES.OK)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async listWallet(@Param('id') wallet_id: string): Promise<Wallet> {
     const { wallet } = await this.findWalletById.execute(wallet_id);
     return wallet;
