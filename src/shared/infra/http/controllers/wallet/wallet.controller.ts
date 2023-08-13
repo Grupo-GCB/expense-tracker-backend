@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -9,6 +9,7 @@ import {
 
 import {
   FindAllWalletsUseCase,
+  FindWalletByIdUseCase,
   RegisterWalletUseCase,
 } from '@/wallet/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
@@ -21,6 +22,7 @@ export class WalletController {
   constructor(
     private readonly walletUseCase: RegisterWalletUseCase,
     private readonly findAllWallets: FindAllWalletsUseCase,
+    private readonly findWalletById: FindWalletByIdUseCase,
   ) {}
 
   @Post()
@@ -46,5 +48,11 @@ export class WalletController {
   async listAllWallets(): Promise<Wallet[]> {
     const { wallets } = await this.findAllWallets.execute();
     return wallets;
+  }
+
+  @Get(':id')
+  async listWallet(@Param('id') wallet_id: string): Promise<Wallet> {
+    const { wallet } = await this.findWalletById.execute(wallet_id);
+    return wallet;
   }
 }
