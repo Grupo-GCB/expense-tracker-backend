@@ -19,19 +19,19 @@ describe('Find Bank by ID', () => {
     findWalletById = new FindWalletByIdUseCase(walletRepository);
   });
 
-  it('should be able to return a wallet', async () => {
-    const walletData = {
-      id: '01',
-      account_type: AccountType.CHECKING_ACCOUNT,
-      description: 'Primeira Descrição de carteira.',
-      created_at: new Date(),
-      updated_at: new Date(),
-      deleted_at: null,
-      bank: null,
-      user: null,
-      transactions: null,
-    } as Wallet;
+  const walletData = {
+    id: '01',
+    account_type: AccountType.CHECKING_ACCOUNT,
+    description: 'Primeira Descrição de carteira.',
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: null,
+    bank: null,
+    user: null,
+    transactions: null,
+  } as Wallet;
 
+  it('should be able to return a wallet', async () => {
     walletRepository.findById.mockResolvedValue(walletData);
 
     const result = await findWalletById.execute(walletId);
