@@ -1,8 +1,9 @@
+import { NotFoundException } from '@nestjs/common';
+
 import { AccountType } from '@/shared/constants';
 import { Wallet } from '@/wallet/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { FindWalletByIdUseCase } from '@/wallet/use-cases';
-import { NotFoundException } from '@nestjs/common';
 
 describe('Find Bank by ID', () => {
   let findWalletById: FindWalletByIdUseCase;

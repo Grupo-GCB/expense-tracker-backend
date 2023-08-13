@@ -6,12 +6,18 @@ import { AccountType } from '@/shared/constants';
 import { Wallet } from '@/wallet/infra/entities';
 import { AppModule } from '@/app.module';
 import { IWalletRepository } from '@/wallet/interfaces';
-import { FindAllWalletsUseCase } from '@/wallet/use-cases';
+import {
+  FindAllWalletsUseCase,
+  FindWalletByIdUseCase,
+} from '@/wallet/use-cases';
 
 describe('Wallet Controller E2E', () => {
   let app: INestApplication;
   let findAllWalletsUseCase: FindAllWalletsUseCase;
+  let findWalletByIdUseCase: FindWalletByIdUseCase;
   let testModule: TestingModule;
+  let walletId: string;
+  let nonExistentWalletId: string;
 
   const mockWallet: Wallet = {
     id: '01',
@@ -42,6 +48,12 @@ describe('Wallet Controller E2E', () => {
     findAllWalletsUseCase = testModule.get<FindAllWalletsUseCase>(
       FindAllWalletsUseCase,
     );
+    findWalletByIdUseCase = testModule.get<FindWalletByIdUseCase>(
+      FindWalletByIdUseCase,
+    );
+
+    walletId = 'existent-wallet-id';
+    nonExistentWalletId = '0a26e4a5-5d1b-4fba-a554-8ef49b76aafb';
 
     app = testModule.createNestApplication();
     await app.init();
@@ -82,6 +94,35 @@ describe('Wallet Controller E2E', () => {
         .expect(HttpStatus.OK);
 
       expect(response.body).toEqual([]);
+    });
+  });
+
+  describe('/wallet/:id (GET)', () => {
+    it('should be able to return wallet data when wallet id exists', async () => {
+      const walletReponse = { wallet: mockWallet };
+      jest
+        .spyOn(findWalletByIdUseCase, 'execute')
+        .mockResolvedValueOnce(walletReponse);
+
+      const response = await request(app.getHttpServer())
+        .get(`/wallet/${walletId}`)
+        .expect(HttpStatus.OK);
+
+      expect(response.body).toMatchObject({
+        id: mockWallet.id,
+        account_type: mockWallet.account_type,
+        description: mockWallet.description,
+        deleted_at: mockWallet.deleted_at,
+        bank: mockWallet.bank,
+        user: mockWallet.user,
+        transactions: mockWallet.transactions,
+      });
+    });
+
+    it('should be able to return 404 if wallet does not exists', async () => {
+      await request(app.getHttpServer())
+        .get(`/wallet/${nonExistentWalletId}`)
+        .expect(HttpStatus.NOT_FOUND);
     });
   });
 });
