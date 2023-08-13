@@ -21,4 +21,8 @@ export class WalletRepository implements IWalletRepository {
   async findAll(): Promise<Wallet[]> {
     return this.walletRepository.find();
   }
+
+  async findById(id: string): Promise<Wallet> {
+    return this.walletRepository.findOne({ where: { id } });
+  }
 }
