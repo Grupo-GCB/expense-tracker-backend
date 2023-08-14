@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsUUID } from 'class-validator';
 
 import { AccountType } from '@/shared/constants';
 import { ApiProperty } from '@nestjs/swagger';
@@ -9,7 +9,16 @@ export class UpdateWalletDTO {
     description: 'Id da carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id da carteira.' })
+  @IsUUID('all', { message: 'Necessário o id seja do tipo UUID.' })
   id: string;
+
+  @ApiProperty({
+    example: '4e8b5d94-6b16-4a42-b6d1-dc58b553d109',
+    description: 'Id do banco associado à carteira.',
+  })
+  @IsNotEmpty({ message: 'Necessário informar o id do banco.' })
+  @IsUUID('all', { message: 'Necessário o id seja do tipo UUID.' })
+  bank_id: string;
 
   @ApiProperty({
     enum: AccountType,
