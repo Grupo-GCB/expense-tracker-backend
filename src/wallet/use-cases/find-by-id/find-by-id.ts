@@ -1,5 +1,6 @@
-import { IWalletReponse, IWalletRepository } from '@/wallet/interfaces';
 import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { IWalletReponse, IWalletRepository } from '@/wallet/interfaces';
 
 @Injectable()
 export class FindWalletByIdUseCase {
