@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { Wallet } from '@/wallet/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
-import { SaveWalletDTO, UpdateWalletDTO } from '@/wallet/dto';
+import { SaveWalletDTO } from '@/wallet/dto';
 
 @Injectable()
 export class WalletRepository implements IWalletRepository {
@@ -22,11 +22,7 @@ export class WalletRepository implements IWalletRepository {
     return this.walletRepository.findOne({ where: { id } });
   }
 
-  async update(data: UpdateWalletDTO): Promise<Wallet> {
-    const wallet = await this.findById(data.id);
-
-    Object.assign(wallet, data);
-
+  async update(wallet: Wallet): Promise<Wallet> {
     return this.walletRepository.save(wallet);
   }
 }
