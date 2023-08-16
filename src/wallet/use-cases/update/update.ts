@@ -23,10 +23,8 @@ export class UpdateWalletUseCase {
     const wallet = await this.walletRepository.findById(data.id);
     if (!wallet) throw new NotFoundException('Carteira não encontrada.');
 
-    try {
-      return this.walletRepository.update(data);
-    } catch {
-      throw new BadRequestException('Erro ao atualizar a carteira.');
-    }
+    Object.assign(wallet, data);
+
+    return this.walletRepository.update(wallet);
   }
 }
