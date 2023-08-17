@@ -20,7 +20,7 @@ describe('Wallet Controller (E2E)', () => {
   let nonExistentWalletId: string;
 
   const mockWallet: Wallet = {
-    id: '01',
+    id: 'existent-wallet-id',
     account_type: AccountType.CHECKING_ACCOUNT,
     description: 'Descrição da carteira.',
     created_at: new Date(),
