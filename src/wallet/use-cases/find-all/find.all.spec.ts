@@ -3,10 +3,23 @@ import { Test } from '@nestjs/testing';
 import { FindAllWalletsUseCase } from '@/wallet/use-cases';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { AccountType } from '@/shared/constants';
+import { Wallet } from '@/wallet/infra/entities';
 
 describe('Find All Wallets', () => {
   let findAll: FindAllWalletsUseCase;
   let walletRepository: jest.Mocked<IWalletRepository>;
+
+  const mockWallet: Wallet = {
+    id: '01',
+    account_type: AccountType.CHECKING_ACCOUNT,
+    description: 'Primeira Descrição de carteira.',
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: null,
+    bank: null,
+    user: null,
+    transactions: null,
+  };
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -25,30 +38,7 @@ describe('Find All Wallets', () => {
   });
 
   it('should be able to return all wallets', async () => {
-    const wallets = [
-      {
-        id: '01',
-        account_type: AccountType.CHECKING_ACCOUNT,
-        description: 'Primeira Descrição de carteira.',
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: null,
-        bank: null,
-        user: null,
-        transactions: null,
-      },
-      {
-        id: '02',
-        account_type: AccountType.CASH,
-        description: 'Segunda Descrição de carteira.',
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: null,
-        bank: null,
-        user: null,
-        transactions: null,
-      },
-    ];
+    const wallets = [mockWallet, mockWallet];
 
     walletRepository.findAll.mockResolvedValue(wallets);
 
