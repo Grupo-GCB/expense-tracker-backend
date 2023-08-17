@@ -1,15 +1,28 @@
-import { Body, Controller, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiNotFoundResponse,
+  ApiNoContentResponse,
 } from '@nestjs/swagger';
 
-import { RegisterWalletUseCase, UpdateWalletUseCase } from '@/wallet/use-cases';
+import {
+  DeleteWalletUseCase,
+  RegisterWalletUseCase,
+  UpdateWalletUseCase,
+} from '@/wallet/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
-import { SaveWalletDTO, UpdateWalletDTO } from '@/wallet/dto';
+import { DeleteWalletDTO, SaveWalletDTO, UpdateWalletDTO } from '@/wallet/dto';
 import { API_RESPONSES } from '@/shared/constants';
 
 @ApiTags('Wallet')
@@ -18,6 +31,7 @@ export class WalletController {
   constructor(
     private readonly walletUseCase: RegisterWalletUseCase,
     private readonly updateWalletUseCase: UpdateWalletUseCase,
+    private readonly deleteWalletUseCase: DeleteWalletUseCase,
   ) {}
 
   @Post()
@@ -42,5 +56,13 @@ export class WalletController {
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async updateWallet(@Body() data: UpdateWalletDTO): Promise<Wallet> {
     return this.updateWalletUseCase.execute(data);
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  @ApiNoContentResponse(API_RESPONSES.NO_CONTENT)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
+  async deleteWallet(@Param() data: DeleteWalletDTO): Promise<void> {
+    await this.deleteWalletUseCase.execute(data);
   }
 }
