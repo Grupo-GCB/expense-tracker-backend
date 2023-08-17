@@ -12,7 +12,7 @@ import { Bank } from '@/bank/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
 
 describe('Update Wallet Use Case', () => {
-  let updateWalletUseCase: UpdateWalletUseCase;
+  let sut: UpdateWalletUseCase;
   let findBankByIdUseCase: FindBankByIdUseCase;
   let walletRepository: IWalletRepository;
   let findByIdMock: jest.SpyInstance;
@@ -40,7 +40,7 @@ describe('Update Wallet Use Case', () => {
       ],
     }).compile();
 
-    updateWalletUseCase = module.get<UpdateWalletUseCase>(UpdateWalletUseCase);
+    sut = module.get<UpdateWalletUseCase>(UpdateWalletUseCase);
     findBankByIdUseCase = module.get<FindBankByIdUseCase>(FindBankByIdUseCase);
     walletRepository = module.get<IWalletRepository>(IWalletRepository);
 
@@ -74,9 +74,8 @@ describe('Update Wallet Use Case', () => {
     updateMock.mockResolvedValue(updatedWallet);
     findByIdMock.mockResolvedValue(updatedWallet);
 
-    await expect(updateWalletUseCase.execute(updateData)).resolves.toEqual(
-      updatedWallet,
-    );
+    await expect(sut.execute(updateData)).resolves.toEqual(updatedWallet);
+
     expect(walletRepository.update).toHaveBeenCalledTimes(1);
     expect(walletRepository.update).toHaveBeenCalledWith(updatedWallet);
 
@@ -97,9 +96,9 @@ describe('Update Wallet Use Case', () => {
 
     findByIdMock.mockResolvedValue(null);
 
-    await expect(
-      updateWalletUseCase.execute(dtoWithNonExistingWallet),
-    ).rejects.toBeInstanceOf(NotFoundException);
+    await expect(sut.execute(dtoWithNonExistingWallet)).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
 
     expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
     expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
@@ -122,9 +121,9 @@ describe('Update Wallet Use Case', () => {
 
     findBankByIdMock.mockResolvedValue(null);
 
-    await expect(
-      updateWalletUseCase.execute(dtoWithNonExistingBank),
-    ).rejects.toBeInstanceOf(NotFoundException);
+    await expect(sut.execute(dtoWithNonExistingBank)).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
 
     expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
     expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
