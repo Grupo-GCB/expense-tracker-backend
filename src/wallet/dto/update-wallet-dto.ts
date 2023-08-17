@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty, IsUUID } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { AccountType } from '@/shared/constants';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateWalletDTO {
   @ApiProperty({
