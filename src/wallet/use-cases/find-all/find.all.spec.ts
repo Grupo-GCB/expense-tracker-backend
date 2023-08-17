@@ -48,7 +48,7 @@ describe('Find All Wallets', () => {
     expect(walletRepository.findAll).toHaveBeenCalledTimes(1);
   });
 
-  it('should not be able to return wallets if they have not been found', async () => {
+  it('should not be able to return wallets if were not found', async () => {
     walletRepository.findAll.mockResolvedValue([]);
 
     const result = await findAll.execute();
