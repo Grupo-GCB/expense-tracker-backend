@@ -18,6 +18,10 @@ export class WalletRepository implements IWalletRepository {
     return this.walletRepository.save(wallet);
   }
 
+  async delete(id: string): Promise<void> {
+    await this.walletRepository.softDelete({ id });
+  }
+
   async findById(id: string): Promise<Wallet> {
     return this.walletRepository.findOne({ where: { id } });
   }
