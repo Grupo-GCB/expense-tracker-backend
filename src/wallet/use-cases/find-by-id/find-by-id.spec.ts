@@ -20,7 +20,7 @@ describe('Find Bank by ID', () => {
   });
 
   const walletData = {
-    id: '01',
+    id: 'existent-wallet-id',
     account_type: AccountType.CHECKING_ACCOUNT,
     description: 'Primeira Descrição de carteira.',
     created_at: new Date(),
