@@ -39,7 +39,6 @@ export class WalletController {
     description: 'Esta rota permite atualizar uma carteira de um usuário.',
   })
   @ApiOkResponse(API_RESPONSES.OK)
-  @ApiBadRequestResponse(API_RESPONSES.BAD_REQUEST)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async updateWallet(@Body() data: UpdateWalletDTO): Promise<Wallet> {
     return this.updateWalletUseCase.execute(data);
