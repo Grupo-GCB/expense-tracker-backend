@@ -7,20 +7,21 @@ import {
 import * as request from 'supertest';
 
 import { AppModule } from '@/app.module';
-import { SaveWalletDTO } from '@/wallet/dto';
+import { UpdateWalletDTO } from '@/wallet/dto';
 import { AccountType } from '@/shared/constants/enums';
 import { IWalletRepository } from '@/wallet/interfaces';
 
 describe('Wallet Controller E2E', () => {
   let app: INestApplication;
   let walletRepository: IWalletRepository;
-  let createWalletMock: jest.SpyInstance;
+  let updateWalletMock: jest.SpyInstance;
+  let findByIdMock: jest.SpyInstance;
 
-  const walletData: SaveWalletDTO = {
-    user_id: 'auth0|58vfb567d5asdea52bc65ebba',
+  const updatedWalletData: UpdateWalletDTO = {
+    id: '6c1839fc-a36e-4f5f-8a62-afdf164d9b57',
     bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d4',
-    account_type: AccountType.CHECKING_ACCOUNT,
-    description: 'Descrição da carteira',
+    account_type: AccountType.CASH,
+    description: 'Nova descrição',
   };
 
   beforeAll(async () => {
@@ -29,14 +30,16 @@ describe('Wallet Controller E2E', () => {
     })
       .overrideProvider(IWalletRepository)
       .useValue({
-        create: jest.fn(),
+        update: jest.fn(),
+        findById: jest.fn(),
       })
       .compile();
 
     app = module.createNestApplication();
     walletRepository = module.get<IWalletRepository>(IWalletRepository);
 
-    createWalletMock = jest.spyOn(walletRepository, 'create');
+    updateWalletMock = jest.spyOn(walletRepository, 'update');
+    findByIdMock = jest.spyOn(walletRepository, 'findById');
 
     await app.init();
   });
@@ -45,55 +48,49 @@ describe('Wallet Controller E2E', () => {
     await app.close();
   });
 
-  describe('/wallet (POST)', () => {
+  describe('/wallet/update (PUT)', () => {
     it('should be defined', () => {
-      expect(walletRepository).toBeDefined();
-      expect(createWalletMock).toBeDefined();
+      expect(updateWalletMock).toBeDefined();
+      expect(findByIdMock).toBeDefined();
     });
 
-    it('should create a wallet', async () => {
-      createWalletMock.mockResolvedValue(walletData);
+    it('should be able to update a wallet', async () => {
+      updateWalletMock.mockResolvedValue(updatedWalletData);
+      findByIdMock.mockResolvedValue(updatedWalletData);
 
       const response = await request(app.getHttpServer())
-        .post('/wallet')
-        .send(walletData)
-        .expect(HttpStatus.CREATED);
+        .put('/wallet/update')
+        .send(updatedWalletData)
+        .expect(HttpStatus.OK);
 
-      expect(response.body).toEqual(
-        expect.objectContaining({
-          user_id: expect.any(String),
-          bank_id: expect.any(String),
-        }),
-      );
-      expect(response.body.account_type).toBe(AccountType.CHECKING_ACCOUNT);
-      expect(response.body.description).toBe('Descrição da carteira');
+      expect(response.body).toEqual(updatedWalletData);
     });
 
-    it('should not be able to register a wallet if user does not exist', async () => {
-      createWalletMock.mockRejectedValue(new NotFoundException());
+    it('should not be able to update a wallet if bank does not exist', async () => {
+      updateWalletMock.mockRejectedValue(new NotFoundException());
 
-      const dtoWithNonExistingUser: SaveWalletDTO = {
-        ...walletData,
-        user_id: 'non_existing_user_id',
+      const dtoWithNonExistingBank: UpdateWalletDTO = {
+        ...updatedWalletData,
+        bank_id: 'd534a168-60ad-48fc-9d57-64b412e4f6d5',
       };
 
       await request(app.getHttpServer())
-        .post('/wallet')
-        .send(dtoWithNonExistingUser)
+        .put('/wallet/update')
+        .send(dtoWithNonExistingBank)
         .expect(HttpStatus.NOT_FOUND);
     });
 
-    it('should not be able to register a wallet if bank does not exist', async () => {
-      createWalletMock.mockRejectedValue(new NotFoundException());
+    it('should not be able to update a wallet if wallet does not exist', async () => {
+      updateWalletMock.mockRejectedValue(new NotFoundException());
 
-      const dtoWithNonExistingBank: SaveWalletDTO = {
-        ...walletData,
-        bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d5',
+      const dtoWithNonExistingWallet: UpdateWalletDTO = {
+        ...updatedWalletData,
+        id: 'd534a168-60ad-48fc-9d57-64b412e4f6d5',
       };
 
       await request(app.getHttpServer())
-        .post('/wallet')
-        .send(dtoWithNonExistingBank)
+        .put('/wallet/update')
+        .send(dtoWithNonExistingWallet)
         .expect(HttpStatus.NOT_FOUND);
     });
   });
