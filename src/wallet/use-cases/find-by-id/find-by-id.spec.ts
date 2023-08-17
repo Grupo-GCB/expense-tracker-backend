@@ -1,7 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 
 import { AccountType } from '@/shared/constants';
-import { Wallet } from '@/wallet/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { FindWalletByIdUseCase } from '@/wallet/use-cases';
 
@@ -30,7 +29,7 @@ describe('Find Bank by ID', () => {
     bank: null,
     user: null,
     transactions: null,
-  } as Wallet;
+  };
 
   it('should be able to return a wallet', async () => {
     walletRepository.findById.mockResolvedValue(walletData);
