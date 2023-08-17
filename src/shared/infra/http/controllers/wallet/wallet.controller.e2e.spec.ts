@@ -11,7 +11,7 @@ import { UpdateWalletDTO } from '@/wallet/dto';
 import { AccountType } from '@/shared/constants/enums';
 import { IWalletRepository } from '@/wallet/interfaces';
 
-describe('Wallet Controller E2E', () => {
+describe('Wallet Controller (E2E)', () => {
   let app: INestApplication;
   let walletRepository: IWalletRepository;
   let updateWalletMock: jest.SpyInstance;
