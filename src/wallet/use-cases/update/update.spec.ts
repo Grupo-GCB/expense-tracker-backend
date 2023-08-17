@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 
 import { AccountType } from '@/shared/constants';
@@ -11,7 +11,7 @@ import { IBankRepository } from '@/bank/interfaces';
 import { Bank } from '@/bank/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
 
-describe('UpdateWalletUseCase', () => {
+describe('Update Wallet Use Case', () => {
   let updateWalletUseCase: UpdateWalletUseCase;
   let findBankByIdUseCase: FindBankByIdUseCase;
   let walletRepository: IWalletRepository;
@@ -47,6 +47,9 @@ describe('UpdateWalletUseCase', () => {
     findByIdMock = jest.spyOn(walletRepository, 'findById');
     updateMock = jest.spyOn(walletRepository, 'update');
     findBankByIdMock = jest.spyOn(findBankByIdUseCase, 'execute');
+
+    findBankByIdMock.mockResolvedValue(bank);
+    updateMock.mockResolvedValue(NotFoundException);
   });
 
   const validId = '4e8b5d94-6b16-4a42-b6d1-dc58b553d109';
@@ -66,10 +69,9 @@ describe('UpdateWalletUseCase', () => {
   } as Bank;
 
   describe('execute', () => {
-    it('should be update wallet successfully', async () => {
+    it('should be able to update a wallet successfully', async () => {
       const updatedWallet = plainToClass(Wallet, updateData);
 
-      findBankByIdMock.mockResolvedValue(bank);
       updateMock.mockResolvedValue(updatedWallet);
       findByIdMock.mockResolvedValue(updatedWallet);
 
@@ -78,44 +80,58 @@ describe('UpdateWalletUseCase', () => {
       );
       expect(walletRepository.update).toHaveBeenCalledTimes(1);
       expect(walletRepository.update).toHaveBeenCalledWith(updatedWallet);
-    });
 
-    it('should throw NotFoundException if wallet does not exist', async () => {
-      const updateData: UpdateWalletDTO = {
-        account_type: AccountType.CHECKING_ACCOUNT,
-        bank_id: validId,
-        description: 'Nova descrição',
-        id: invalidId,
-      };
+      expect(walletRepository.findById).toHaveBeenCalledTimes(1);
+      expect(walletRepository.findById).toHaveBeenCalledWith(updateData.id);
 
-      findBankByIdMock.mockResolvedValue(bank);
-      findByIdMock.mockResolvedValue(null);
-      updateMock.mockResolvedValue(NotFoundException);
-
-      await expect(
-        updateWalletUseCase.execute(updateData),
-      ).rejects.toBeInstanceOf(NotFoundException);
-      expect(walletRepository.update).not.toHaveBeenCalled();
-    });
-
-    it('should throw NotFoundException if bank does not exist', async () => {
-      const updateData: UpdateWalletDTO = {
-        account_type: AccountType.CHECKING_ACCOUNT,
-        bank_id: invalidId,
-        description: 'Nova descrição',
-        id: validId,
-      };
-
-      updateMock.mockResolvedValue(NotFoundException);
-      findBankByIdMock.mockResolvedValue(null);
-
-      await expect(
-        updateWalletUseCase.execute(updateData),
-      ).rejects.toBeInstanceOf(NotFoundException);
       expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
       expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
         updateData.bank_id,
       );
+    });
+
+    it('should throw NotFoundException if wallet does not exist', async () => {
+      const dtoWithNonExistingWallet: UpdateWalletDTO = {
+        ...updateData,
+        id: invalidId,
+      };
+
+      findByIdMock.mockResolvedValue(null);
+
+      await expect(
+        updateWalletUseCase.execute(dtoWithNonExistingWallet),
+      ).rejects.toBeInstanceOf(NotFoundException);
+
+      expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
+      expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
+        dtoWithNonExistingWallet.bank_id,
+      );
+
+      expect(walletRepository.findById).toHaveBeenCalledTimes(1);
+      expect(walletRepository.findById).toHaveBeenCalledWith(
+        dtoWithNonExistingWallet.id,
+      );
+
+      expect(walletRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException if bank does not exist', async () => {
+      const dtoWithNonExistingBank: UpdateWalletDTO = {
+        ...updateData,
+        bank_id: invalidId,
+      };
+
+      findBankByIdMock.mockResolvedValue(null);
+
+      await expect(
+        updateWalletUseCase.execute(dtoWithNonExistingBank),
+      ).rejects.toBeInstanceOf(NotFoundException);
+
+      expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
+      expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
+        dtoWithNonExistingBank.bank_id,
+      );
+
       expect(walletRepository.findById).not.toHaveBeenCalled();
       expect(walletRepository.update).not.toHaveBeenCalled();
     });
