@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Register Wallet Use Case should not be able to return a wallet when bank id does not exist 1`] = `"Banco não encontrado."`;
+
+exports[`Register Wallet Use Case should not be able to return a wallet when user id does not exist 1`] = `"Usuário não encontrado."`;
