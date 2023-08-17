@@ -1,5 +1,5 @@
 import { Wallet } from '@/wallet/infra/entities/';
 
-export class IWalletsResponse {
+export interface IWalletsResponse {
   wallets: Wallet[];
 }
