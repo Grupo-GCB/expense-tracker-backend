@@ -9,7 +9,7 @@ export class UpdateWalletDTO {
     description: 'Id da carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id da carteira.' })
-  @IsUUID('all', { message: 'Necessário o id seja do tipo UUID.' })
+  @IsUUID('all', { message: 'Necessário que o id seja do tipo UUID.' })
   id: string;
 
   @ApiProperty({
