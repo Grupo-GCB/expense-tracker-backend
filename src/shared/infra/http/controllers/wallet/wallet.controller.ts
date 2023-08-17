@@ -36,7 +36,7 @@ export class WalletController {
   @Put('update')
   @ApiOperation({
     summary: 'Atualizar uma carteira.',
-    description: 'Esta rota permite atualizar uma carteira de um usuário.',
+    description: 'Esta rota permite atualizar a carteira de um usuário.',
   })
   @ApiOkResponse(API_RESPONSES.OK)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
