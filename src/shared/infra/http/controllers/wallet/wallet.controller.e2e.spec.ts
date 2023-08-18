@@ -38,14 +38,10 @@ describe('Wallet Controller (E2E)', () => {
     app = module.createNestApplication();
     walletRepository = module.get<IWalletRepository>(IWalletRepository);
 
-    updateWalletMock = jest.spyOn(walletRepository, 'update');
     findByIdMock = jest.spyOn(walletRepository, 'findById');
+    updateWalletMock = jest.spyOn(walletRepository, 'update');
 
     await app.init();
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 
   describe('/wallet/update (PUT)', () => {
@@ -55,8 +51,8 @@ describe('Wallet Controller (E2E)', () => {
     });
 
     it('should be able to update a wallet', async () => {
-      updateWalletMock.mockResolvedValue(updatedWalletData);
       findByIdMock.mockResolvedValue(updatedWalletData);
+      updateWalletMock.mockResolvedValue(updatedWalletData);
 
       const response = await request(app.getHttpServer())
         .put('/wallet/update')
@@ -92,6 +88,10 @@ describe('Wallet Controller (E2E)', () => {
         .put('/wallet/update')
         .send(dtoWithNonExistingWallet)
         .expect(HttpStatus.NOT_FOUND);
+    });
+
+    afterAll(async () => {
+      await app.close();
     });
   });
 });
