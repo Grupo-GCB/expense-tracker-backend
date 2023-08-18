@@ -10,6 +10,7 @@ import {
 
 import {
   FindAllWalletsByUserIdUseCase,
+  FindWalletByIdUseCase,
   RegisterWalletUseCase,
 } from '@/wallet/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
@@ -22,7 +23,6 @@ export class WalletController {
   constructor(
     private readonly walletUseCase: RegisterWalletUseCase,
     private readonly findAllWalletsByUserId: FindAllWalletsByUserIdUseCase,
-    private readonly findAllWallets: FindAllWalletsUseCase,
     private readonly findWalletById: FindWalletByIdUseCase,
   ) {}
 
@@ -54,7 +54,7 @@ export class WalletController {
     return wallets;
   }
 
-  @Get(':id')
+  @Get('wallet/:id')
   @ApiOperation({
     summary: 'Listar uma carteira pelo ID.',
     description: 'Esta rota permite visualizar os dados de uma carteira.',
