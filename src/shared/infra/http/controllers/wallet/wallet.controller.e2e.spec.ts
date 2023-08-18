@@ -1,20 +1,23 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import {
-  INestApplication,
   HttpStatus,
+  INestApplication,
   NotFoundException,
 } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 
 import { AppModule } from '@/app.module';
 import { SaveWalletDTO } from '@/wallet/dto';
 import { AccountType } from '@/shared/constants/enums';
 import { IWalletRepository } from '@/wallet/interfaces';
+import { FindAllWalletsByUserIdUseCase } from '@/wallet/use-cases';
+import { Wallet } from '@/wallet/infra/entities';
 
 describe('Wallet Controller E2E', () => {
   let app: INestApplication;
   let walletRepository: IWalletRepository;
   let createWalletMock: jest.SpyInstance;
+  let findAllWalletsByUserIdUseCase: FindAllWalletsByUserIdUseCase;
 
   const walletData: SaveWalletDTO = {
     user_id: 'auth0|58vfb567d5asdea52bc65ebba',
@@ -23,6 +26,20 @@ describe('Wallet Controller E2E', () => {
     description: 'Descrição da carteira',
   };
 
+  const mockWallet: Wallet = {
+    id: 'existent-wallet-id',
+    account_type: AccountType.CHECKING_ACCOUNT,
+    description: 'Descrição da carteira.',
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: null,
+    bank: null,
+    user: null,
+    transactions: null,
+  };
+
+  const user_id = 'auth0|user-id';
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -30,11 +47,16 @@ describe('Wallet Controller E2E', () => {
       .overrideProvider(IWalletRepository)
       .useValue({
         create: jest.fn(),
+        findById: jest.fn(),
+        findAll: jest.fn(),
       })
       .compile();
 
     app = module.createNestApplication();
     walletRepository = module.get<IWalletRepository>(IWalletRepository);
+    findAllWalletsByUserIdUseCase = module.get<FindAllWalletsByUserIdUseCase>(
+      FindAllWalletsByUserIdUseCase,
+    );
 
     createWalletMock = jest.spyOn(walletRepository, 'create');
 
@@ -95,6 +117,40 @@ describe('Wallet Controller E2E', () => {
         .post('/wallet')
         .send(dtoWithNonExistingBank)
         .expect(HttpStatus.NOT_FOUND);
+    });
+  });
+
+  describe('/wallets/:id (GET)', () => {
+    it('should be able to return a list with all wallets by user id', async () => {
+      const wallets = [mockWallet, mockWallet];
+
+      const walletsSerialized = wallets.map((wallet) => ({
+        ...wallet,
+        created_at: wallet.created_at.toISOString(),
+        updated_at: wallet.updated_at.toISOString(),
+      }));
+
+      jest
+        .spyOn(findAllWalletsByUserIdUseCase, 'execute')
+        .mockResolvedValue({ wallets });
+
+      const response = await request(app.getHttpServer())
+        .get(`/wallets/${user_id}`)
+        .expect(HttpStatus.OK);
+
+      expect(response.body).toEqual(walletsSerialized);
+    });
+
+    it('should be able to return an empty wallet list', async () => {
+      jest
+        .spyOn(findAllWalletsByUserIdUseCase, 'execute')
+        .mockResolvedValue({ wallets: [] });
+
+      const response = await request(app.getHttpServer())
+        .get(`/wallets/${user_id}`)
+        .expect(HttpStatus.OK);
+
+      expect(response.body).toEqual([]);
     });
   });
 });
