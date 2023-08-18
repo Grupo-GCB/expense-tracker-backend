@@ -29,7 +29,7 @@ describe('Wallet Controller (E2E)', () => {
     bank: null,
     user: null,
     transactions: null,
-  } as Wallet;
+  };
 
   const user_id = 'auth0|user-id';
 
@@ -68,7 +68,6 @@ describe('Wallet Controller (E2E)', () => {
 
   describe('/wallet/all (GET)', () => {
     it('should be able to return a list with all wallets', async () => {
-      const user_id = 'auth0|user-id'; // Replace with the actual user ID
       const wallets = [mockWallet, mockWallet];
 
       const walletsSerialized = wallets.map((wallet) => ({
