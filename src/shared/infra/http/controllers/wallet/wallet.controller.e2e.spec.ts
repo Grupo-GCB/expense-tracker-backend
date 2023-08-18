@@ -7,13 +7,13 @@ import { Wallet } from '@/wallet/infra/entities';
 import { AppModule } from '@/app.module';
 import { IWalletRepository } from '@/wallet/interfaces';
 import {
-  FindAllWalletsUseCase,
+  FindAllWalletsByUserIdUseCase,
   FindWalletByIdUseCase,
 } from '@/wallet/use-cases';
 
 describe('Wallet Controller (E2E)', () => {
   let app: INestApplication;
-  let findAllWalletsUseCase: FindAllWalletsUseCase;
+  let findAllWalletsByUserIdUseCase: FindAllWalletsByUserIdUseCase;
   let findWalletByIdUseCase: FindWalletByIdUseCase;
   let testModule: TestingModule;
   let walletId: string;
@@ -31,6 +31,8 @@ describe('Wallet Controller (E2E)', () => {
     transactions: null,
   } as Wallet;
 
+  const user_id = 'auth0|user-id';
+
   beforeAll(async () => {
     testModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -45,9 +47,10 @@ describe('Wallet Controller (E2E)', () => {
       ],
     }).compile();
 
-    findAllWalletsUseCase = testModule.get<FindAllWalletsUseCase>(
-      FindAllWalletsUseCase,
-    );
+    findAllWalletsByUserIdUseCase =
+      testModule.get<FindAllWalletsByUserIdUseCase>(
+        FindAllWalletsByUserIdUseCase,
+      );
     findWalletByIdUseCase = testModule.get<FindWalletByIdUseCase>(
       FindWalletByIdUseCase,
     );
@@ -65,6 +68,7 @@ describe('Wallet Controller (E2E)', () => {
 
   describe('/wallet/all (GET)', () => {
     it('should be able to return a list with all wallets', async () => {
+      const user_id = 'auth0|user-id'; // Replace with the actual user ID
       const wallets = [mockWallet, mockWallet];
 
       const walletsSerialized = wallets.map((wallet) => ({
@@ -74,11 +78,11 @@ describe('Wallet Controller (E2E)', () => {
       }));
 
       jest
-        .spyOn(findAllWalletsUseCase, 'execute')
+        .spyOn(findAllWalletsByUserIdUseCase, 'execute')
         .mockResolvedValue({ wallets });
 
       const response = await request(app.getHttpServer())
-        .get('/wallet/all')
+        .get(`/wallets/${user_id}`)
         .expect(HttpStatus.OK);
 
       expect(response.body).toEqual(walletsSerialized);
@@ -86,11 +90,11 @@ describe('Wallet Controller (E2E)', () => {
 
     it('should be able to return an empty wallet list', async () => {
       jest
-        .spyOn(findAllWalletsUseCase, 'execute')
+        .spyOn(findAllWalletsByUserIdUseCase, 'execute')
         .mockResolvedValue({ wallets: [] });
 
       const response = await request(app.getHttpServer())
-        .get('/wallet/all')
+        .get(`/wallets/${user_id}`)
         .expect(HttpStatus.OK);
 
       expect(response.body).toEqual([]);
