@@ -66,7 +66,7 @@ describe('Wallet Controller (E2E)', () => {
     await app.close();
   });
 
-  describe('/wallet/all (GET)', () => {
+  describe('/wallets/:id (GET)', () => {
     it('should be able to return a list with all wallets', async () => {
       const wallets = [mockWallet, mockWallet];
 
