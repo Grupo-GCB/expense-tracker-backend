@@ -16,7 +16,7 @@ import { SaveWalletDTO } from '@/wallet/dto';
 import { API_RESPONSES } from '@/shared/constants';
 
 @ApiTags('Wallet')
-@Controller('wallet')
+@Controller()
 export class WalletController {
   constructor(
     private readonly walletUseCase: RegisterWalletUseCase,
