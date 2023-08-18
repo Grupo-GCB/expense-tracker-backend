@@ -5,10 +5,11 @@ import {
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiNotFoundResponse,
+  ApiResponse,
 } from '@nestjs/swagger';
 
 import {
-  FindAllWalletsByUserIdUseCase,
+  FindAllWalletsUseCase,
   FindWalletByIdUseCase,
   RegisterWalletUseCase,
 } from '@/wallet/use-cases';
@@ -21,7 +22,7 @@ import { API_RESPONSES } from '@/shared/constants';
 export class WalletController {
   constructor(
     private readonly walletUseCase: RegisterWalletUseCase,
-    private readonly findAllWalletsByUserId: FindAllWalletsByUserIdUseCase,
+    private readonly findAllWallets: FindAllWalletsUseCase,
     private readonly findWalletById: FindWalletByIdUseCase,
   ) {}
 
@@ -38,28 +39,25 @@ export class WalletController {
     return this.walletUseCase.createWallet(walletData);
   }
 
-  @Get('wallets/:id')
+  @Get('all')
   @ApiOkResponse(API_RESPONSES.OK)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   @ApiOperation({
     summary: 'Listar todas as carteiras.',
     description: 'Esta rota permite visualizar todas as carteiras.',
   })
-  async listAllWalletsByUserId(
-    @Param('id') user_id: string,
-  ): Promise<Wallet[]> {
-    const { wallets } = await this.findAllWalletsByUserId.execute(user_id);
+  async listAllWallets(): Promise<Wallet[]> {
+    const { wallets } = await this.findAllWallets.execute();
     return wallets;
   }
 
-  @Get('wallet/:id')
-  @ApiOkResponse(API_RESPONSES.OK)
-  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
+  @Get(':id')
   @ApiOperation({
-    summary: 'Listar todas as carteiras de um usuário pelo ID.',
-    description:
-      'Esta rota permite visualizar todas as carteiras de um usuário.',
+    summary: 'Listar uma carteira pelo ID.',
+    description: 'Esta rota permite visualizar os dados de uma carteira.',
   })
+  @ApiResponse(API_RESPONSES.OK)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async listWallet(@Param('id') wallet_id: string): Promise<Wallet> {
     const { wallet } = await this.findWalletById.execute(wallet_id);
     return wallet;
