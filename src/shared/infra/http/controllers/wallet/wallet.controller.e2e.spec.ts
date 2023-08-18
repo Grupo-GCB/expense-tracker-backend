@@ -6,15 +6,15 @@ import { AccountType } from '@/shared/constants';
 import { Wallet } from '@/wallet/infra/entities';
 import { AppModule } from '@/app.module';
 import { IWalletRepository } from '@/wallet/interfaces';
-import { FindAllWalletsUseCase } from '@/wallet/use-cases';
+import { FindAllWalletsByUserIdUseCase } from '@/wallet/use-cases';
 
 describe('Wallet Controller (E2E)', () => {
   let app: INestApplication;
-  let findAllWalletsUseCase: FindAllWalletsUseCase;
+  let findAllWalletsByUserIdUseCase: FindAllWalletsByUserIdUseCase;
   let testModule: TestingModule;
 
   const mockWallet: Wallet = {
-    id: '01',
+    id: 'existent-wallet-id',
     account_type: AccountType.CHECKING_ACCOUNT,
     description: 'Descrição da carteira.',
     created_at: new Date(),
@@ -23,7 +23,9 @@ describe('Wallet Controller (E2E)', () => {
     bank: null,
     user: null,
     transactions: null,
-  } as Wallet;
+  };
+
+  const user_id = 'auth0|user-id';
 
   beforeAll(async () => {
     testModule = await Test.createTestingModule({
@@ -39,9 +41,10 @@ describe('Wallet Controller (E2E)', () => {
       ],
     }).compile();
 
-    findAllWalletsUseCase = testModule.get<FindAllWalletsUseCase>(
-      FindAllWalletsUseCase,
-    );
+    findAllWalletsByUserIdUseCase =
+      testModule.get<FindAllWalletsByUserIdUseCase>(
+        FindAllWalletsByUserIdUseCase,
+      );
 
     app = testModule.createNestApplication();
     await app.init();
@@ -51,8 +54,8 @@ describe('Wallet Controller (E2E)', () => {
     await app.close();
   });
 
-  describe('/wallet/all (GET)', () => {
-    it('should be able to return a list with all wallets', async () => {
+  describe('/wallets/:id (GET)', () => {
+    it('should be able to return a list with all wallets by user id', async () => {
       const wallets = [mockWallet, mockWallet];
 
       const walletsSerialized = wallets.map((wallet) => ({
@@ -62,11 +65,11 @@ describe('Wallet Controller (E2E)', () => {
       }));
 
       jest
-        .spyOn(findAllWalletsUseCase, 'execute')
+        .spyOn(findAllWalletsByUserIdUseCase, 'execute')
         .mockResolvedValue({ wallets });
 
       const response = await request(app.getHttpServer())
-        .get('/wallet/all')
+        .get(`/wallets/${user_id}`)
         .expect(HttpStatus.OK);
 
       expect(response.body).toEqual(walletsSerialized);
@@ -74,11 +77,11 @@ describe('Wallet Controller (E2E)', () => {
 
     it('should be able to return an empty wallet list', async () => {
       jest
-        .spyOn(findAllWalletsUseCase, 'execute')
+        .spyOn(findAllWalletsByUserIdUseCase, 'execute')
         .mockResolvedValue({ wallets: [] });
 
       const response = await request(app.getHttpServer())
-        .get('/wallet/all')
+        .get(`/wallets/${user_id}`)
         .expect(HttpStatus.OK);
 
       expect(response.body).toEqual([]);
