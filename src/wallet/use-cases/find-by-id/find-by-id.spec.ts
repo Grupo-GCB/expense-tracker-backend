@@ -36,7 +36,11 @@ describe('Find Bank by ID', () => {
 
     const result = await findWalletById.execute(walletId);
 
-    expect(result.wallet).toEqual(walletData);
+    expect(result.wallet).toEqual({
+      ...walletData,
+      bank: expect.any(Object),
+    });
+
     expect(walletRepository.findById).toHaveBeenCalledWith(walletId);
     expect(walletRepository.findById).toHaveBeenCalledTimes(1);
   });

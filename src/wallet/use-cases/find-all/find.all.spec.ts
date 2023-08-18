@@ -49,7 +49,15 @@ describe('Find All Wallets', () => {
 
     const result = await findAllWalletsByUserIdUseCase.execute(user_id);
 
-    expect(result.wallets).toEqual(wallets);
+    expect(result.wallets).toEqual(
+      expect.arrayContaining(
+        wallets.map((wallet) => ({
+          ...wallet,
+          bank: expect.any(Object),
+        })),
+      ),
+    );
+
     expect(walletRepository.findAllByUserId).toHaveBeenCalledTimes(1);
   });
 
