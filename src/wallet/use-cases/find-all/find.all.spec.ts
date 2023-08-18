@@ -28,7 +28,7 @@ describe('Find All Wallets By User ID', () => {
   });
 
   it('should be able to return all wallets by user ID', async () => {
-    const user_id = 'auth0|user-id'; // Replace with the actual user ID
+    const user_id = 'auth0|user-id';
     const wallets = [
       {
         id: '01',
