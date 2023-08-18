@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
 
 import { AccountType } from '@/shared/constants';
 import { UpdateWalletDTO } from '@/wallet/dto';
@@ -19,7 +18,7 @@ describe('Update Wallet Use Case', () => {
   let updateMock: jest.SpyInstance;
   let findBankByIdMock: jest.SpyInstance;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UpdateWalletUseCase,
@@ -47,7 +46,9 @@ describe('Update Wallet Use Case', () => {
     findByIdMock = jest.spyOn(walletRepository, 'findById');
     updateMock = jest.spyOn(walletRepository, 'update');
     findBankByIdMock = jest.spyOn(findBankByIdUseCase, 'execute');
+  });
 
+  beforeEach(async () => {
     findBankByIdMock.mockResolvedValue(bank);
     updateMock.mockResolvedValue(NotFoundException);
   });
@@ -69,68 +70,74 @@ describe('Update Wallet Use Case', () => {
   } as Bank;
 
   it('should be able to update a wallet', async () => {
-    const updatedWallet = plainToClass(Wallet, updateData);
+    const updatedWallet = updateData as unknown as Wallet;
 
-    updateMock.mockResolvedValue(updatedWallet);
     findByIdMock.mockResolvedValue(updatedWallet);
+    updateMock.mockResolvedValue(updatedWallet);
 
-    await expect(sut.execute(updateData)).resolves.toEqual(updatedWallet);
+    const result = await sut.execute(updateData);
 
-    expect(walletRepository.update).toHaveBeenCalledTimes(1);
-    expect(walletRepository.update).toHaveBeenCalledWith(updatedWallet);
-
-    expect(walletRepository.findById).toHaveBeenCalledTimes(1);
-    expect(walletRepository.findById).toHaveBeenCalledWith(updateData.id);
+    expect(result).toEqual(updatedWallet);
 
     expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
     expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
       updateData.bank_id,
     );
+
+    expect(walletRepository.findById).toHaveBeenCalledTimes(1);
+    expect(walletRepository.findById).toHaveBeenCalledWith(updateData.id);
+
+    expect(walletRepository.update).toHaveBeenCalledTimes(1);
+    expect(walletRepository.update).toHaveBeenCalledWith(updatedWallet);
   });
 
   it('should not be able to update a wallet when wallet does not exists', async () => {
-    const dtoWithNonExistingWallet: UpdateWalletDTO = {
+    const nonExistingWalletId: UpdateWalletDTO = {
       ...updateData,
       id: invalidId,
     };
 
     findByIdMock.mockResolvedValue(null);
 
-    await expect(sut.execute(dtoWithNonExistingWallet)).rejects.toBeInstanceOf(
+    await expect(sut.execute(nonExistingWalletId)).rejects.toBeInstanceOf(
       NotFoundException,
     );
 
     expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
     expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
-      dtoWithNonExistingWallet.bank_id,
+      nonExistingWalletId.bank_id,
     );
 
     expect(walletRepository.findById).toHaveBeenCalledTimes(1);
     expect(walletRepository.findById).toHaveBeenCalledWith(
-      dtoWithNonExistingWallet.id,
+      nonExistingWalletId.id,
     );
 
     expect(walletRepository.update).not.toHaveBeenCalled();
   });
 
   it('should not be able to update a wallet when bank does not exists', async () => {
-    const dtoWithNonExistingBank: UpdateWalletDTO = {
+    const nonExistingBankId: UpdateWalletDTO = {
       ...updateData,
       bank_id: invalidId,
     };
 
     findBankByIdMock.mockResolvedValue(null);
 
-    await expect(sut.execute(dtoWithNonExistingBank)).rejects.toBeInstanceOf(
+    await expect(sut.execute(nonExistingBankId)).rejects.toBeInstanceOf(
       NotFoundException,
     );
 
     expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
     expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
-      dtoWithNonExistingBank.bank_id,
+      nonExistingBankId.bank_id,
     );
 
-    expect(walletRepository.findById).not.toHaveBeenCalled();
+    expect(walletRepository.findById).toHaveBeenCalledTimes(1);
+    expect(walletRepository.findById).toHaveBeenCalledWith(
+      nonExistingBankId.id,
+    );
+
     expect(walletRepository.update).not.toHaveBeenCalled();
   });
 });
