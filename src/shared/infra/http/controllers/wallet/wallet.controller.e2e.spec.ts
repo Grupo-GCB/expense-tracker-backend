@@ -1,11 +1,11 @@
-import { HttpStatus, INestApplication, NotFoundException } from '@nestjs/common';
+import {
+  HttpStatus,
+  INestApplication,
+  NotFoundException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 
-import { AccountType } from '@/shared/constants';
-import { Wallet } from '@/wallet/infra/entities';
-import { AppModule } from '@/app.module';
-import { IWalletRepository } from '@/wallet/interfaces';
 import {
   FindAllWalletsByUserIdUseCase,
   FindWalletByIdUseCase,
@@ -14,6 +14,7 @@ import { SaveWalletDTO } from '@/wallet/dto';
 import { AppModule } from '@/app.module';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { AccountType } from '@/shared/constants/enums';
+import { Wallet } from '@/wallet/infra/entities';
 
 describe('Wallet Controller E2E', () => {
   let app: INestApplication;
