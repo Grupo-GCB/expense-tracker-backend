@@ -26,7 +26,7 @@ export class WalletController {
     private readonly findWalletById: FindWalletByIdUseCase,
   ) {}
 
-  @Post()
+  @Post('wallet')
   @ApiOperation({
     summary: 'Registrar uma carteira.',
     description: 'Esta rota permite registrar uma carteira de um usuário.',
