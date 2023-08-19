@@ -1,4 +1,8 @@
-import { HttpStatus, INestApplication } from '@nestjs/common';
+import {
+  HttpStatus,
+  INestApplication,
+  NotFoundException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 
@@ -13,11 +17,11 @@ import {
 
 describe('Wallet Controller (E2E)', () => {
   let app: INestApplication;
-  let findAllWalletsByUserIdUseCase: FindAllWalletsByUserIdUseCase;
-  let findWalletByIdUseCase: FindWalletByIdUseCase;
   let testModule: TestingModule;
   let walletId: string;
   let nonExistentWalletId: string;
+  let findAllMock: jest.SpyInstance;
+  let findByIdMock: jest.SpyInstance;
 
   const mockWallet: Wallet = {
     id: 'existent-wallet-id',
@@ -47,16 +51,19 @@ describe('Wallet Controller (E2E)', () => {
       ],
     }).compile();
 
-    findAllWalletsByUserIdUseCase =
-      testModule.get<FindAllWalletsByUserIdUseCase>(
-        FindAllWalletsByUserIdUseCase,
-      );
-    findWalletByIdUseCase = testModule.get<FindWalletByIdUseCase>(
-      FindWalletByIdUseCase,
-    );
-
     walletId = 'existent-wallet-id';
     nonExistentWalletId = '0a26e4a5-5d1b-4fba-a554-8ef49b76aafb';
+
+    findAllMock = jest.spyOn(
+      testModule.get<FindAllWalletsByUserIdUseCase>(
+        FindAllWalletsByUserIdUseCase,
+      ),
+      'execute',
+    );
+    findByIdMock = jest.spyOn(
+      testModule.get<FindWalletByIdUseCase>(FindWalletByIdUseCase),
+      'execute',
+    );
 
     app = testModule.createNestApplication();
     await app.init();
@@ -76,9 +83,7 @@ describe('Wallet Controller (E2E)', () => {
         updated_at: wallet.updated_at.toISOString(),
       }));
 
-      jest
-        .spyOn(findAllWalletsByUserIdUseCase, 'execute')
-        .mockResolvedValue({ wallets });
+      findAllMock.mockResolvedValue({ wallets });
 
       const response = await request(app.getHttpServer())
         .get(`/wallets/${user_id}`)
@@ -88,9 +93,7 @@ describe('Wallet Controller (E2E)', () => {
     });
 
     it('should be able to return an empty wallet list', async () => {
-      jest
-        .spyOn(findAllWalletsByUserIdUseCase, 'execute')
-        .mockResolvedValue({ wallets: [] });
+      findAllMock.mockResolvedValue({ wallets: [] });
 
       const response = await request(app.getHttpServer())
         .get(`/wallets/${user_id}`)
@@ -103,9 +106,8 @@ describe('Wallet Controller (E2E)', () => {
   describe('/wallet/:id (GET)', () => {
     it('should be able to return wallet data when wallet id exists', async () => {
       const walletReponse = { wallet: mockWallet };
-      jest
-        .spyOn(findWalletByIdUseCase, 'execute')
-        .mockResolvedValueOnce(walletReponse);
+
+      findByIdMock.mockResolvedValueOnce(walletReponse);
 
       const response = await request(app.getHttpServer())
         .get(`/wallet/${walletId}`)
@@ -123,6 +125,8 @@ describe('Wallet Controller (E2E)', () => {
     });
 
     it('should be able to return 404 if wallet does not exists', async () => {
+      findByIdMock.mockRejectedValue(new NotFoundException());
+
       await request(app.getHttpServer())
         .get(`/wallet/${nonExistentWalletId}`)
         .expect(HttpStatus.NOT_FOUND);
