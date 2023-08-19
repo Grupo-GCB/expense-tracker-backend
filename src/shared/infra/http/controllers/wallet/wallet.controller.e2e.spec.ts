@@ -16,7 +16,7 @@ import { IWalletRepository } from '@/wallet/interfaces';
 import { AccountType } from '@/shared/constants/enums';
 import { Wallet } from '@/wallet/infra/entities';
 
-describe('Wallet Controller E2E', () => {
+describe('Wallet Controller (E2E)', () => {
   let app: INestApplication;
   let testModule: TestingModule;
   let walletId: string;
