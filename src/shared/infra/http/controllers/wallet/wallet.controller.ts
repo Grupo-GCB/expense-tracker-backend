@@ -5,10 +5,12 @@ import {
   ApiOkResponse,
   ApiBadRequestResponse,
   ApiNotFoundResponse,
+  ApiResponse,
 } from '@nestjs/swagger';
 
 import {
   FindAllWalletsByUserIdUseCase,
+  FindWalletByIdUseCase,
   RegisterWalletUseCase,
 } from '@/wallet/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
@@ -21,6 +23,7 @@ export class WalletController {
   constructor(
     private readonly walletUseCase: RegisterWalletUseCase,
     private readonly findAllWalletsByUserId: FindAllWalletsByUserIdUseCase,
+    private readonly findWalletById: FindWalletByIdUseCase,
   ) {}
 
   @Post('wallet')
@@ -49,5 +52,17 @@ export class WalletController {
   ): Promise<Wallet[]> {
     const { wallets } = await this.findAllWalletsByUserId.execute(user_id);
     return wallets;
+  }
+
+  @Get('wallet/:id')
+  @ApiOperation({
+    summary: 'Listar uma carteira pelo ID.',
+    description: 'Esta rota permite visualizar os dados de uma carteira.',
+  })
+  @ApiResponse(API_RESPONSES.OK)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
+  async listWallet(@Param('id') wallet_id: string): Promise<Wallet> {
+    const { wallet } = await this.findWalletById.execute(wallet_id);
+    return wallet;
   }
 }

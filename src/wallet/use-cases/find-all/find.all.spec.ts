@@ -6,7 +6,7 @@ import { AccountType } from '@/shared/constants';
 import { Wallet } from '@/wallet/infra/entities';
 
 describe('Find All Wallets', () => {
-  let findAllByUserId: FindAllWalletsByUserIdUseCase;
+  let findAllWalletsByUserIdUseCase: FindAllWalletsByUserIdUseCase;
   let walletRepository: jest.Mocked<IWalletRepository>;
 
   const mockWallet: Wallet = {
@@ -34,12 +34,12 @@ describe('Find All Wallets', () => {
       ],
     }).compile();
     walletRepository = module.get(IWalletRepository);
-    findAllByUserId = module.get(FindAllWalletsByUserIdUseCase);
+    findAllWalletsByUserIdUseCase = module.get(FindAllWalletsByUserIdUseCase);
   });
 
   it('should be defined', () => {
     expect(walletRepository).toBeDefined();
-    expect(findAllByUserId).toBeDefined();
+    expect(findAllWalletsByUserIdUseCase).toBeDefined();
   });
 
   it('should be able to return all wallets', async () => {
@@ -47,16 +47,24 @@ describe('Find All Wallets', () => {
 
     walletRepository.findAllByUserId.mockResolvedValue(wallets);
 
-    const result = await findAllByUserId.execute(user_id);
+    const result = await findAllWalletsByUserIdUseCase.execute(user_id);
 
-    expect(result.wallets).toEqual(wallets);
+    expect(result.wallets).toEqual(
+      expect.arrayContaining(
+        wallets.map((wallet) => ({
+          ...wallet,
+          bank: expect.any(Object),
+        })),
+      ),
+    );
+
     expect(walletRepository.findAllByUserId).toHaveBeenCalledTimes(1);
   });
 
   it('should not be able to return wallets if were not found', async () => {
     walletRepository.findAllByUserId.mockResolvedValue([]);
 
-    const result = await findAllByUserId.execute(user_id);
+    const result = await findAllWalletsByUserIdUseCase.execute(user_id);
 
     expect(result).toEqual({ wallets: [] });
   });
