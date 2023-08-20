@@ -1,5 +1,4 @@
 import { NotFoundException } from '@nestjs/common';
-
 import { AccountType } from '@/shared/constants';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { FindWalletByIdUseCase } from '@/wallet/use-cases';
@@ -7,6 +6,7 @@ import { FindWalletByIdUseCase } from '@/wallet/use-cases';
 describe('Find Bank by ID', () => {
   let findWalletById: FindWalletByIdUseCase;
   let walletRepository: jest.Mocked<IWalletRepository>;
+  let findByIdMock: jest.SpyInstance;
 
   const walletId = 'existent-wallet-id';
   const nonExistentWalletId = 'non-existent-wallet-id';
@@ -17,6 +17,7 @@ describe('Find Bank by ID', () => {
     } as unknown as jest.Mocked<IWalletRepository>;
 
     findWalletById = new FindWalletByIdUseCase(walletRepository);
+    findByIdMock = jest.spyOn(walletRepository, 'findById');
   });
 
   const walletData = {
@@ -32,7 +33,7 @@ describe('Find Bank by ID', () => {
   };
 
   it('should be able to return a wallet', async () => {
-    walletRepository.findById.mockResolvedValue(walletData);
+    findByIdMock.mockResolvedValue(walletData);
 
     const result = await findWalletById.execute(walletId);
 
@@ -41,12 +42,12 @@ describe('Find Bank by ID', () => {
       bank: expect.any(Object),
     });
 
-    expect(walletRepository.findById).toHaveBeenCalledWith(walletId);
-    expect(walletRepository.findById).toHaveBeenCalledTimes(1);
+    expect(findByIdMock).toHaveBeenCalledWith(walletId);
+    expect(findByIdMock).toHaveBeenCalledTimes(1);
   });
 
   it('should not be able to return a wallet', async () => {
-    walletRepository.findById.mockResolvedValueOnce(null);
+    findByIdMock.mockResolvedValueOnce(null);
 
     await expect(
       findWalletById.execute(nonExistentWalletId),
