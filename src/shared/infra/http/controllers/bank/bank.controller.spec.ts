@@ -14,6 +14,8 @@ describe('Bank Controller (E2E)', () => {
   let findBankByIdUseCase: FindBankByIdUseCase;
   let findAllUseCase: FindAllBanksUseCase;
   let testModule: TestingModule;
+  let findAllMock: jest.SpyInstance;
+  let findBankByIdMock: jest.SpyInstance;
 
   const mockBank: Bank = {
     id: 'bank-01',
@@ -42,6 +44,9 @@ describe('Bank Controller (E2E)', () => {
     bankId = '87b2a64b-2651-422a-8659-c85fedafdc78';
     nonExistentBankId = 'f632a171-e958-4006-98cc-052cfedb82b5';
 
+    findAllMock = jest.spyOn(findAllUseCase, 'execute');
+    findBankByIdMock = jest.spyOn(findBankByIdUseCase, 'execute');
+
     app = testModule.createNestApplication();
     await app.init();
   });
@@ -53,7 +58,8 @@ describe('Bank Controller (E2E)', () => {
   describe('/bank/all (GET)', () => {
     it('should be able to return a list with banks', async () => {
       const banks = [mockBank, mockBank];
-      jest.spyOn(findAllUseCase, 'execute').mockResolvedValue({ banks });
+
+      findAllMock.mockResolvedValue({ banks });
 
       const response = await request(app.getHttpServer())
         .get('/bank/all')
@@ -63,7 +69,7 @@ describe('Bank Controller (E2E)', () => {
     });
 
     it('should be able to return an empty list', async () => {
-      jest.spyOn(findAllUseCase, 'execute').mockResolvedValue({ banks: [] });
+      findAllMock.mockResolvedValue({ banks: [] });
 
       const response = await request(app.getHttpServer())
         .get(`/bank/all`)
@@ -76,9 +82,8 @@ describe('Bank Controller (E2E)', () => {
   describe('/bank/:id (GET)', () => {
     it('should be able to return data from a database when id exists in the database', async () => {
       const bankResponse = { bank: mockBank };
-      jest
-        .spyOn(findBankByIdUseCase, 'execute')
-        .mockResolvedValueOnce(bankResponse);
+
+      findBankByIdMock.mockResolvedValueOnce(bankResponse);
 
       const response = await request(app.getHttpServer())
         .get(`/bank/${bankId}`)
