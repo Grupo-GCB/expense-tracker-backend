@@ -2,7 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 
 import { User } from '@/user/infra/entities';
 import { IUserRepository } from '@/user/interfaces';
-import { ListUserByIdUseCase } from '@/user/use-cases';
+import { FindUserByIdUseCase } from '@/user/use-cases';
 
 describe('List User By Id', () => {
   let listUserUseCase: ListUserByIdUseCase;
