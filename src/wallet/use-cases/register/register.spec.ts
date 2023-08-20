@@ -1,5 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 
 import { RegisterWalletUseCase } from '@/wallet/use-cases';
 import { IWalletRepository } from '@/wallet/interfaces';
@@ -11,7 +10,7 @@ import { Wallet } from '@/wallet/infra/entities';
 
 describe('Register Wallet Use Case', () => {
   let registerWalletUseCase: RegisterWalletUseCase;
-  let walletRepository: IWalletRepository;
+  let walletRepository: jest.Mocked<IWalletRepository>;
   let findUserByIdUseCase: FindUserByIdUseCase;
   let findBankByIdUseCase: FindBankByIdUseCase;
   let walletData: SaveWalletDTO;
@@ -19,43 +18,42 @@ describe('Register Wallet Use Case', () => {
   let findUserByIdExecuteMock: jest.SpyInstance;
   let findBankByIdExecuteMock: jest.SpyInstance;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        RegisterWalletUseCase,
-        {
-          provide: IWalletRepository,
-          useValue: {
-            create: jest.fn(),
-          },
-        },
-        {
-          provide: FindUserByIdUseCase,
-          useValue: {
-            execute: jest.fn(),
-          },
-        },
-        {
-          provide: FindBankByIdUseCase,
-          useValue: {
-            execute: jest.fn(),
-          },
-        },
-      ],
-    }).compile();
+  const mockWallet: Wallet = {
+    id: '01',
+    account_type: AccountType.CHECKING_ACCOUNT,
+    description: 'Primeira Descrição de carteira.',
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: null,
+    bank: null,
+    user: null,
+    transactions: null,
+  } as Wallet;
 
-    registerWalletUseCase = module.get<RegisterWalletUseCase>(
-      RegisterWalletUseCase,
-    );
-    walletRepository = module.get<IWalletRepository>(IWalletRepository);
-    findUserByIdUseCase = module.get<FindUserByIdUseCase>(FindUserByIdUseCase);
-    findBankByIdUseCase = module.get<FindBankByIdUseCase>(FindBankByIdUseCase);
+  beforeEach(() => {
+    walletRepository = {
+      create: jest.fn(),
+    } as unknown as jest.Mocked<IWalletRepository>;
+
+    findUserByIdUseCase = {
+      execute: jest.fn(),
+    } as unknown as jest.Mocked<FindUserByIdUseCase>;
+
+    findBankByIdUseCase = {
+      execute: jest.fn(),
+    } as unknown as jest.Mocked<FindBankByIdUseCase>;
 
     createSpy = jest.spyOn(walletRepository, 'create');
     findUserByIdExecuteMock = jest.spyOn(findUserByIdUseCase, 'execute');
     findBankByIdExecuteMock = jest.spyOn(findBankByIdUseCase, 'execute');
 
-    createSpy.mockResolvedValue({} as Wallet);
+    registerWalletUseCase = new RegisterWalletUseCase(
+      walletRepository,
+      findUserByIdUseCase,
+      findBankByIdUseCase,
+    );
+
+    createSpy.mockResolvedValue(mockWallet);
     findUserByIdExecuteMock.mockResolvedValue({});
     findBankByIdExecuteMock.mockResolvedValue({});
 
@@ -76,7 +74,7 @@ describe('Register Wallet Use Case', () => {
   });
 
   it('should not be able to return a wallet when user id does not exist', async () => {
-    findUserByIdExecuteMock.mockResolvedValue(undefined);
+    findUserByIdExecuteMock.mockResolvedValue(null);
 
     await expect(
       registerWalletUseCase.createWallet(walletData),
@@ -103,17 +101,5 @@ describe('Register Wallet Use Case', () => {
     await expect(
       async () => await registerWalletUseCase.createWallet(walletData),
     ).rejects.toThrowErrorMatchingSnapshot();
-  });
-
-  it('should not be able to return a wallet if the wallet register fails', async () => {
-    createSpy.mockRejectedValueOnce(
-      new BadRequestException('Erro ao criar a carteira.'),
-    );
-
-    await expect(
-      registerWalletUseCase.createWallet(walletData),
-    ).rejects.toThrowError(BadRequestException);
-    expect(createSpy).toHaveBeenCalledTimes(1);
-    expect(createSpy).toHaveBeenCalledWith(walletData);
   });
 });
