@@ -19,7 +19,7 @@ import { API_RESPONSES } from '@/shared/constants';
 export class UserController {
   constructor(
     private readonly signInUseCase: SignInUseCase,
-    private readonly listUserUseCase: ListUserByIdUseCase,
+    private readonly findUserUseCase: FindUserByIdUseCase,
   ) {}
 
   @Post('login')
