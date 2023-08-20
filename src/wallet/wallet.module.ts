@@ -23,7 +23,7 @@ import { WalletRepository } from '@/wallet/infra/repositories';
   imports: [TypeOrmModule.forFeature([Wallet, Bank, User])],
   providers: [
     RegisterWalletUseCase,
-    ListUserByIdUseCase,
+    FindUserByIdUseCase,
     FindBankByIdUseCase,
     FindWalletByIdUseCase,
     FindAllWalletsByUserIdUseCase,
