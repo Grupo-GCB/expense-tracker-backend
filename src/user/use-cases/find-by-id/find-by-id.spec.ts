@@ -7,6 +7,7 @@ import { FindUserByIdUseCase } from '@/user/use-cases';
 describe('Find User By Id', () => {
   let findUserUseCase: FindUserByIdUseCase;
   let userRepository: jest.Mocked<IUserRepository>;
+  let findByIdMock: jest.SpyInstance;
 
   const userId = '123456';
   const nonExistentUserId = 'non-existent-user-id';
@@ -17,6 +18,7 @@ describe('Find User By Id', () => {
     } as unknown as jest.Mocked<IUserRepository>;
 
     findUserUseCase = new FindUserByIdUseCase(userRepository);
+    findByIdMock = jest.spyOn(userRepository, 'findById');
   });
 
   it('should be able to return an user', async () => {
@@ -28,17 +30,17 @@ describe('Find User By Id', () => {
       wallet: [],
     };
 
-    userRepository.findById.mockResolvedValue(user);
+    findByIdMock.mockResolvedValue(user);
 
     const result = await findUserUseCase.execute(userId);
 
     expect(result.user).toEqual(user);
-    expect(userRepository.findById).toHaveBeenCalledWith(userId);
-    expect(userRepository.findById).toHaveBeenCalledTimes(1);
+    expect(findByIdMock).toHaveBeenCalledWith(userId);
+    expect(findByIdMock).toHaveBeenCalledTimes(1);
   });
 
   it('should not be able to return an user', async () => {
-    userRepository.findById.mockResolvedValueOnce(null);
+    findByIdMock.mockResolvedValueOnce(null);
 
     await expect(
       findUserUseCase.execute(nonExistentUserId),
