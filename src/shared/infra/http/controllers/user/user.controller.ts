@@ -9,7 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
-import { ListUserByIdUseCase, SignInUseCase } from '@/user/use-cases';
+import { FindUserByIdUseCase, SignInUseCase } from '@/user/use-cases';
 import { UserTokenDTO } from '@/user/dto';
 import { User } from '@/user/infra/entities';
 import { API_RESPONSES } from '@/shared/constants';
