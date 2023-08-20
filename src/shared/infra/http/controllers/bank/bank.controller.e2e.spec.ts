@@ -4,18 +4,17 @@ import * as request from 'supertest';
 
 import { AppModule } from '@/app.module';
 import { IBankRepository } from '@/bank/interfaces';
-import { FindAllBanksUseCase, FindBankByIdUseCase } from '@/bank/use-cases';
 import { Bank } from '@/bank/infra/entities';
+import { BankRepository } from '@/bank/infra/repositories';
 
 describe('Bank Controller (E2E)', () => {
   let app: INestApplication;
   let bankId: string;
   let nonExistentBankId: string;
-  let findBankByIdUseCase: FindBankByIdUseCase;
-  let findAllUseCase: FindAllBanksUseCase;
   let testModule: TestingModule;
   let findAllMock: jest.SpyInstance;
   let findBankByIdMock: jest.SpyInstance;
+  let bankRepository: jest.Mocked<BankRepository>;
 
   const mockBank: Bank = {
     id: 'bank-01',
@@ -37,15 +36,11 @@ describe('Bank Controller (E2E)', () => {
       ],
     }).compile();
 
-    findBankByIdUseCase =
-      testModule.get<FindBankByIdUseCase>(FindBankByIdUseCase);
-    findAllUseCase = testModule.get<FindAllBanksUseCase>(FindAllBanksUseCase);
-
     bankId = '87b2a64b-2651-422a-8659-c85fedafdc78';
     nonExistentBankId = 'f632a171-e958-4006-98cc-052cfedb82b5';
 
-    findAllMock = jest.spyOn(findAllUseCase, 'execute');
-    findBankByIdMock = jest.spyOn(findBankByIdUseCase, 'execute');
+    findAllMock = jest.spyOn(bankRepository, 'findAll');
+    findBankByIdMock = jest.spyOn(bankRepository, 'findById');
 
     app = testModule.createNestApplication();
     await app.init();
