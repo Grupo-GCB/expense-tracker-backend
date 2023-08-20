@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { IWalletRepository } from '@/wallet/interfaces';
 import { SaveWalletDTO } from '@/wallet/dto';
@@ -36,11 +32,6 @@ export class RegisterWalletUseCase {
       account_type,
       description,
     };
-
-    try {
-      return this.walletRepository.create(saveWalletDTO);
-    } catch {
-      throw new BadRequestException('Erro ao criar a carteira.');
-    }
+    return this.walletRepository.create(saveWalletDTO);
   }
 }
