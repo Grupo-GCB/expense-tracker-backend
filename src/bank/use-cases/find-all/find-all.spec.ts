@@ -3,7 +3,7 @@ import { FindAllBanksUseCase } from '@/bank/use-cases';
 import { Bank } from '@/bank/infra/entities';
 import { Test } from '@nestjs/testing';
 
-describe('Find Bank by Id', () => {
+describe('Find Banks by Id', () => {
   let findAll: FindAllBanksUseCase;
   let bankRepository: jest.Mocked<IBankRepository>;
 
