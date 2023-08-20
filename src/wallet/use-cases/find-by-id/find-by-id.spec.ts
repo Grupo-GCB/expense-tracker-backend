@@ -1,4 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
+
 import { AccountType } from '@/shared/constants';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { FindWalletByIdUseCase } from '@/wallet/use-cases';
