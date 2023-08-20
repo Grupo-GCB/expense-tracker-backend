@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import {
   HttpStatus,
   INestApplication,
@@ -20,6 +20,7 @@ describe('User Controller (E2E)', () => {
   let decodeTokenMock: jest.SpyInstance;
   let userId: string;
   let nonexistentUserId: string;
+  let testModule: TestingModule;
 
   const userPayload: Pick<IDecodedTokenPayload, 'sub' | 'name' | 'email'> = {
     sub: 'auth0|58vfb567d5asdea52bc65ebba',
@@ -28,7 +29,7 @@ describe('User Controller (E2E)', () => {
   };
 
   beforeAll(async () => {
-    const module = await Test.createTestingModule({
+    testModule = await Test.createTestingModule({
       imports: [AppModule],
     })
       .overrideProvider(IUserRepository)
@@ -46,15 +47,15 @@ describe('User Controller (E2E)', () => {
     userId = 'google-oauth2|456734566205483104315';
     nonexistentUserId = 'invalid-id';
 
-    app = module.createNestApplication();
-    usersRepository = module.get<IUserRepository>(IUserRepository);
-    jwtAuthProvider = module.get<IJwtAuthProvider>(IJwtAuthProvider);
+    usersRepository = testModule.get<IUserRepository>(IUserRepository);
+    jwtAuthProvider = testModule.get<IJwtAuthProvider>(IJwtAuthProvider);
 
     findByIdMock = jest.spyOn(usersRepository, 'findById');
     findByEmailMock = jest.spyOn(usersRepository, 'findByEmail');
     createUserMock = jest.spyOn(usersRepository, 'create');
     decodeTokenMock = jest.spyOn(jwtAuthProvider, 'decodeToken');
 
+    app = testModule.createNestApplication();
     await app.init();
   });
 
