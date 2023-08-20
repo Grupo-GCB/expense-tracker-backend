@@ -1,7 +1,6 @@
 import { IBankRepository } from '@/bank/interfaces';
 import { FindAllBanksUseCase } from '@/bank/use-cases';
 import { Bank } from '@/bank/infra/entities';
-import { Test, TestingModule } from '@nestjs/testing';
 
 describe('Find Banks by Id', () => {
   let findAll: FindAllBanksUseCase;
@@ -9,15 +8,11 @@ describe('Find Banks by Id', () => {
   let findAllMock: jest.SpyInstance;
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        FindAllBanksUseCase,
-        { provide: IBankRepository, useValue: { findAll: jest.fn() } },
-      ],
-    }).compile();
+    bankRepository = {
+      findAll: jest.fn(),
+    } as unknown as jest.Mocked<IBankRepository>;
 
-    bankRepository = module.get(IBankRepository);
-    findAll = module.get(FindAllBanksUseCase);
+    findAll = new FindAllBanksUseCase(bankRepository);
 
     findAllMock = jest.spyOn(bankRepository, 'findAll');
   });
