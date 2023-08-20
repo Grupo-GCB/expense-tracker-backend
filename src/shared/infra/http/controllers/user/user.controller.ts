@@ -44,8 +44,8 @@ export class UserController {
   @ApiOkResponse(API_RESPONSES.OK)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   @Get(':id')
-  async listUser(@Param('id') user_id: string): Promise<User> {
-    const { user } = await this.listUserUseCase.execute(user_id);
+  async findUser(@Param('id') user_id: string): Promise<User> {
+    const { user } = await this.findUserUseCase.execute(user_id);
     return user;
   }
 }
