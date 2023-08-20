@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsJWT, IsNotEmpty } from 'class-validator';
+import { IsJWT, IsNotEmpty, IsString } from 'class-validator';
 
 export class UserTokenDTO {
   @IsNotEmpty({ message: 'Necessário informar o id.' })
+  @IsString({ message: 'Id deve ser uma string.' })
   @IsJWT({ message: 'Token deve ser um JWT.' })
   @ApiProperty({
     example:
