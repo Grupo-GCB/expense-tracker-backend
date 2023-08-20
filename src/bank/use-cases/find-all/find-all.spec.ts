@@ -1,21 +1,25 @@
 import { IBankRepository } from '@/bank/interfaces';
 import { FindAllBanksUseCase } from '@/bank/use-cases';
 import { Bank } from '@/bank/infra/entities';
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 
 describe('Find Banks by Id', () => {
   let findAll: FindAllBanksUseCase;
   let bankRepository: jest.Mocked<IBankRepository>;
+  let findAllMock: jest.SpyInstance;
 
   beforeAll(async () => {
-    const module = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         FindAllBanksUseCase,
         { provide: IBankRepository, useValue: { findAll: jest.fn() } },
       ],
     }).compile();
+
     bankRepository = module.get(IBankRepository);
     findAll = module.get(FindAllBanksUseCase);
+
+    findAllMock = jest.spyOn(bankRepository, 'findAll');
   });
 
   it('should be defined', () => {
@@ -37,16 +41,16 @@ describe('Find Banks by Id', () => {
       } as Bank,
     ];
 
-    bankRepository.findAll.mockResolvedValue(banks);
+    findAllMock.mockResolvedValue(banks);
 
     const result = await findAll.execute();
 
     expect(result.banks).toEqual(banks);
-    expect(bankRepository.findAll).toHaveBeenCalledTimes(1);
+    expect(findAllMock).toHaveBeenCalledTimes(1);
   });
 
   it('should be able to return an empty list when no banks were found', async () => {
-    bankRepository.findAll.mockResolvedValue([]);
+    findAllMock.mockResolvedValue([]);
 
     const result = await findAll.execute();
 
