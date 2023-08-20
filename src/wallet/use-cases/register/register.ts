@@ -7,7 +7,7 @@ import {
 import { IWalletRepository } from '@/wallet/interfaces';
 import { SaveWalletDTO } from '@/wallet/dto';
 import { Wallet } from '@/wallet/infra/entities';
-import { ListUserByIdUseCase } from '@/user/use-cases';
+import { FindUserByIdUseCase } from '@/user/use-cases';
 import { FindBankByIdUseCase } from '@/bank/use-cases/';
 
 @Injectable()
