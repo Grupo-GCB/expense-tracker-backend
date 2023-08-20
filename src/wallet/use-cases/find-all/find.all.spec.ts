@@ -1,5 +1,3 @@
-import { Test } from '@nestjs/testing';
-
 import { FindAllWalletsByUserIdUseCase } from '@/wallet/use-cases';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { AccountType } from '@/shared/constants';
@@ -8,6 +6,7 @@ import { Wallet } from '@/wallet/infra/entities';
 describe('Find All Wallets', () => {
   let findAllWalletsByUserIdUseCase: FindAllWalletsByUserIdUseCase;
   let walletRepository: jest.Mocked<IWalletRepository>;
+  let findAllByUserIdMock: jest.SpyInstance;
 
   const mockWallet: Wallet = {
     id: '01',
@@ -24,17 +23,14 @@ describe('Find All Wallets', () => {
   const user_id = 'auth0|user-id';
 
   beforeAll(async () => {
-    const module = await Test.createTestingModule({
-      providers: [
-        FindAllWalletsByUserIdUseCase,
-        {
-          provide: IWalletRepository,
-          useValue: { findAllByUserId: jest.fn() },
-        },
-      ],
-    }).compile();
-    walletRepository = module.get(IWalletRepository);
-    findAllWalletsByUserIdUseCase = module.get(FindAllWalletsByUserIdUseCase);
+    walletRepository = {
+      findAllByUserId: jest.fn(),
+    } as unknown as jest.Mocked<IWalletRepository>;
+
+    findAllWalletsByUserIdUseCase = new FindAllWalletsByUserIdUseCase(
+      walletRepository,
+    );
+    findAllByUserIdMock = jest.spyOn(walletRepository, 'findAllByUserId');
   });
 
   it('should be defined', () => {
@@ -45,7 +41,7 @@ describe('Find All Wallets', () => {
   it('should be able to return all wallets', async () => {
     const wallets = [mockWallet, mockWallet];
 
-    walletRepository.findAllByUserId.mockResolvedValue(wallets);
+    findAllByUserIdMock.mockResolvedValue(wallets);
 
     const result = await findAllWalletsByUserIdUseCase.execute(user_id);
 
@@ -58,11 +54,11 @@ describe('Find All Wallets', () => {
       ),
     );
 
-    expect(walletRepository.findAllByUserId).toHaveBeenCalledTimes(1);
+    expect(findAllByUserIdMock).toHaveBeenCalledTimes(1);
   });
 
   it('should not be able to return wallets if were not found', async () => {
-    walletRepository.findAllByUserId.mockResolvedValue([]);
+    findAllByUserIdMock.mockResolvedValue([]);
 
     const result = await findAllWalletsByUserIdUseCase.execute(user_id);
 
