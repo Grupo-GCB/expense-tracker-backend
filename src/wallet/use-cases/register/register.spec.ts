@@ -5,14 +5,14 @@ import { RegisterWalletUseCase } from '@/wallet/use-cases';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { SaveWalletDTO } from '@/wallet/dto';
 import { AccountType } from '@/shared/constants/enums';
-import { ListUserByIdUseCase } from '@/user/use-cases';
+import { FindUserByIdUseCase } from '@/user/use-cases';
 import { FindBankByIdUseCase } from '@/bank/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 
 describe('Register Wallet Use Case', () => {
   let registerWalletUseCase: RegisterWalletUseCase;
   let walletRepository: IWalletRepository;
-  let listUserByIdUseCase: ListUserByIdUseCase;
+  let findUserByIdUseCase: FindUserByIdUseCase;
   let findBankByIdUseCase: FindBankByIdUseCase;
   let walletData: SaveWalletDTO;
 
@@ -27,7 +27,7 @@ describe('Register Wallet Use Case', () => {
           },
         },
         {
-          provide: ListUserByIdUseCase,
+          provide: FindUserByIdUseCase,
           useValue: {
             execute: jest.fn(),
           },
@@ -45,11 +45,11 @@ describe('Register Wallet Use Case', () => {
       RegisterWalletUseCase,
     );
     walletRepository = module.get<IWalletRepository>(IWalletRepository);
-    listUserByIdUseCase = module.get<ListUserByIdUseCase>(ListUserByIdUseCase);
+    findUserByIdUseCase = module.get<FindUserByIdUseCase>(FindUserByIdUseCase);
     findBankByIdUseCase = module.get<FindBankByIdUseCase>(FindBankByIdUseCase);
 
     walletRepository.create = jest.fn().mockResolvedValue({} as Wallet);
-    listUserByIdUseCase.execute = jest.fn().mockResolvedValue({});
+    findUserByIdUseCase.execute = jest.fn().mockResolvedValue({});
     findBankByIdUseCase.execute = jest.fn().mockResolvedValue({});
 
     walletData = {
@@ -69,14 +69,14 @@ describe('Register Wallet Use Case', () => {
   });
 
   it('should not be able to return a wallet when user id does not exist', async () => {
-    listUserByIdUseCase.execute = jest.fn().mockResolvedValue(undefined);
+    findUserByIdUseCase.execute = jest.fn().mockResolvedValue(undefined);
 
     await expect(
       registerWalletUseCase.createWallet(walletData),
     ).rejects.toThrowError(NotFoundException);
 
-    expect(listUserByIdUseCase.execute).toHaveBeenCalledTimes(1);
-    expect(listUserByIdUseCase.execute).toHaveBeenCalledWith(
+    expect(findUserByIdUseCase.execute).toHaveBeenCalledTimes(1);
+    expect(findUserByIdUseCase.execute).toHaveBeenCalledWith(
       walletData.user_id,
     );
 

@@ -7,14 +7,14 @@ import {
 import { IWalletRepository } from '@/wallet/interfaces';
 import { SaveWalletDTO } from '@/wallet/dto';
 import { Wallet } from '@/wallet/infra/entities';
-import { ListUserByIdUseCase } from '@/user/use-cases';
+import { FindUserByIdUseCase } from '@/user/use-cases';
 import { FindBankByIdUseCase } from '@/bank/use-cases/';
 
 @Injectable()
 export class RegisterWalletUseCase {
   constructor(
     private readonly walletRepository: IWalletRepository,
-    private readonly listUserByIdUseCase: ListUserByIdUseCase,
+    private readonly findUserByIdUseCase: FindUserByIdUseCase,
     private readonly findBankByIdUseCase: FindBankByIdUseCase,
   ) {}
 
@@ -24,7 +24,7 @@ export class RegisterWalletUseCase {
     account_type,
     description,
   }: SaveWalletDTO): Promise<Wallet> {
-    const user = await this.listUserByIdUseCase.execute(user_id);
+    const user = await this.findUserByIdUseCase.execute(user_id);
     if (!user) throw new NotFoundException('Usuário não encontrado.');
 
     const bank = await this.findBankByIdUseCase.execute(bank_id);
