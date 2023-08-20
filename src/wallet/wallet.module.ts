@@ -6,7 +6,7 @@ import {
   FindWalletByIdUseCase,
   RegisterWalletUseCase,
 } from '@/wallet/use-cases';
-import { ListUserByIdUseCase } from '@/user/use-cases';
+import { FindUserByIdUseCase } from '@/user/use-cases';
 import { FindBankByIdUseCase } from '@/bank/use-cases';
 import { User } from '@/user/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
