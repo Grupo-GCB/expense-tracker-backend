@@ -9,7 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
-import { ListUserByIdUseCase, SignInUseCase } from '@/user/use-cases';
+import { FindUserByIdUseCase, SignInUseCase } from '@/user/use-cases';
 import { UserTokenDTO } from '@/user/dto';
 import { User } from '@/user/infra/entities';
 import { API_RESPONSES } from '@/shared/constants';
@@ -19,7 +19,7 @@ import { API_RESPONSES } from '@/shared/constants';
 export class UserController {
   constructor(
     private readonly signInUseCase: SignInUseCase,
-    private readonly listUserUseCase: ListUserByIdUseCase,
+    private readonly findUserUseCase: FindUserByIdUseCase,
   ) {}
 
   @Post('login')
@@ -44,8 +44,8 @@ export class UserController {
   @ApiOkResponse(API_RESPONSES.OK)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   @Get(':id')
-  async listUser(@Param('id') user_id: string): Promise<User> {
-    const { user } = await this.listUserUseCase.execute(user_id);
+  async findUser(@Param('id') user_id: string): Promise<User> {
+    const { user } = await this.findUserUseCase.execute(user_id);
     return user;
   }
 }
