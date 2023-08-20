@@ -5,7 +5,7 @@ import { IUserRepository } from '@/user/interfaces';
 import { FindUserByIdUseCase } from '@/user/use-cases';
 
 describe('List User By Id', () => {
-  let listUserUseCase: ListUserByIdUseCase;
+  let findUserUseCase: FindUserByIdUseCase;
   let userRepository: jest.Mocked<IUserRepository>;
 
   const userId = '123456';
@@ -16,7 +16,7 @@ describe('List User By Id', () => {
       findById: jest.fn(),
     } as unknown as jest.Mocked<IUserRepository>;
 
-    listUserUseCase = new ListUserByIdUseCase(userRepository);
+    findUserUseCase = new FindUserByIdUseCase(userRepository);
   });
 
   it('should be able to return an user', async () => {
@@ -30,7 +30,7 @@ describe('List User By Id', () => {
 
     userRepository.findById.mockResolvedValue(user);
 
-    const result = await listUserUseCase.execute(userId);
+    const result = await findUserUseCase.execute(userId);
 
     expect(result.user).toEqual(user);
     expect(userRepository.findById).toHaveBeenCalledWith(userId);
@@ -41,7 +41,7 @@ describe('List User By Id', () => {
     userRepository.findById.mockResolvedValueOnce(null);
 
     await expect(
-      listUserUseCase.execute(nonExistentUserId),
+      findUserUseCase.execute(nonExistentUserId),
     ).rejects.toThrowError(new NotFoundException('Usuário não encontrado.'));
   });
 });
