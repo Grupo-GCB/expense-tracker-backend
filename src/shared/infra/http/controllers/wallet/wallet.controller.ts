@@ -64,6 +64,13 @@ export class WalletController {
   ): Promise<Wallet> {
     return this.updateWalletUseCase.execute(id, data);
   }
+  @Delete(':id')
+  @HttpCode(204)
+  @ApiNoContentResponse(API_RESPONSES.NO_CONTENT)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
+  async deleteWallet(@Param() data: DeleteWalletDTO): Promise<void> {
+    await this.deleteWalletUseCase.execute(data);
+  }
 
   @Get('all/:id')
   @ApiOkResponse(API_RESPONSES.OK)
