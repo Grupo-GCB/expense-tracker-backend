@@ -15,13 +15,18 @@ export class WalletRepository implements IWalletRepository {
     private readonly walletRepository: Repository<Wallet>,
   ) {}
 
-  async create(data: SaveWalletDTO): Promise<Wallet> {
-    const wallet = new Wallet();
-    wallet.account_type = data.account_type;
-    wallet.description = data.description;
-
-    wallet.user = { id: data.user_id } as User;
-    wallet.bank = { id: data.bank_id } as Bank;
+  async create({
+    user_id,
+    account_type,
+    bank_id,
+    description,
+  }: SaveWalletDTO): Promise<Wallet> {
+    const wallet = this.walletRepository.create({
+      user: { id: user_id } as User,
+      bank: { id: bank_id } as Bank,
+      account_type,
+      description,
+    });
 
     return this.walletRepository.save(wallet);
   }
