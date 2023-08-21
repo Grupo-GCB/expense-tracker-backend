@@ -15,15 +15,28 @@ export class WalletRepository implements IWalletRepository {
     private readonly walletRepository: Repository<Wallet>,
   ) {}
 
-  async create(data: SaveWalletDTO): Promise<Wallet> {
-    const wallet = new Wallet();
-    wallet.account_type = data.account_type;
-    wallet.description = data.description;
-
-    wallet.user = { id: data.user_id } as User;
-    wallet.bank = { id: data.bank_id } as Bank;
+  async create({
+    user_id,
+    account_type,
+    bank_id,
+    description,
+  }: SaveWalletDTO): Promise<Wallet> {
+    const wallet = this.walletRepository.create({
+      user: { id: user_id } as User,
+      bank: { id: bank_id } as Bank,
+      account_type,
+      description,
+    });
 
     return this.walletRepository.save(wallet);
+  }
+
+  async update(wallet: Wallet): Promise<Wallet> {
+    return this.walletRepository.save(wallet);
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.walletRepository.softDelete({ id });
   }
 
   async findAllByUserId(user_id: string): Promise<Wallet[]> {
@@ -38,9 +51,5 @@ export class WalletRepository implements IWalletRepository {
       where: { id },
       relations: ['bank'],
     });
-  }
-
-  async update(wallet: Wallet): Promise<Wallet> {
-    return this.walletRepository.save(wallet);
   }
 }

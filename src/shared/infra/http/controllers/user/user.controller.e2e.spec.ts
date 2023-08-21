@@ -10,7 +10,7 @@ import { AppModule } from '@/app.module';
 import { IUserRepository, IDecodedTokenPayload } from '@/user/interfaces';
 import { IJwtAuthProvider } from '@/auth/interfaces';
 
-describe('User ControuserRepositoryller (E2E)', () => {
+describe('User Controller (E2E)', () => {
   let app: INestApplication;
   let validUserId: string;
   let nonexistentUserId: string;
