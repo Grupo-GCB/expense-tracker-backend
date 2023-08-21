@@ -15,6 +15,7 @@ describe('Wallet Controller E2E', () => {
   let app: INestApplication;
   let walletRepository: IWalletRepository;
   let updateWalletMock: jest.SpyInstance;
+  let deleteWalletMock: jest.SpyInstance;
   let findByIdMock: jest.SpyInstance;
 
   const updatedWalletData: UpdateWalletDTO = {
@@ -24,6 +25,9 @@ describe('Wallet Controller E2E', () => {
     description: 'Nova descrição',
   };
 
+  const validWalletId = '6c1839fc-a36e-4f5f-8a62-afdf164d9b57';
+  const invalidWalletId = 'invalid-id';
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -32,6 +36,7 @@ describe('Wallet Controller E2E', () => {
       .useValue({
         update: jest.fn(),
         findById: jest.fn(),
+        delete: jest.fn(),
       })
       .compile();
 
@@ -40,6 +45,7 @@ describe('Wallet Controller E2E', () => {
 
     updateWalletMock = jest.spyOn(walletRepository, 'update');
     findByIdMock = jest.spyOn(walletRepository, 'findById');
+    deleteWalletMock = jest.spyOn(walletRepository, 'delete');
 
     await app.init();
   });
@@ -91,6 +97,16 @@ describe('Wallet Controller E2E', () => {
       await request(app.getHttpServer())
         .put('/wallet/update')
         .send(dtoWithNonExistingWallet)
+        .expect(HttpStatus.NOT_FOUND);
+    });
+  });
+
+  describe('/wallet/:id (DELETE)', () => {
+    it.only('should not be able to delete a wallet if wallet does not exist', async () => {
+      deleteWalletMock.mockRejectedValue(new NotFoundException());
+
+      await request(app.getHttpServer())
+        .delete(`/wallet/${invalidWalletId}`)
         .expect(HttpStatus.NOT_FOUND);
     });
   });
