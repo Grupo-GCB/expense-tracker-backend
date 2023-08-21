@@ -51,58 +51,56 @@ describe('Bank Controller (E2E)', () => {
   });
 
   describe('/bank/all (GET)', () => {
-    describe('/wallet (POST)', () => {
-      it('should be defined', () => {
-        expect(bankRepository).toBeDefined();
-        expect(findAllMock).toBeDefined();
-        expect(findBankByIdMock).toBeDefined();
-      });
+    it('should be defined', () => {
+      expect(bankRepository).toBeDefined();
+      expect(findAllMock).toBeDefined();
+      expect(findBankByIdMock).toBeDefined();
+    });
 
-      it('should be able to return a list with banks', async () => {
-        const banks = [mockBank, mockBank];
+    it('should be able to return a list with banks', async () => {
+      const banks = [mockBank, mockBank];
 
-        findAllMock.mockResolvedValue(banks);
+      findAllMock.mockResolvedValue(banks);
 
-        const response = await request(app.getHttpServer())
-          .get('/bank/all')
-          .expect(HttpStatus.OK);
+      const response = await request(app.getHttpServer())
+        .get('/bank/all')
+        .expect(HttpStatus.OK);
 
-        expect(response.body).toEqual(banks);
-      });
+      expect(response.body).toEqual(banks);
+    });
 
-      it('should be able to return an empty list', async () => {
-        findAllMock.mockResolvedValue([]);
+    it('should be able to return an empty list', async () => {
+      findAllMock.mockResolvedValue([]);
 
-        const response = await request(app.getHttpServer())
-          .get(`/bank/all`)
-          .expect(HttpStatus.OK);
+      const response = await request(app.getHttpServer())
+        .get(`/bank/all`)
+        .expect(HttpStatus.OK);
 
-        expect(response.body).toEqual([]);
+      expect(response.body).toEqual([]);
+    });
+  });
+
+  describe('/bank/:id (GET)', () => {
+    it('should be able to return data from a database when id exists in the database', async () => {
+      const bankResponse = { bank: mockBank };
+
+      findBankByIdMock.mockResolvedValueOnce(bankResponse);
+
+      const response = await request(app.getHttpServer())
+        .get(`/bank/${bankId}`)
+        .expect(HttpStatus.OK);
+
+      expect(response.body.bank).toMatchObject({
+        id: mockBank.id,
+        name: mockBank.name,
+        logo_url: mockBank.logo_url,
       });
     });
 
-    describe('/bank/:id (GET)', () => {
-      it('should be able to return data from a database when id exists in the database', async () => {
-        const bankResponse = { bank: mockBank };
-
-        findBankByIdMock.mockResolvedValueOnce(bankResponse);
-
-        const response = await request(app.getHttpServer())
-          .get(`/bank/${bankId}`)
-          .expect(HttpStatus.OK);
-
-        expect(response.body.bank).toMatchObject({
-          id: mockBank.id,
-          name: mockBank.name,
-          logo_url: mockBank.logo_url,
-        });
-      });
-
-      it('should be able to return 404 for a nonexistent bank', async () => {
-        await request(app.getHttpServer())
-          .get(`/bank/${nonExistentBankId}`)
-          .expect(HttpStatus.NOT_FOUND);
-      });
+    it('should be able to return 404 for a nonexistent bank', async () => {
+      await request(app.getHttpServer())
+        .get(`/bank/${nonExistentBankId}`)
+        .expect(HttpStatus.NOT_FOUND);
     });
   });
 });
