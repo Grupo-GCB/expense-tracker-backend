@@ -102,9 +102,11 @@ describe('Wallet Controller E2E', () => {
   });
 
   describe('/wallet/:id (DELETE)', () => {
-    it.only('should not be able to delete a wallet if wallet does not exist', async () => {
-      deleteWalletMock.mockRejectedValue(new NotFoundException());
+    it('should be defined', () => {
+      expect(deleteWalletMock).toBeDefined();
+    });
 
+    it('should not be able to delete a wallet if wallet does not exist', async () => {
       await request(app.getHttpServer())
         .delete(`/wallet/${invalidWalletId}`)
         .expect(HttpStatus.NOT_FOUND);
