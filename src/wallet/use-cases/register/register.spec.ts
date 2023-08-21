@@ -9,12 +9,12 @@ import { FindBankByIdUseCase } from '@/bank/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 
 describe('Register Wallet Use Case', () => {
-  let registerWalletUseCase: RegisterWalletUseCase;
-  let walletRepository: jest.Mocked<IWalletRepository>;
-  let findUserByIdUseCase: FindUserByIdUseCase;
-  let findBankByIdUseCase: FindBankByIdUseCase;
   let walletData: SaveWalletDTO;
   let createSpy: jest.SpyInstance;
+  let walletRepository: jest.Mocked<IWalletRepository>;
+  let registerWalletUseCase: RegisterWalletUseCase;
+  let findUserByIdUseCase: FindUserByIdUseCase;
+  let findBankByIdUseCase: FindBankByIdUseCase;
   let findUserByIdExecuteMock: jest.SpyInstance;
   let findBankByIdExecuteMock: jest.SpyInstance;
 
@@ -63,6 +63,12 @@ describe('Register Wallet Use Case', () => {
       account_type: AccountType.CHECKING_ACCOUNT,
       description: 'Descrição da carteira',
     };
+  });
+
+  it('should be defined', () => {
+    expect(walletRepository).toBeDefined();
+    expect(findUserByIdExecuteMock).toBeDefined();
+    expect(findBankByIdExecuteMock).toBeDefined();
   });
 
   it('should be able to register a new wallet', async () => {
