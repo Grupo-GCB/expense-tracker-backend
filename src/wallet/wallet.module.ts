@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import {
+  DeleteWalletUseCase,
   FindAllWalletsByUserIdUseCase,
   FindWalletByIdUseCase,
   RegisterWalletUseCase,
@@ -29,6 +30,7 @@ import { UpdateWalletUseCase } from '@/wallet/use-cases';
     FindWalletByIdUseCase,
     FindAllWalletsByUserIdUseCase,
     UpdateWalletUseCase,
+    DeleteWalletUseCase,
     {
       provide: IWalletRepository,
       useClass: WalletRepository,

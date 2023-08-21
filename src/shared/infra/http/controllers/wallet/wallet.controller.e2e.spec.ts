@@ -15,8 +15,6 @@ import { Wallet } from '@/wallet/infra/entities';
 describe('Wallet Controller (E2E)', () => {
   let app: INestApplication;
   let testModule: TestingModule;
-  let validWalletId: string;
-  let invalidWalletId: string;
   let findAllMock: jest.SpyInstance;
   let findByIdMock: jest.SpyInstance;
   let walletRepository: IWalletRepository;
@@ -34,6 +32,7 @@ describe('Wallet Controller (E2E)', () => {
             findAll: jest.fn(),
             update: jest.fn(),
             create: jest.fn(),
+            delete: jest.fn(),
           },
         },
       ],
@@ -44,12 +43,8 @@ describe('Wallet Controller (E2E)', () => {
     findAllMock = jest.spyOn(walletRepository, 'findAllByUserId');
     updateWalletMock = jest.spyOn(walletRepository, 'update');
     createWalletMock = jest.spyOn(walletRepository, 'create');
-
     app = testModule.createNestApplication();
     await app.init();
-
-    validWalletId = 'existent-wallet-id';
-    invalidWalletId = '0a26e4a5-5d1b-4fba-a554-8ef49b76aafb';
   });
 
   const updatedWalletData: UpdateWalletDTO = {
@@ -79,6 +74,9 @@ describe('Wallet Controller (E2E)', () => {
     user: null,
     transactions: null,
   };
+
+  const validWalletId = 'eacbdb5d-ae6c-4857-9ffd-68f3050dd5ee';
+  const invalidWalletId = '0a26e4a5-5d1b-4fba-a554-8ef49b76aafb';
 
   describe('/wallet (POST)', () => {
     it('should be defined', () => {
@@ -235,6 +233,20 @@ describe('Wallet Controller (E2E)', () => {
           .get(`/wallet/${invalidWalletId}`)
           .expect(HttpStatus.NOT_FOUND);
       });
+    });
+  });
+
+  describe('/wallet/:id (DELETE)', () => {
+    it('should be able to delete a wallet', async () => {
+      await request(app.getHttpServer())
+        .delete(`/wallet/${validWalletId}`)
+        .expect(HttpStatus.NO_CONTENT);
+    });
+
+    it('should not be able to delete a wallet if wallet does not exist', async () => {
+      await request(app.getHttpServer())
+        .delete(`/wallets/${invalidWalletId}`)
+        .expect(HttpStatus.NOT_FOUND);
     });
   });
 
