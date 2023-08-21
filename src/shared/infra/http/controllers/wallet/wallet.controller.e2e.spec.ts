@@ -54,12 +54,13 @@ describe('Wallet Controller E2E', () => {
     await app.close();
   });
 
-  describe('/wallet/update (PUT)', () => {
-    it('should be defined', () => {
-      expect(updateWalletMock).toBeDefined();
-      expect(findByIdMock).toBeDefined();
-    });
+  it('should be defined', () => {
+    expect(updateWalletMock).toBeDefined();
+    expect(findByIdMock).toBeDefined();
+    expect(deleteWalletMock).toBeDefined();
+  });
 
+  describe('/wallet/update (PUT)', () => {
     it('should be able to update a wallet', async () => {
       updateWalletMock.mockResolvedValue(updatedWalletData);
       findByIdMock.mockResolvedValue(updatedWalletData);
@@ -102,13 +103,15 @@ describe('Wallet Controller E2E', () => {
   });
 
   describe('/wallet/:id (DELETE)', () => {
-    it('should be defined', () => {
-      expect(deleteWalletMock).toBeDefined();
+    it('should be able to delete a wallet', async () => {
+      await request(app.getHttpServer())
+        .delete(`/wallet/${validWalletId}`)
+        .expect(HttpStatus.NO_CONTENT);
     });
 
     it('should not be able to delete a wallet if wallet does not exist', async () => {
       await request(app.getHttpServer())
-        .delete(`/wallet/${invalidWalletId}`)
+        .delete(`/wallets/${invalidWalletId}`)
         .expect(HttpStatus.NOT_FOUND);
     });
   });
