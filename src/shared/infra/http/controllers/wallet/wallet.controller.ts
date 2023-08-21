@@ -3,7 +3,6 @@ import {
   ApiTags,
   ApiOperation,
   ApiOkResponse,
-  ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiResponse,
 } from '@nestjs/swagger';
@@ -32,7 +31,6 @@ export class WalletController {
     description: 'Esta rota permite registrar uma carteira de um usuário.',
   })
   @ApiOkResponse(API_RESPONSES.OK)
-  @ApiBadRequestResponse(API_RESPONSES.BAD_REQUEST)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async createWallet(@Body() walletData: SaveWalletDTO): Promise<Wallet> {

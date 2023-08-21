@@ -5,43 +5,51 @@ import { IUserRepository } from '@/user/interfaces';
 import { FindUserByIdUseCase } from '@/user/use-cases';
 
 describe('Find User By Id', () => {
-  let findUserUseCase: FindUserByIdUseCase;
+  let sut: FindUserByIdUseCase;
+  let findByIdMock: jest.SpyInstance;
   let userRepository: jest.Mocked<IUserRepository>;
-
-  const userId = '123456';
-  const nonExistentUserId = 'non-existent-user-id';
 
   beforeAll(() => {
     userRepository = {
       findById: jest.fn(),
     } as unknown as jest.Mocked<IUserRepository>;
 
-    findUserUseCase = new FindUserByIdUseCase(userRepository);
+    sut = new FindUserByIdUseCase(userRepository);
+    findByIdMock = jest.spyOn(userRepository, 'findById');
+  });
+
+  const validUserId = '123456';
+  const invalidUserId = 'non-existent-user-id';
+
+  const user: User = {
+    id: validUserId,
+    name: 'John Doe',
+    email: 'johndoe@example.com',
+    created_at: new Date(),
+    wallet: [],
+  };
+
+  it('should be defined', () => {
+    expect(userRepository).toBeDefined();
+    expect(sut).toBeDefined();
+    expect(findByIdMock).toBeDefined();
   });
 
   it('should be able to return an user', async () => {
-    const user: User = {
-      id: userId,
-      name: 'John Doe',
-      email: 'johndoe@example.com',
-      created_at: new Date(),
-      wallet: [],
-    };
+    findByIdMock.mockResolvedValue(user);
 
-    userRepository.findById.mockResolvedValue(user);
-
-    const result = await findUserUseCase.execute(userId);
+    const result = await sut.execute(validUserId);
 
     expect(result.user).toEqual(user);
-    expect(userRepository.findById).toHaveBeenCalledWith(userId);
-    expect(userRepository.findById).toHaveBeenCalledTimes(1);
+    expect(findByIdMock).toHaveBeenCalledWith(validUserId);
+    expect(findByIdMock).toHaveBeenCalledTimes(1);
   });
 
   it('should not be able to return an user', async () => {
-    userRepository.findById.mockResolvedValueOnce(null);
+    findByIdMock.mockResolvedValueOnce(null);
 
-    await expect(
-      findUserUseCase.execute(nonExistentUserId),
-    ).rejects.toThrowError(new NotFoundException('Usuário não encontrado.'));
+    await expect(sut.execute(invalidUserId)).rejects.toThrowError(
+      new NotFoundException('Usuário não encontrado.'),
+    );
   });
 });
