@@ -5,21 +5,23 @@ import { IWalletRepository } from '@/wallet/interfaces';
 import { FindWalletByIdUseCase } from '@/wallet/use-cases';
 
 describe('Find Bank by ID', () => {
-  let findWalletById: FindWalletByIdUseCase;
+  let sut: FindWalletByIdUseCase;
+  let findByIdMock: jest.SpyInstance;
   let walletRepository: jest.Mocked<IWalletRepository>;
-
-  const walletId = 'existent-wallet-id';
-  const nonExistentWalletId = 'non-existent-wallet-id';
 
   beforeAll(() => {
     walletRepository = {
       findById: jest.fn(),
     } as unknown as jest.Mocked<IWalletRepository>;
 
-    findWalletById = new FindWalletByIdUseCase(walletRepository);
+    sut = new FindWalletByIdUseCase(walletRepository);
+    findByIdMock = jest.spyOn(walletRepository, 'findById');
   });
 
-  const walletData = {
+  const walletId = 'existent-wallet-id';
+  const invalidWalletId = 'non-existent-wallet-id';
+
+  const wallet = {
     id: 'existent-wallet-id',
     account_type: AccountType.CHECKING_ACCOUNT,
     description: 'Primeira Descrição de carteira.',
@@ -31,25 +33,30 @@ describe('Find Bank by ID', () => {
     transactions: null,
   };
 
-  it('should be able to return a wallet', async () => {
-    walletRepository.findById.mockResolvedValue(walletData);
+  it('should be defined', () => {
+    expect(walletRepository).toBeDefined();
+    expect(findByIdMock).toBeDefined();
+  });
 
-    const result = await findWalletById.execute(walletId);
+  it('should be able to return a wallet', async () => {
+    findByIdMock.mockResolvedValue(wallet);
+
+    const result = await sut.execute(walletId);
 
     expect(result.wallet).toEqual({
-      ...walletData,
+      ...wallet,
       bank: expect.any(Object),
     });
 
-    expect(walletRepository.findById).toHaveBeenCalledWith(walletId);
-    expect(walletRepository.findById).toHaveBeenCalledTimes(1);
+    expect(findByIdMock).toHaveBeenCalledWith(walletId);
+    expect(findByIdMock).toHaveBeenCalledTimes(1);
   });
 
   it('should not be able to return a wallet', async () => {
-    walletRepository.findById.mockResolvedValueOnce(null);
+    findByIdMock.mockResolvedValueOnce(null);
 
-    await expect(
-      findWalletById.execute(nonExistentWalletId),
-    ).rejects.toBeInstanceOf(NotFoundException);
+    await expect(sut.execute(invalidWalletId)).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
   });
 });

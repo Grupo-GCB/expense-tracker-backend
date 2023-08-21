@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 import { AccountType } from '@/shared/constants/enums';
 
@@ -22,6 +22,7 @@ export class SaveWalletDTO {
     description: 'Descrição da carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar a descrição.' })
+  @IsString({ message: 'Descrição deve ser uma string.' })
   description: string;
 
   @ApiProperty({
@@ -29,6 +30,7 @@ export class SaveWalletDTO {
     description: 'Id do banco associado à carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id do banco.' })
+  @IsString({ message: 'Id deve ser uma string.' })
   bank_id: string;
 
   @ApiProperty({
@@ -36,5 +38,6 @@ export class SaveWalletDTO {
     description: 'Id do usuário proprietário da carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id do usuário.' })
+  @IsString({ message: 'Id deve ser uma string.' })
   user_id: string;
 }

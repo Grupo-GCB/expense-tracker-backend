@@ -5,41 +5,50 @@ import { FindBankByIdUseCase } from '@/bank/use-cases';
 import { Bank } from '@/bank/infra/entities';
 
 describe('Find Bank by Id', () => {
-  let findBankById: FindBankByIdUseCase;
   let bankRepository: jest.Mocked<IBankRepository>;
-
-  const bankId = '097d540a-2298-4600-b0f4-77f1e3aasf2';
-  const nonExistentBankId = 'non-existent-bank-id';
+  let sut: FindBankByIdUseCase;
+  let findByIdMock: jest.SpyInstance;
 
   beforeAll(() => {
     bankRepository = {
       findById: jest.fn(),
     } as unknown as jest.Mocked<IBankRepository>;
 
-    findBankById = new FindBankByIdUseCase(bankRepository);
+    sut = new FindBankByIdUseCase(bankRepository);
+
+    findByIdMock = jest.spyOn(bankRepository, 'findById');
+  });
+
+  const bankId = '097d540a-2298-4600-b0f4-77f1e3aasf2';
+  const invalidBankId = 'invalid-bank-id';
+
+  const bank = {
+    id: bankId,
+    name: 'anyBank',
+    logo_url: 'anyURL',
+  } as Bank;
+
+  it('should be defined', () => {
+    expect(bankRepository).toBeDefined();
+    expect(findByIdMock).toBeDefined();
+    expect(sut).toBeDefined();
   });
 
   it('should be able to return a bank', async () => {
-    const bank = {
-      id: bankId,
-      name: 'anyBank',
-      logo_url: 'anyURL',
-    } as Bank;
+    findByIdMock.mockResolvedValue(bank);
 
-    bankRepository.findById.mockResolvedValue(bank);
-
-    const result = await findBankById.execute(bankId);
+    const result = await sut.execute(bankId);
 
     expect(result.bank).toEqual(bank);
-    expect(bankRepository.findById).toHaveBeenCalledWith(bankId);
-    expect(bankRepository.findById).toHaveBeenCalledTimes(1);
+    expect(findByIdMock).toHaveBeenCalledWith(bankId);
+    expect(findByIdMock).toHaveBeenCalledTimes(1);
   });
 
   it('should not be able to return a bank', async () => {
-    bankRepository.findById.mockResolvedValueOnce(null);
+    findByIdMock.mockResolvedValueOnce(null);
 
-    await expect(
-      findBankById.execute(nonExistentBankId),
-    ).rejects.toBeInstanceOf(NotFoundException);
+    await expect(sut.execute(invalidBankId)).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
   });
 });

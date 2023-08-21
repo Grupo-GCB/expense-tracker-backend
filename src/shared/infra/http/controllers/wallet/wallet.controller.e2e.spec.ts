@@ -1,9 +1,9 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import {
   HttpStatus,
   INestApplication,
   NotFoundException,
 } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 
 import {
@@ -19,41 +19,13 @@ import { Wallet } from '@/wallet/infra/entities';
 describe('Wallet Controller (E2E)', () => {
   let app: INestApplication;
   let testModule: TestingModule;
-  let walletId: string;
-  let nonExistentWalletId: string;
+  let validWalletId: string;
+  let invalidWalletId: string;
   let findAllMock: jest.SpyInstance;
   let findByIdMock: jest.SpyInstance;
   let walletRepository: IWalletRepository;
-  let createWalletMock: jest.SpyInstance;
   let updateWalletMock: jest.SpyInstance;
-
-  const mockWallet: Wallet = {
-    id: 'existent-wallet-id',
-    account_type: AccountType.CHECKING_ACCOUNT,
-    description: 'Descrição da carteira.',
-    created_at: new Date(),
-    updated_at: new Date(),
-    deleted_at: null,
-    bank: null,
-    user: null,
-    transactions: null,
-  };
-
-  const user_id = 'auth0|user-id';
-
-  const updatedWalletData: UpdateWalletDTO = {
-    id: '6c1839fc-a36e-4f5f-8a62-afdf164d9b57',
-    bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d4',
-    account_type: AccountType.CASH,
-    description: 'Nova descrição',
-  };
-
-  const walletData: SaveWalletDTO = {
-    user_id: 'auth0|58vfb567d5asdea52bc65ebba',
-    bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d4',
-    account_type: AccountType.CHECKING_ACCOUNT,
-    description: 'Descrição da carteira',
-  };
+  let createWalletMock: jest.SpyInstance;
 
   beforeAll(async () => {
     testModule = await Test.createTestingModule({
@@ -70,9 +42,6 @@ describe('Wallet Controller (E2E)', () => {
         },
       ],
     }).compile();
-
-    walletId = 'existent-wallet-id';
-    nonExistentWalletId = '0a26e4a5-5d1b-4fba-a554-8ef49b76aafb';
 
     findAllMock = jest.spyOn(
       testModule.get<FindAllWalletsByUserIdUseCase>(
@@ -92,7 +61,40 @@ describe('Wallet Controller (E2E)', () => {
 
     app = testModule.createNestApplication();
     await app.init();
+
+    validWalletId = 'existent-wallet-id';
+    invalidWalletId = '0a26e4a5-5d1b-4fba-a554-8ef49b76aafb';
   });
+
+  const user_id = 'auth0|user-id';
+
+  const updatedWalletData: UpdateWalletDTO = {
+    id: '6c1839fc-a36e-4f5f-8a62-afdf164d9b57',
+    bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d4',
+    account_type: AccountType.CASH,
+    description: 'Nova descrição',
+  };
+
+  const validUserId = 'auth0|user-id';
+
+  const walletData: SaveWalletDTO = {
+    user_id: 'auth0|58vfb567d5asdea52bc65ebba',
+    bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d4',
+    account_type: AccountType.CHECKING_ACCOUNT,
+    description: 'Descrição da carteira',
+  };
+
+  const mockWallet: Wallet = {
+    id: 'existent-wallet-id',
+    account_type: AccountType.CHECKING_ACCOUNT,
+    description: 'Descrição da carteira.',
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: null,
+    bank: null,
+    user: null,
+    transactions: null,
+  };
 
   describe('/wallet (POST)', () => {
     it('should be defined', () => {
@@ -193,8 +195,67 @@ describe('Wallet Controller (E2E)', () => {
         .expect(HttpStatus.NOT_FOUND);
     });
 
-    afterAll(async () => {
-      await app.close();
+    describe('/wallets/:id (GET)', () => {
+      it('should be able to return a list with all wallets', async () => {
+        const wallets = [mockWallet, mockWallet];
+
+        const walletsSerialized = wallets.map((wallet) => ({
+          ...wallet,
+          created_at: wallet.created_at.toISOString(),
+          updated_at: wallet.updated_at.toISOString(),
+        }));
+
+        findAllMock.mockResolvedValue({ wallets });
+
+        const response = await request(app.getHttpServer())
+          .get(`/wallets/${validUserId}`)
+          .expect(HttpStatus.OK);
+
+        expect(response.body).toEqual(walletsSerialized);
+      });
+
+      it('should be able to return an empty wallet list', async () => {
+        findAllMock.mockResolvedValue({ wallets: [] });
+
+        const response = await request(app.getHttpServer())
+          .get(`/wallets/${validUserId}`)
+          .expect(HttpStatus.OK);
+
+        expect(response.body).toEqual([]);
+      });
     });
+
+    describe('/wallet/:id (GET)', () => {
+      it('should be able to return wallet data when wallet id exists', async () => {
+        const walletReponse = { wallet: mockWallet };
+
+        findByIdMock.mockResolvedValueOnce(walletReponse);
+
+        const response = await request(app.getHttpServer())
+          .get(`/wallet/${validWalletId}`)
+          .expect(HttpStatus.OK);
+
+        expect(response.body).toMatchObject({
+          id: mockWallet.id,
+          account_type: mockWallet.account_type,
+          description: mockWallet.description,
+          deleted_at: mockWallet.deleted_at,
+          bank: mockWallet.bank,
+          user: mockWallet.user,
+          transactions: mockWallet.transactions,
+        });
+      });
+
+      it('should be able to return 404 if wallet does not exists', async () => {
+        findByIdMock.mockRejectedValue(new NotFoundException());
+
+        await request(app.getHttpServer())
+          .get(`/wallet/${invalidWalletId}`)
+          .expect(HttpStatus.NOT_FOUND);
+      });
+    });
+  });
+  afterAll(async () => {
+    await app.close();
   });
 });
