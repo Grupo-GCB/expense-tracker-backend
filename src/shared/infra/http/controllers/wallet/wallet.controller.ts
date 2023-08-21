@@ -18,7 +18,7 @@ import { SaveWalletDTO, UpdateWalletDTO } from '@/wallet/dto';
 import { API_RESPONSES } from '@/shared/constants';
 
 @ApiTags('Wallet')
-@Controller()
+@Controller('wallet')
 export class WalletController {
   constructor(
     private readonly walletUseCase: RegisterWalletUseCase,
@@ -27,7 +27,7 @@ export class WalletController {
     private readonly updateWalletUseCase: UpdateWalletUseCase,
   ) {}
 
-  @Post('wallet')
+  @Post()
   @ApiOperation({
     summary: 'Registrar uma carteira.',
     description: 'Esta rota permite registrar uma carteira de um usuário.',
@@ -39,18 +39,21 @@ export class WalletController {
     return this.walletUseCase.createWallet(walletData);
   }
 
-  @Put('update')
+  @Put(':id')
   @ApiOperation({
     summary: 'Atualizar uma carteira.',
     description: 'Esta rota permite atualizar a carteira de um usuário.',
   })
   @ApiOkResponse(API_RESPONSES.OK)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
-  async updateWallet(@Body() data: UpdateWalletDTO): Promise<Wallet> {
-    return this.updateWalletUseCase.execute(data);
+  async updateWallet(
+    @Param('id') id: string,
+    @Body() data: UpdateWalletDTO,
+  ): Promise<Wallet> {
+    return this.updateWalletUseCase.execute(id, data);
   }
 
-  @Get('wallets/:id')
+  @Get('all/:id')
   @ApiOkResponse(API_RESPONSES.OK)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   @ApiOperation({
@@ -65,7 +68,7 @@ export class WalletController {
     return wallets;
   }
 
-  @Get('wallet/:id')
+  @Get(':id')
   @ApiOperation({
     summary: 'Listar uma carteira pelo ID.',
     description: 'Esta rota permite visualizar os dados de uma carteira.',

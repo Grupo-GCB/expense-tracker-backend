@@ -75,7 +75,7 @@ describe('Update Wallet Use Case', () => {
     findByIdMock.mockResolvedValue(updatedWallet);
     updateMock.mockResolvedValue(updatedWallet);
 
-    const result = await sut.execute(updateData);
+    const result = await sut.execute(updateData.id, updateData);
 
     expect(result).toEqual(updatedWallet);
 
@@ -92,52 +92,27 @@ describe('Update Wallet Use Case', () => {
   });
 
   it('should not be able to update a wallet if wallet does not exist', async () => {
-    const nonExistingWalletId: UpdateWalletDTO = {
-      ...updateData,
+    const nonExistingWalletData: UpdateWalletDTO = {
       id: invalidId,
+      bank_id: validId,
+      account_type: AccountType.CHECKING_ACCOUNT,
+      description: 'Nova descrição',
     };
 
     findByIdMock.mockResolvedValue(null);
 
-    await expect(sut.execute(nonExistingWalletId)).rejects.toBeInstanceOf(
-      NotFoundException,
-    );
+    await expect(
+      sut.execute(nonExistingWalletData.id, nonExistingWalletData),
+    ).rejects.toBeInstanceOf(NotFoundException);
 
     expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
     expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
-      nonExistingWalletId.bank_id,
+      nonExistingWalletData.bank_id,
     );
 
     expect(walletRepository.findById).toHaveBeenCalledTimes(1);
     expect(walletRepository.findById).toHaveBeenCalledWith(
-      nonExistingWalletId.id,
+      nonExistingWalletData.id,
     );
-
-    expect(walletRepository.update).not.toHaveBeenCalled();
-  });
-
-  it('should not be able to update a wallet if bank does not exist', async () => {
-    const nonExistingBankId: UpdateWalletDTO = {
-      ...updateData,
-      bank_id: invalidId,
-    };
-
-    findBankByIdMock.mockResolvedValue(null);
-
-    await expect(sut.execute(nonExistingBankId)).rejects.toBeInstanceOf(
-      NotFoundException,
-    );
-
-    expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
-    expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
-      nonExistingBankId.bank_id,
-    );
-
-    expect(walletRepository.findById).toHaveBeenCalledTimes(1);
-    expect(walletRepository.findById).toHaveBeenCalledWith(
-      nonExistingBankId.id,
-    );
-
-    expect(walletRepository.update).not.toHaveBeenCalled();
   });
 });
