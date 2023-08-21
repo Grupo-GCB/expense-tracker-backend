@@ -4,11 +4,22 @@ import { AccountType } from '@/shared/constants';
 import { Wallet } from '@/wallet/infra/entities';
 
 describe('Find All Wallets', () => {
-  let findAllWalletsByUserIdUseCase: FindAllWalletsByUserIdUseCase;
   let walletRepository: jest.Mocked<IWalletRepository>;
   let findAllByUserIdMock: jest.SpyInstance;
+  let sut: FindAllWalletsByUserIdUseCase;
 
-  const mockWallet: Wallet = {
+  beforeAll(async () => {
+    walletRepository = {
+      findAllByUserId: jest.fn(),
+    } as unknown as jest.Mocked<IWalletRepository>;
+
+    sut = new FindAllWalletsByUserIdUseCase(walletRepository);
+    findAllByUserIdMock = jest.spyOn(walletRepository, 'findAllByUserId');
+  });
+
+  const validUserId = 'auth0|user-id';
+
+  const wallet: Wallet = {
     id: '01',
     account_type: AccountType.CHECKING_ACCOUNT,
     description: 'Primeira Descrição de carteira.',
@@ -20,30 +31,17 @@ describe('Find All Wallets', () => {
     transactions: null,
   };
 
-  const user_id = 'auth0|user-id';
-
-  beforeAll(async () => {
-    walletRepository = {
-      findAllByUserId: jest.fn(),
-    } as unknown as jest.Mocked<IWalletRepository>;
-
-    findAllWalletsByUserIdUseCase = new FindAllWalletsByUserIdUseCase(
-      walletRepository,
-    );
-    findAllByUserIdMock = jest.spyOn(walletRepository, 'findAllByUserId');
-  });
-
   it('should be defined', () => {
     expect(walletRepository).toBeDefined();
-    expect(findAllWalletsByUserIdUseCase).toBeDefined();
+    expect(sut).toBeDefined();
   });
 
   it('should be able to return all wallets', async () => {
-    const wallets = [mockWallet, mockWallet];
+    const wallets = [wallet, wallet];
 
     findAllByUserIdMock.mockResolvedValue(wallets);
 
-    const result = await findAllWalletsByUserIdUseCase.execute(user_id);
+    const result = await sut.execute(validUserId);
 
     expect(result.wallets).toEqual(
       expect.arrayContaining(
@@ -57,10 +55,10 @@ describe('Find All Wallets', () => {
     expect(findAllByUserIdMock).toHaveBeenCalledTimes(1);
   });
 
-  it('should not be able to return wallets if were not found', async () => {
+  it('should not be able to return wallets if they were not found', async () => {
     findAllByUserIdMock.mockResolvedValue([]);
 
-    const result = await findAllWalletsByUserIdUseCase.execute(user_id);
+    const result = await sut.execute(validUserId);
 
     expect(result).toEqual({ wallets: [] });
   });
