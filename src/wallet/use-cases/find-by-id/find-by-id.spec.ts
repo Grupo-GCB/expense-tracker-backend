@@ -5,9 +5,9 @@ import { IWalletRepository } from '@/wallet/interfaces';
 import { FindWalletByIdUseCase } from '@/wallet/use-cases';
 
 describe('Find Bank by ID', () => {
-  let findWalletById: FindWalletByIdUseCase;
   let walletRepository: jest.Mocked<IWalletRepository>;
   let findByIdMock: jest.SpyInstance;
+  let findWalletById: FindWalletByIdUseCase;
 
   const walletId = 'existent-wallet-id';
   const nonExistentWalletId = 'non-existent-wallet-id';
@@ -32,6 +32,11 @@ describe('Find Bank by ID', () => {
     user: null,
     transactions: null,
   };
+
+  it('should be defined', () => {
+    expect(walletRepository).toBeDefined();
+    expect(findByIdMock).toBeDefined();
+  });
 
   it('should be able to return a wallet', async () => {
     findByIdMock.mockResolvedValue(walletData);
