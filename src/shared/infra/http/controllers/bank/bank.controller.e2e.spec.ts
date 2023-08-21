@@ -5,7 +5,6 @@ import * as request from 'supertest';
 import { AppModule } from '@/app.module';
 import { IBankRepository } from '@/bank/interfaces';
 import { Bank } from '@/bank/infra/entities';
-import { BankRepository } from '@/bank/infra/repositories';
 
 describe('Bank Controller (E2E)', () => {
   let app: INestApplication;
@@ -14,7 +13,7 @@ describe('Bank Controller (E2E)', () => {
   let testModule: TestingModule;
   let findAllMock: jest.SpyInstance;
   let findBankByIdMock: jest.SpyInstance;
-  let bankRepository: jest.Mocked<BankRepository>;
+  let bankRepository: IBankRepository;
 
   const mockBank: Bank = {
     id: 'bank-01',
@@ -39,6 +38,7 @@ describe('Bank Controller (E2E)', () => {
     bankId = '87b2a64b-2651-422a-8659-c85fedafdc78';
     nonExistentBankId = 'f632a171-e958-4006-98cc-052cfedb82b5';
 
+    bankRepository = testModule.get<IBankRepository>(IBankRepository);
     findAllMock = jest.spyOn(bankRepository, 'findAll');
     findBankByIdMock = jest.spyOn(bankRepository, 'findById');
 
@@ -51,50 +51,58 @@ describe('Bank Controller (E2E)', () => {
   });
 
   describe('/bank/all (GET)', () => {
-    it('should be able to return a list with banks', async () => {
-      const banks = [mockBank, mockBank];
+    describe('/wallet (POST)', () => {
+      it('should be defined', () => {
+        expect(bankRepository).toBeDefined();
+        expect(findAllMock).toBeDefined();
+        expect(findBankByIdMock).toBeDefined();
+      });
 
-      findAllMock.mockResolvedValue({ banks });
+      it('should be able to return a list with banks', async () => {
+        const banks = [mockBank, mockBank];
 
-      const response = await request(app.getHttpServer())
-        .get('/bank/all')
-        .expect(HttpStatus.OK);
+        findAllMock.mockResolvedValue(banks);
 
-      expect(response.body).toEqual(banks);
-    });
+        const response = await request(app.getHttpServer())
+          .get('/bank/all')
+          .expect(HttpStatus.OK);
 
-    it('should be able to return an empty list', async () => {
-      findAllMock.mockResolvedValue({ banks: [] });
+        expect(response.body).toEqual(banks);
+      });
 
-      const response = await request(app.getHttpServer())
-        .get(`/bank/all`)
-        .expect(HttpStatus.OK);
+      it('should be able to return an empty list', async () => {
+        findAllMock.mockResolvedValue([]);
 
-      expect(response.body).toEqual([]);
-    });
-  });
+        const response = await request(app.getHttpServer())
+          .get(`/bank/all`)
+          .expect(HttpStatus.OK);
 
-  describe('/bank/:id (GET)', () => {
-    it('should be able to return data from a database when id exists in the database', async () => {
-      const bankResponse = { bank: mockBank };
-
-      findBankByIdMock.mockResolvedValueOnce(bankResponse);
-
-      const response = await request(app.getHttpServer())
-        .get(`/bank/${bankId}`)
-        .expect(HttpStatus.OK);
-
-      expect(response.body).toMatchObject({
-        id: mockBank.id,
-        name: mockBank.name,
-        logo_url: mockBank.logo_url,
+        expect(response.body).toEqual([]);
       });
     });
 
-    it('should be able to return 404 for a nonexistent bank', async () => {
-      await request(app.getHttpServer())
-        .get(`/bank/${nonExistentBankId}`)
-        .expect(HttpStatus.NOT_FOUND);
+    describe('/bank/:id (GET)', () => {
+      it('should be able to return data from a database when id exists in the database', async () => {
+        const bankResponse = { bank: mockBank };
+
+        findBankByIdMock.mockResolvedValueOnce(bankResponse);
+
+        const response = await request(app.getHttpServer())
+          .get(`/bank/${bankId}`)
+          .expect(HttpStatus.OK);
+
+        expect(response.body.bank).toMatchObject({
+          id: mockBank.id,
+          name: mockBank.name,
+          logo_url: mockBank.logo_url,
+        });
+      });
+
+      it('should be able to return 404 for a nonexistent bank', async () => {
+        await request(app.getHttpServer())
+          .get(`/bank/${nonExistentBankId}`)
+          .expect(HttpStatus.NOT_FOUND);
+      });
     });
   });
 });

@@ -23,8 +23,8 @@ describe('Wallet Controller (E2E)', () => {
   let nonExistentWalletId: string;
   let findAllMock: jest.SpyInstance;
   let findByIdMock: jest.SpyInstance;
-  let walletRepository: IWalletRepository;
   let createWalletMock: jest.SpyInstance;
+  let walletRepository: IWalletRepository;
 
   const mockWallet: Wallet = {
     id: 'existent-wallet-id',
