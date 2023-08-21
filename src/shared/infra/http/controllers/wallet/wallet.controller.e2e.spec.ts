@@ -66,8 +66,6 @@ describe('Wallet Controller (E2E)', () => {
     invalidWalletId = '0a26e4a5-5d1b-4fba-a554-8ef49b76aafb';
   });
 
-  const user_id = 'auth0|user-id';
-
   const updatedWalletData: UpdateWalletDTO = {
     id: '6c1839fc-a36e-4f5f-8a62-afdf164d9b57',
     bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d4',
@@ -255,6 +253,7 @@ describe('Wallet Controller (E2E)', () => {
       });
     });
   });
+
   afterAll(async () => {
     await app.close();
   });
