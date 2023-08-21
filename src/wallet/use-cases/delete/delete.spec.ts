@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { IWalletRepository } from '@/wallet/interfaces';
 import { AccountType } from '@/shared/constants';
-import { NotFoundException } from '@nestjs/common';
-import { DeleteWalletUseCase } from '@/wallet/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
+import { IWalletRepository } from '@/wallet/interfaces';
+import { DeleteWalletUseCase } from '@/wallet/use-cases';
+import { NotFoundException } from '@nestjs/common';
 
 describe('Delete Wallet Use Case', () => {
   let walletRepository: IWalletRepository;
@@ -42,7 +42,7 @@ describe('Delete Wallet Use Case', () => {
     deleted_at: null as Date | null,
   } as Wallet;
 
-  it.only('should be able to delete a wallet when exist a wallet', async () => {
+  it('should be able to delete a wallet when exist a wallet', async () => {
     findByIdMock.mockResolvedValue(wallet);
 
     await sut.execute({ id: wallet.id });
@@ -55,19 +55,21 @@ describe('Delete Wallet Use Case', () => {
   });
 
   it('should not be able to delete a wallet when non exist wallet', async () => {
+    findByIdMock.mockRejectedValue(new NotFoundException());
+
     const nonExistingWalletId: Wallet = {
       ...wallet,
       id: invalidId,
     };
 
-    const result = sut.execute(nonExistingWalletId);
+    await expect(sut.execute(nonExistingWalletId)).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
 
     expect(walletRepository.findById).toHaveBeenCalledTimes(1);
     expect(walletRepository.findById).toHaveBeenCalledWith(
       nonExistingWalletId.id,
     );
-
-    expect(result).rejects.toBeInstanceOf(NotFoundException);
 
     expect(walletRepository.delete).not.toHaveBeenCalled();
   });
