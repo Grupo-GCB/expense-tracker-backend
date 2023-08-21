@@ -19,33 +19,12 @@ import { Wallet } from '@/wallet/infra/entities';
 describe('Wallet Controller (E2E)', () => {
   let app: INestApplication;
   let testModule: TestingModule;
-  let walletId: string;
-  let nonExistentWalletId: string;
+  let validWalletId: string;
+  let invalidWalletId: string;
   let findAllMock: jest.SpyInstance;
   let findByIdMock: jest.SpyInstance;
   let createWalletMock: jest.SpyInstance;
   let walletRepository: IWalletRepository;
-
-  const mockWallet: Wallet = {
-    id: 'existent-wallet-id',
-    account_type: AccountType.CHECKING_ACCOUNT,
-    description: 'Descrição da carteira.',
-    created_at: new Date(),
-    updated_at: new Date(),
-    deleted_at: null,
-    bank: null,
-    user: null,
-    transactions: null,
-  };
-
-  const user_id = 'auth0|user-id';
-
-  const walletData: SaveWalletDTO = {
-    user_id: 'auth0|58vfb567d5asdea52bc65ebba',
-    bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d4',
-    account_type: AccountType.CHECKING_ACCOUNT,
-    description: 'Descrição da carteira',
-  };
 
   beforeAll(async () => {
     testModule = await Test.createTestingModule({
@@ -61,9 +40,6 @@ describe('Wallet Controller (E2E)', () => {
         },
       ],
     }).compile();
-
-    walletId = 'existent-wallet-id';
-    nonExistentWalletId = '0a26e4a5-5d1b-4fba-a554-8ef49b76aafb';
 
     findAllMock = jest.spyOn(
       testModule.get<FindAllWalletsByUserIdUseCase>(
@@ -81,11 +57,35 @@ describe('Wallet Controller (E2E)', () => {
 
     app = testModule.createNestApplication();
     await app.init();
+
+    validWalletId = 'existent-wallet-id';
+    invalidWalletId = '0a26e4a5-5d1b-4fba-a554-8ef49b76aafb';
   });
 
   afterAll(async () => {
     await app.close();
   });
+
+  const validUserId = 'auth0|user-id';
+
+  const walletData: SaveWalletDTO = {
+    user_id: 'auth0|58vfb567d5asdea52bc65ebba',
+    bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d4',
+    account_type: AccountType.CHECKING_ACCOUNT,
+    description: 'Descrição da carteira',
+  };
+
+  const mockWallet: Wallet = {
+    id: 'existent-wallet-id',
+    account_type: AccountType.CHECKING_ACCOUNT,
+    description: 'Descrição da carteira.',
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: null,
+    bank: null,
+    user: null,
+    transactions: null,
+  };
 
   describe('/wallet (POST)', () => {
     it('should be defined', () => {
@@ -153,7 +153,7 @@ describe('Wallet Controller (E2E)', () => {
       findAllMock.mockResolvedValue({ wallets });
 
       const response = await request(app.getHttpServer())
-        .get(`/wallets/${user_id}`)
+        .get(`/wallets/${validUserId}`)
         .expect(HttpStatus.OK);
 
       expect(response.body).toEqual(walletsSerialized);
@@ -163,7 +163,7 @@ describe('Wallet Controller (E2E)', () => {
       findAllMock.mockResolvedValue({ wallets: [] });
 
       const response = await request(app.getHttpServer())
-        .get(`/wallets/${user_id}`)
+        .get(`/wallets/${validUserId}`)
         .expect(HttpStatus.OK);
 
       expect(response.body).toEqual([]);
@@ -177,7 +177,7 @@ describe('Wallet Controller (E2E)', () => {
       findByIdMock.mockResolvedValueOnce(walletReponse);
 
       const response = await request(app.getHttpServer())
-        .get(`/wallet/${walletId}`)
+        .get(`/wallet/${validWalletId}`)
         .expect(HttpStatus.OK);
 
       expect(response.body).toMatchObject({
@@ -195,7 +195,7 @@ describe('Wallet Controller (E2E)', () => {
       findByIdMock.mockRejectedValue(new NotFoundException());
 
       await request(app.getHttpServer())
-        .get(`/wallet/${nonExistentWalletId}`)
+        .get(`/wallet/${invalidWalletId}`)
         .expect(HttpStatus.NOT_FOUND);
     });
   });

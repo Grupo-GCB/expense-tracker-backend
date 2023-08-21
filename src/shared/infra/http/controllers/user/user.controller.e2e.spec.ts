@@ -12,21 +12,15 @@ import { IJwtAuthProvider } from '@/auth/interfaces';
 
 describe('User ControuserRepositoryller (E2E)', () => {
   let app: INestApplication;
+  let validUserId: string;
+  let nonexistentUserId: string;
+  let testModule: TestingModule;
   let userRepository: IUserRepository;
   let jwtAuthProvider: IJwtAuthProvider;
   let findByEmailMock: jest.SpyInstance;
   let findByIdMock: jest.SpyInstance;
   let createUserMock: jest.SpyInstance;
   let decodeTokenMock: jest.SpyInstance;
-  let userId: string;
-  let nonexistentUserId: string;
-  let testModule: TestingModule;
-
-  const userPayload: Pick<IDecodedTokenPayload, 'sub' | 'name' | 'email'> = {
-    sub: 'auth0|58vfb567d5asdea52bc65ebba',
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-  };
 
   beforeAll(async () => {
     testModule = await Test.createTestingModule({
@@ -44,9 +38,6 @@ describe('User ControuserRepositoryller (E2E)', () => {
       })
       .compile();
 
-    userId = 'google-oauth2|456734566205483104315';
-    nonexistentUserId = 'invalid-id';
-
     userRepository = testModule.get<IUserRepository>(IUserRepository);
     jwtAuthProvider = testModule.get<IJwtAuthProvider>(IJwtAuthProvider);
 
@@ -57,11 +48,19 @@ describe('User ControuserRepositoryller (E2E)', () => {
 
     app = testModule.createNestApplication();
     await app.init();
+
+    validUserId = 'google-oauth2|456734566205483104315';
   });
 
   afterAll(async () => {
     await app.close();
   });
+
+  const userPayload: Pick<IDecodedTokenPayload, 'sub' | 'name' | 'email'> = {
+    sub: 'auth0|58vfb567d5asdea52bc65ebba',
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+  };
 
   describe('/user/login (POST)', () => {
     it('should be defined', () => {
@@ -125,7 +124,7 @@ describe('User ControuserRepositoryller (E2E)', () => {
     findByIdMock.mockResolvedValue(userPayload);
 
     const response = await request(app.getHttpServer())
-      .get(`/user/${userId}`)
+      .get(`/user/${validUserId}`)
       .expect(HttpStatus.OK);
 
     expect(response.body).toMatchObject(userPayload);
