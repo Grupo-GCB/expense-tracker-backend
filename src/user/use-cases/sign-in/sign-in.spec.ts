@@ -7,8 +7,8 @@ import { SaveUserDTO } from '@/user/dto';
 
 describe('Sign In Use Case', () => {
   let sut: SignInUseCase;
-  let findByEmailMock: jest.SpyInstance;
   let createUserMock: jest.SpyInstance;
+  let findByEmailMock: jest.SpyInstance;
   let decodeTokenMock: jest.SpyInstance;
   let userRepository: jest.Mocked<IUserRepository>;
   let jwtAuthProvider: jest.Mocked<IJwtAuthProvider>;
@@ -44,12 +44,6 @@ describe('Sign In Use Case', () => {
   const token = 'valid-jwt-token';
   const invalidToken = 'invalid-jwt-token';
 
-  const user: SaveUserDTO = {
-    id: userPayload.sub,
-    name: userPayload.name,
-    email: userPayload.email,
-  };
-
   it('should be defined', () => {
     expect(userRepository).toBeDefined();
     expect(jwtAuthProvider).toBeDefined();
@@ -74,6 +68,12 @@ describe('Sign In Use Case', () => {
   });
 
   it('should be able to create a new user if the user does not exist', async () => {
+    const user: SaveUserDTO = {
+      id: userPayload.sub,
+      name: userPayload.name,
+      email: userPayload.email,
+    };
+
     findByEmailMock.mockResolvedValue(null);
     createUserMock.mockResolvedValue(user);
 
@@ -89,7 +89,7 @@ describe('Sign In Use Case', () => {
     expect(userRepository.create).toHaveBeenCalledWith(userPayload);
   });
 
-  it('should throw an exception if the token is invalid', async () => {
+  it('should throw an exception if token is invalid', async () => {
     decodeTokenMock.mockRejectedValue(UnauthorizedException);
 
     await expect(sut.execute(invalidToken)).rejects.toBeInstanceOf(
