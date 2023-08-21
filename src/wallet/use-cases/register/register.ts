@@ -14,24 +14,22 @@ export class RegisterWalletUseCase {
     private readonly findBankByIdUseCase: FindBankByIdUseCase,
   ) {}
 
-  async createWallet({
-    user_id,
-    bank_id,
-    account_type,
-    description,
-  }: SaveWalletDTO): Promise<Wallet> {
-    const user = await this.findUserByIdUseCase.execute(user_id);
-    if (!user) throw new NotFoundException('Usuário não encontrado.');
+  async createWallet(data: SaveWalletDTO): Promise<Wallet> {
+    const [user, bank] = await Promise.all([
+      this.findUserByIdUseCase.execute(data.user_id),
+      this.findBankByIdUseCase.execute(data.bank_id),
+    ]);
 
-    const bank = await this.findBankByIdUseCase.execute(bank_id);
+    if (!user) throw new NotFoundException('Usuário não encontrado.');
     if (!bank) throw new NotFoundException('Banco não encontrado.');
 
     const saveWalletDTO: SaveWalletDTO = {
-      user_id,
-      bank_id,
-      account_type,
-      description,
+      user_id: data.user_id,
+      bank_id: data.bank_id,
+      account_type: data.account_type,
+      description: data.description,
     };
+
     return this.walletRepository.create(saveWalletDTO);
   }
 }
