@@ -65,14 +65,14 @@ describe('Wallet Controller (E2E)', () => {
     it('should not be able to update a wallet if bank does not exist', async () => {
       updateWalletMock.mockRejectedValue(new NotFoundException());
 
-      const dtoWithNonExistingBank: UpdateWalletDTO = {
+      const nonExistingBank: UpdateWalletDTO = {
         ...updatedWalletData,
         bank_id: 'd534a168-60ad-48fc-9d57-64b412e4f6d5',
       };
 
       await request(app.getHttpServer())
         .put('/wallet/update')
-        .send(dtoWithNonExistingBank)
+        .send(nonExistingBank)
         .expect(HttpStatus.NOT_FOUND);
     });
 
