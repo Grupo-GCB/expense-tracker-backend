@@ -67,7 +67,7 @@ describe('Wallet Controller (E2E)', () => {
   });
 
   const updatedWalletData: UpdateWalletDTO = {
-    id: '6c1839fc-a36e-4f5f-8a62-afdf164d9b57',
+    id: '2a7fa85a-d5d8-4757-aff6-c0faf61639ec',
     bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d4',
     account_type: AccountType.CASH,
     description: 'Nova descrição',
@@ -147,7 +147,7 @@ describe('Wallet Controller (E2E)', () => {
     });
   });
 
-  describe('/wallet/update (PUT)', () => {
+  describe('/update (PUT)', () => {
     it('should be defined', () => {
       expect(updateWalletMock).toBeDefined();
       expect(findByIdMock).toBeDefined();
@@ -158,7 +158,7 @@ describe('Wallet Controller (E2E)', () => {
       updateWalletMock.mockResolvedValue(updatedWalletData);
 
       const response = await request(app.getHttpServer())
-        .put('/wallet/update')
+        .put('/update')
         .send(updatedWalletData)
         .expect(HttpStatus.OK);
 
@@ -174,7 +174,7 @@ describe('Wallet Controller (E2E)', () => {
       };
 
       await request(app.getHttpServer())
-        .put('/wallet/update')
+        .put('/update')
         .send(nonExistingBank)
         .expect(HttpStatus.NOT_FOUND);
     });
