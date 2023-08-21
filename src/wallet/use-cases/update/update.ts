@@ -13,10 +13,12 @@ export class UpdateWalletUseCase {
   ) {}
 
   async execute(data: UpdateWalletDTO): Promise<Wallet> {
-    const bank = await this.findBankByIdUseCase.execute(data.bank_id);
-    if (!bank) throw new NotFoundException('Banco não encontrado.');
+    const [bank, wallet] = await Promise.all([
+      this.findBankByIdUseCase.execute(data.bank_id),
+      this.walletRepository.findById(data.id),
+    ]);
 
-    const wallet = await this.walletRepository.findById(data.id);
+    if (!bank) throw new NotFoundException('Banco não encontrado.');
     if (!wallet) throw new NotFoundException('Carteira não encontrada.');
 
     Object.assign(wallet, data);
