@@ -31,15 +31,25 @@ export class WalletRepository implements IWalletRepository {
     return this.walletRepository.save(wallet);
   }
 
-  async findById(id: string): Promise<Wallet> {
-    return this.walletRepository.findOne({ where: { id } });
-  }
-
   async update(wallet: Wallet): Promise<Wallet> {
     return this.walletRepository.save(wallet);
   }
 
   async delete(id: string): Promise<void> {
     await this.walletRepository.softDelete({ id });
+  }
+
+  async findAllByUserId(user_id: string): Promise<Wallet[]> {
+    return this.walletRepository.find({
+      where: { user: { id: user_id } },
+      relations: ['bank'],
+    });
+  }
+
+  async findById(id: string): Promise<Wallet> {
+    return this.walletRepository.findOne({
+      where: { id },
+      relations: ['bank'],
+    });
   }
 }
