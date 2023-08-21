@@ -5,9 +5,9 @@ import { IUserRepository } from '@/user/interfaces';
 import { FindUserByIdUseCase } from '@/user/use-cases';
 
 describe('Find User By Id', () => {
-  let userRepository: jest.Mocked<IUserRepository>;
   let sut: FindUserByIdUseCase;
   let findByIdMock: jest.SpyInstance;
+  let userRepository: jest.Mocked<IUserRepository>;
 
   beforeAll(() => {
     userRepository = {

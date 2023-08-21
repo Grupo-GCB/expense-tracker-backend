@@ -4,9 +4,9 @@ import { AccountType } from '@/shared/constants';
 import { Wallet } from '@/wallet/infra/entities';
 
 describe('Find All Wallets', () => {
-  let walletRepository: jest.Mocked<IWalletRepository>;
-  let findAllByUserIdMock: jest.SpyInstance;
   let sut: FindAllWalletsByUserIdUseCase;
+  let findAllByUserIdMock: jest.SpyInstance;
+  let walletRepository: jest.Mocked<IWalletRepository>;
 
   beforeAll(async () => {
     walletRepository = {

@@ -9,14 +9,14 @@ import { FindBankByIdUseCase } from '@/bank/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 
 describe('Register Wallet Use Case', () => {
-  let walletData: SaveWalletDTO;
-  let createSpy: jest.SpyInstance;
-  let walletRepository: jest.Mocked<IWalletRepository>;
   let sut: RegisterWalletUseCase;
   let findUserById: FindUserByIdUseCase;
   let findBankById: FindBankByIdUseCase;
   let findUserByIdExecuteMock: jest.SpyInstance;
   let findBankByIdExecuteMock: jest.SpyInstance;
+  let createSpy: jest.SpyInstance;
+  let walletData: SaveWalletDTO;
+  let walletRepository: jest.Mocked<IWalletRepository>;
 
   beforeEach(() => {
     walletRepository = {
