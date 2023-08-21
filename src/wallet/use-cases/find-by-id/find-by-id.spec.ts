@@ -5,23 +5,23 @@ import { IWalletRepository } from '@/wallet/interfaces';
 import { FindWalletByIdUseCase } from '@/wallet/use-cases';
 
 describe('Find Bank by ID', () => {
-  let walletRepository: jest.Mocked<IWalletRepository>;
+  let sut: FindWalletByIdUseCase;
   let findByIdMock: jest.SpyInstance;
-  let findWalletById: FindWalletByIdUseCase;
-
-  const walletId = 'existent-wallet-id';
-  const nonExistentWalletId = 'non-existent-wallet-id';
+  let walletRepository: jest.Mocked<IWalletRepository>;
 
   beforeAll(() => {
     walletRepository = {
       findById: jest.fn(),
     } as unknown as jest.Mocked<IWalletRepository>;
 
-    findWalletById = new FindWalletByIdUseCase(walletRepository);
+    sut = new FindWalletByIdUseCase(walletRepository);
     findByIdMock = jest.spyOn(walletRepository, 'findById');
   });
 
-  const walletData = {
+  const walletId = 'existent-wallet-id';
+  const invalidWalletId = 'non-existent-wallet-id';
+
+  const wallet = {
     id: 'existent-wallet-id',
     account_type: AccountType.CHECKING_ACCOUNT,
     description: 'Primeira Descrição de carteira.',
@@ -39,12 +39,12 @@ describe('Find Bank by ID', () => {
   });
 
   it('should be able to return a wallet', async () => {
-    findByIdMock.mockResolvedValue(walletData);
+    findByIdMock.mockResolvedValue(wallet);
 
-    const result = await findWalletById.execute(walletId);
+    const result = await sut.execute(walletId);
 
     expect(result.wallet).toEqual({
-      ...walletData,
+      ...wallet,
       bank: expect.any(Object),
     });
 
@@ -55,8 +55,8 @@ describe('Find Bank by ID', () => {
   it('should not be able to return a wallet', async () => {
     findByIdMock.mockResolvedValueOnce(null);
 
-    await expect(
-      findWalletById.execute(nonExistentWalletId),
-    ).rejects.toBeInstanceOf(NotFoundException);
+    await expect(sut.execute(invalidWalletId)).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
   });
 });
