@@ -42,7 +42,7 @@ describe('Delete Wallet Use Case', () => {
     deleted_at: null as Date | null,
   } as Wallet;
 
-  it('should be able to delete a wallet when exist a wallet', async () => {
+  it('should be able to delete a wallet when a wallet exists', async () => {
     findByIdMock.mockResolvedValue(wallet);
 
     await sut.execute({ id: wallet.id });
@@ -54,7 +54,7 @@ describe('Delete Wallet Use Case', () => {
     expect(walletRepository.delete).toHaveBeenCalledWith(wallet.id);
   });
 
-  it('should not be able to delete a wallet when non exist wallet', async () => {
+  it('should be able to delete a wallet when a wallet no exists', async () => {
     findByIdMock.mockRejectedValue(new NotFoundException());
 
     const nonExistingWalletId: Wallet = {
