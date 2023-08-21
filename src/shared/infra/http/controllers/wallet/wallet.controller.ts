@@ -64,6 +64,7 @@ export class WalletController {
   ): Promise<Wallet> {
     return this.updateWalletUseCase.execute(id, data);
   }
+
   @Delete(':id')
   @HttpCode(204)
   @ApiNoContentResponse(API_RESPONSES.NO_CONTENT)
