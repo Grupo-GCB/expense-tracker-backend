@@ -1,2 +1,2 @@
 export * from './enums';
-export * from './api-reponse-options';
+export * from './api-response-options';
