@@ -18,12 +18,12 @@ jobs:
 
       - name: run install and build
         run: |
-          npm install
-          npm run build
+          yarn
+          yarn start
 
       - name: test coverage
         run: |
-          npm run test:cov
+          yarn test:cov
 
       - name: validate test coverage
         run: |
