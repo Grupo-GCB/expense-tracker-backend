@@ -1,0 +1,35 @@
+name: Expense Tracker CI Integration
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  continuos-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Using Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: run install and build
+        run: |
+          npm install
+          npm run build
+
+      - name: test coverage
+        run: |
+          npm run test:cov
+
+      - name: validate test coverage
+        run: |
+          coverage=$(cat coverage/coverage-summary.json | jq -r '.total.lines.pct')
+          min_coverage=80
+          if (( $(echo "$coverage < $min_coverage" | bc -l) )); then
+            echo "O coverage de testes é $coverage e é inferior a $min_coverage%. Abortando o pull request."
+            exit 1
+          fi
