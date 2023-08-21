@@ -5,12 +5,20 @@ import { IUserRepository } from '@/user/interfaces';
 import { FindUserByIdUseCase } from '@/user/use-cases';
 
 describe('Find User By Id', () => {
-  let findUserUseCase: FindUserByIdUseCase;
   let userRepository: jest.Mocked<IUserRepository>;
+  let findUserUseCase: FindUserByIdUseCase;
   let findByIdMock: jest.SpyInstance;
 
   const userId = '123456';
   const nonExistentUserId = 'non-existent-user-id';
+
+  const user: User = {
+    id: userId,
+    name: 'John Doe',
+    email: 'johndoe@example.com',
+    created_at: new Date(),
+    wallet: [],
+  };
 
   beforeAll(() => {
     userRepository = {
@@ -21,15 +29,13 @@ describe('Find User By Id', () => {
     findByIdMock = jest.spyOn(userRepository, 'findById');
   });
 
-  it('should be able to return an user', async () => {
-    const user: User = {
-      id: userId,
-      name: 'John Doe',
-      email: 'johndoe@example.com',
-      created_at: new Date(),
-      wallet: [],
-    };
+  it('should be defined', () => {
+    expect(userRepository).toBeDefined();
+    expect(findUserUseCase).toBeDefined();
+    expect(findByIdMock).toBeDefined();
+  });
 
+  it('should be able to return an user', async () => {
     findByIdMock.mockResolvedValue(user);
 
     const result = await findUserUseCase.execute(userId);

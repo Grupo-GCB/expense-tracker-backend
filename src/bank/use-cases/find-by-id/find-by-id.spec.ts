@@ -22,6 +22,12 @@ describe('Find Bank by Id', () => {
     findByIdMock = jest.spyOn(bankRepository, 'findById');
   });
 
+  it('should be defined', () => {
+    expect(bankRepository).toBeDefined();
+    expect(findByIdMock).toBeDefined();
+    expect(findBankById).toBeDefined();
+  });
+
   it('should be able to return a bank', async () => {
     const bank = {
       id: bankId,
