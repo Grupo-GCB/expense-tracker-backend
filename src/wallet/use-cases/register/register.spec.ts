@@ -12,45 +12,33 @@ describe('Register Wallet Use Case', () => {
   let walletData: SaveWalletDTO;
   let createSpy: jest.SpyInstance;
   let walletRepository: jest.Mocked<IWalletRepository>;
-  let registerWalletUseCase: RegisterWalletUseCase;
-  let findUserByIdUseCase: FindUserByIdUseCase;
-  let findBankByIdUseCase: FindBankByIdUseCase;
+  let sut: RegisterWalletUseCase;
+  let findUserById: FindUserByIdUseCase;
+  let findBankById: FindBankByIdUseCase;
   let findUserByIdExecuteMock: jest.SpyInstance;
   let findBankByIdExecuteMock: jest.SpyInstance;
-
-  const mockWallet: Wallet = {
-    id: '01',
-    account_type: AccountType.CHECKING_ACCOUNT,
-    description: 'Primeira Descrição de carteira.',
-    created_at: new Date(),
-    updated_at: new Date(),
-    deleted_at: null,
-    bank: null,
-    user: null,
-    transactions: null,
-  } as Wallet;
 
   beforeEach(() => {
     walletRepository = {
       create: jest.fn(),
     } as unknown as jest.Mocked<IWalletRepository>;
 
-    findUserByIdUseCase = {
+    findUserById = {
       execute: jest.fn(),
     } as unknown as jest.Mocked<FindUserByIdUseCase>;
 
-    findBankByIdUseCase = {
+    findBankById = {
       execute: jest.fn(),
     } as unknown as jest.Mocked<FindBankByIdUseCase>;
 
     createSpy = jest.spyOn(walletRepository, 'create');
-    findUserByIdExecuteMock = jest.spyOn(findUserByIdUseCase, 'execute');
-    findBankByIdExecuteMock = jest.spyOn(findBankByIdUseCase, 'execute');
+    findUserByIdExecuteMock = jest.spyOn(findUserById, 'execute');
+    findBankByIdExecuteMock = jest.spyOn(findBankById, 'execute');
 
-    registerWalletUseCase = new RegisterWalletUseCase(
+    sut = new RegisterWalletUseCase(
       walletRepository,
-      findUserByIdUseCase,
-      findBankByIdUseCase,
+      findUserById,
+      findBankById,
     );
 
     createSpy.mockResolvedValue(mockWallet);
@@ -65,6 +53,18 @@ describe('Register Wallet Use Case', () => {
     };
   });
 
+  const mockWallet: Wallet = {
+    id: '01',
+    account_type: AccountType.CHECKING_ACCOUNT,
+    description: 'Primeira Descrição de carteira.',
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: null,
+    bank: null,
+    user: null,
+    transactions: null,
+  } as Wallet;
+
   it('should be defined', () => {
     expect(walletRepository).toBeDefined();
     expect(findUserByIdExecuteMock).toBeDefined();
@@ -72,7 +72,7 @@ describe('Register Wallet Use Case', () => {
   });
 
   it('should be able to register a new wallet', async () => {
-    const result = await registerWalletUseCase.createWallet(walletData);
+    const result = await sut.createWallet(walletData);
 
     expect(result).toBeDefined();
     expect(createSpy).toHaveBeenCalledTimes(1);
@@ -82,30 +82,30 @@ describe('Register Wallet Use Case', () => {
   it('should not be able to return a wallet when user id does not exist', async () => {
     findUserByIdExecuteMock.mockResolvedValue(null);
 
-    await expect(
-      registerWalletUseCase.createWallet(walletData),
-    ).rejects.toThrowError(NotFoundException);
+    await expect(sut.createWallet(walletData)).rejects.toThrowError(
+      NotFoundException,
+    );
 
     expect(findUserByIdExecuteMock).toHaveBeenCalledTimes(1);
     expect(findUserByIdExecuteMock).toHaveBeenCalledWith(walletData.user_id);
 
     await expect(
-      async () => await registerWalletUseCase.createWallet(walletData),
+      async () => await sut.createWallet(walletData),
     ).rejects.toThrowErrorMatchingSnapshot();
   });
 
   it('should not be able to return a wallet when bank id does not exist', async () => {
     findBankByIdExecuteMock.mockResolvedValue(null);
 
-    await expect(
-      registerWalletUseCase.createWallet(walletData),
-    ).rejects.toThrowError(NotFoundException);
+    await expect(sut.createWallet(walletData)).rejects.toThrowError(
+      NotFoundException,
+    );
 
     expect(findBankByIdExecuteMock).toHaveBeenCalledTimes(1);
     expect(findBankByIdExecuteMock).toHaveBeenCalledWith(walletData.bank_id);
 
     await expect(
-      async () => await registerWalletUseCase.createWallet(walletData),
+      async () => await sut.createWallet(walletData),
     ).rejects.toThrowErrorMatchingSnapshot();
   });
 });
