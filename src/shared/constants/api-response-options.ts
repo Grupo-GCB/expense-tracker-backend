@@ -19,6 +19,9 @@ export const API_RESPONSES = {
   FORBIDDEN: createApiResponseOptions(
     'Acesso proibido. Você não tem permissão para acessar este recurso.',
   ),
+  NO_CONTENT: createApiResponseOptions(
+    'A solicitação foi processada com sucesso.',
+  ),
   CREATED: createApiResponseOptions('Recurso criado com sucesso.'),
   UPDATED: createApiResponseOptions('Recurso atualizado com sucesso.'),
   DELETED: createApiResponseOptions('Recurso excluído com sucesso.'),
