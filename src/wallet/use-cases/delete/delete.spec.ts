@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
 
 import { AccountType } from '@/shared/constants';
 import { Wallet } from '@/wallet/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { DeleteWalletUseCase } from '@/wallet/use-cases';
-import { NotFoundException } from '@nestjs/common';
 
 describe('Delete Wallet Use Case', () => {
   let walletRepository: IWalletRepository;
