@@ -39,4 +39,8 @@ export class WalletRepository implements IWalletRepository {
       relations: ['bank'],
     });
   }
+
+  async update(wallet: Wallet): Promise<Wallet> {
+    return this.walletRepository.save(wallet);
+  }
 }

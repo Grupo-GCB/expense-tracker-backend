@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -11,9 +11,10 @@ import {
   FindAllWalletsByUserIdUseCase,
   FindWalletByIdUseCase,
   RegisterWalletUseCase,
+  UpdateWalletUseCase,
 } from '@/wallet/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
-import { SaveWalletDTO } from '@/wallet/dto';
+import { SaveWalletDTO, UpdateWalletDTO } from '@/wallet/dto';
 import { API_RESPONSES } from '@/shared/constants';
 
 @ApiTags('Wallet')
@@ -23,6 +24,7 @@ export class WalletController {
     private readonly walletUseCase: RegisterWalletUseCase,
     private readonly findAllWalletsByUserId: FindAllWalletsByUserIdUseCase,
     private readonly findWalletById: FindWalletByIdUseCase,
+    private readonly updateWalletUseCase: UpdateWalletUseCase,
   ) {}
 
   @Post('wallet')
@@ -35,6 +37,17 @@ export class WalletController {
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async createWallet(@Body() walletData: SaveWalletDTO): Promise<Wallet> {
     return this.walletUseCase.createWallet(walletData);
+  }
+
+  @Put('update')
+  @ApiOperation({
+    summary: 'Atualizar uma carteira.',
+    description: 'Esta rota permite atualizar a carteira de um usuário.',
+  })
+  @ApiOkResponse(API_RESPONSES.OK)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
+  async updateWallet(@Body() data: UpdateWalletDTO): Promise<Wallet> {
+    return this.updateWalletUseCase.execute(data);
   }
 
   @Get('wallets/:id')
