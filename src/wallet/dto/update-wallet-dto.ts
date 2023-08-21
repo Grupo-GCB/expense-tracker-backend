@@ -27,7 +27,7 @@ export class UpdateWalletDTO {
     description: 'Tipo de conta da carteira.',
   })
   @IsNotEmpty({
-    message: 'Necessário informar um tipo de conta',
+    message: 'Necessário informar um tipo de conta.',
   })
   @IsEnum(AccountType, {
     message:
