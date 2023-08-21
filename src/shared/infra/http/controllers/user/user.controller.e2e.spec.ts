@@ -10,9 +10,9 @@ import { AppModule } from '@/app.module';
 import { IUserRepository, IDecodedTokenPayload } from '@/user/interfaces';
 import { IJwtAuthProvider } from '@/auth/interfaces';
 
-describe('User Controller (E2E)', () => {
+describe('User ControuserRepositoryller (E2E)', () => {
   let app: INestApplication;
-  let usersRepository: IUserRepository;
+  let userRepository: IUserRepository;
   let jwtAuthProvider: IJwtAuthProvider;
   let findByEmailMock: jest.SpyInstance;
   let findByIdMock: jest.SpyInstance;
@@ -47,12 +47,12 @@ describe('User Controller (E2E)', () => {
     userId = 'google-oauth2|456734566205483104315';
     nonexistentUserId = 'invalid-id';
 
-    usersRepository = testModule.get<IUserRepository>(IUserRepository);
+    userRepository = testModule.get<IUserRepository>(IUserRepository);
     jwtAuthProvider = testModule.get<IJwtAuthProvider>(IJwtAuthProvider);
 
-    findByIdMock = jest.spyOn(usersRepository, 'findById');
-    findByEmailMock = jest.spyOn(usersRepository, 'findByEmail');
-    createUserMock = jest.spyOn(usersRepository, 'create');
+    findByIdMock = jest.spyOn(userRepository, 'findById');
+    findByEmailMock = jest.spyOn(userRepository, 'findByEmail');
+    createUserMock = jest.spyOn(userRepository, 'create');
     decodeTokenMock = jest.spyOn(jwtAuthProvider, 'decodeToken');
 
     app = testModule.createNestApplication();
@@ -64,6 +64,14 @@ describe('User Controller (E2E)', () => {
   });
 
   describe('/user/login (POST)', () => {
+    it('should be defined', () => {
+      expect(userRepository).toBeDefined();
+      expect(findByIdMock).toBeDefined();
+      expect(findByEmailMock).toBeDefined();
+      expect(createUserMock).toBeDefined();
+      expect(decodeTokenMock).toBeDefined();
+    });
+
     it('should be able to return 200 if user already exists', async () => {
       findByEmailMock.mockResolvedValue(userPayload.email);
       decodeTokenMock.mockReturnValue(userPayload);
