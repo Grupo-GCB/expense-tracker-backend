@@ -131,7 +131,7 @@ describe('Wallet Controller (E2E)', () => {
     });
   });
 
-  describe('/update (PUT)', () => {
+  describe('/wallet/id: (PUT)', () => {
     it('should be defined', () => {
       expect(updateWalletMock).toBeDefined();
       expect(findByIdMock).toBeDefined();
@@ -142,7 +142,7 @@ describe('Wallet Controller (E2E)', () => {
       updateWalletMock.mockResolvedValue(updatedWalletData);
 
       const response = await request(app.getHttpServer())
-        .put('/update')
+        .put('/wallet/:id')
         .send(updatedWalletData)
         .expect(HttpStatus.OK);
 
@@ -158,7 +158,7 @@ describe('Wallet Controller (E2E)', () => {
       };
 
       await request(app.getHttpServer())
-        .put('/update')
+        .put('/wallet/:id')
         .send(nonExistingBank)
         .expect(HttpStatus.NOT_FOUND);
     });
@@ -177,7 +177,7 @@ describe('Wallet Controller (E2E)', () => {
         .expect(HttpStatus.NOT_FOUND);
     });
 
-    describe('/wallets/:id (GET)', () => {
+    describe('/wallet/all/:id (GET)', () => {
       it('should be able to return a list with all wallets', async () => {
         const wallets = [mockWallet, mockWallet];
 
@@ -190,7 +190,7 @@ describe('Wallet Controller (E2E)', () => {
         findAllMock.mockResolvedValue({ wallets });
 
         const response = await request(app.getHttpServer())
-          .get(`/wallets/${validUserId}`)
+          .get(`/wallet/all/${validUserId}`)
           .expect(HttpStatus.OK);
 
         expect(response.body).toEqual({ wallets: walletsSerialized });
@@ -200,7 +200,7 @@ describe('Wallet Controller (E2E)', () => {
         findAllMock.mockResolvedValue({ wallets: [] });
 
         const response = await request(app.getHttpServer())
-          .get(`/wallets/${validUserId}`)
+          .get(`/wallet/all/${validUserId}`)
           .expect(HttpStatus.OK);
 
         expect(response.body).toEqual({ wallets: [] });
