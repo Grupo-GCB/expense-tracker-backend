@@ -6,10 +6,6 @@ import {
 } from '@nestjs/common';
 import * as request from 'supertest';
 
-import {
-  FindAllWalletsByUserIdUseCase,
-  FindWalletByIdUseCase,
-} from '@/wallet/use-cases';
 import { UpdateWalletDTO, SaveWalletDTO } from '@/wallet/dto';
 import { AppModule } from '@/app.module';
 import { IWalletRepository } from '@/wallet/interfaces';
@@ -43,19 +39,9 @@ describe('Wallet Controller (E2E)', () => {
       ],
     }).compile();
 
-    findAllMock = jest.spyOn(
-      testModule.get<FindAllWalletsByUserIdUseCase>(
-        FindAllWalletsByUserIdUseCase,
-      ),
-      'execute',
-    );
-    findByIdMock = jest.spyOn(
-      testModule.get<FindWalletByIdUseCase>(FindWalletByIdUseCase),
-      'execute',
-    );
-
     walletRepository = testModule.get<IWalletRepository>(IWalletRepository);
     findByIdMock = jest.spyOn(walletRepository, 'findById');
+    findAllMock = jest.spyOn(walletRepository, 'findAllByUserId');
     updateWalletMock = jest.spyOn(walletRepository, 'update');
     createWalletMock = jest.spyOn(walletRepository, 'create');
 
@@ -209,7 +195,7 @@ describe('Wallet Controller (E2E)', () => {
           .get(`/wallets/${validUserId}`)
           .expect(HttpStatus.OK);
 
-        expect(response.body).toEqual(walletsSerialized);
+        expect(response.body).toEqual({ wallets: walletsSerialized });
       });
 
       it('should be able to return an empty wallet list', async () => {
@@ -219,29 +205,27 @@ describe('Wallet Controller (E2E)', () => {
           .get(`/wallets/${validUserId}`)
           .expect(HttpStatus.OK);
 
-        expect(response.body).toEqual([]);
+        expect(response.body).toEqual({ wallets: [] });
       });
     });
 
     describe('/wallet/:id (GET)', () => {
       it('should be able to return wallet data when wallet id exists', async () => {
-        const walletReponse = { wallet: mockWallet };
+        const walletResponse = { wallet: mockWallet };
 
-        findByIdMock.mockResolvedValueOnce(walletReponse);
+        findByIdMock.mockResolvedValueOnce(walletResponse);
 
         const response = await request(app.getHttpServer())
           .get(`/wallet/${validWalletId}`)
           .expect(HttpStatus.OK);
 
-        expect(response.body).toMatchObject({
-          id: mockWallet.id,
-          account_type: mockWallet.account_type,
-          description: mockWallet.description,
-          deleted_at: mockWallet.deleted_at,
-          bank: mockWallet.bank,
-          user: mockWallet.user,
-          transactions: mockWallet.transactions,
-        });
+        const expectedWallet = {
+          ...mockWallet,
+          created_at: mockWallet.created_at.toISOString(),
+          updated_at: mockWallet.updated_at.toISOString(),
+        };
+
+        expect(response.body.wallet).toMatchObject(expectedWallet);
       });
 
       it('should be able to return 404 if wallet does not exists', async () => {
