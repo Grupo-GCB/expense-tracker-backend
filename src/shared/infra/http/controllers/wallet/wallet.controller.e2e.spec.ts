@@ -75,7 +75,7 @@ describe('Wallet Controller (E2E)', () => {
     transactions: null,
   };
 
-  const validWalletId = 'eacbdb5d-ae6c-4857-9ffd-68f3050dd5ee';
+  const validWalletId = '2a7fa85a-d5d8-4757-aff6-c0faf61649ec';
   const invalidWalletId = '0a26e4a5-5d1b-4fba-a554-8ef49b76aafb';
 
   describe('/wallet (POST)', () => {
@@ -230,7 +230,7 @@ describe('Wallet Controller (E2E)', () => {
         findByIdMock.mockRejectedValue(new NotFoundException());
 
         await request(app.getHttpServer())
-          .get(`/wallet/${invalidWalletId}`)
+          .get(`/wallets/${invalidWalletId}`)
           .expect(HttpStatus.NOT_FOUND);
       });
     });
@@ -238,19 +238,19 @@ describe('Wallet Controller (E2E)', () => {
 
   describe('/wallet/:id (DELETE)', () => {
     it('should be able to delete a wallet', async () => {
+      findByIdMock.mockResolvedValue({});
+
       await request(app.getHttpServer())
         .delete(`/wallet/${validWalletId}`)
         .expect(HttpStatus.NO_CONTENT);
     });
 
     it('should not be able to delete a wallet if wallet does not exist', async () => {
+      findByIdMock.mockRejectedValue(new NotFoundException());
+
       await request(app.getHttpServer())
         .delete(`/wallets/${invalidWalletId}`)
         .expect(HttpStatus.NOT_FOUND);
     });
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 });
