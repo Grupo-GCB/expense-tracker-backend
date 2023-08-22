@@ -62,7 +62,7 @@ export class WalletController {
     @Param('id') id: string,
     @Body() data: UpdateWalletDTO,
   ): Promise<Wallet> {
-    return this.updateWalletUseCase.execute(id, data);
+    return await this.updateWalletUseCase.execute(id, data);
   }
 
   @Delete(':id')
