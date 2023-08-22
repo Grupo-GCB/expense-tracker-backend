@@ -1,4 +1,4 @@
-/* import { NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 
 import { IBankRepository } from '@/bank/interfaces';
 import { FindBankByIdUseCase } from '@/bank/use-cases';
@@ -52,4 +52,3 @@ describe('Find Bank by Id', () => {
     );
   });
 });
- */
