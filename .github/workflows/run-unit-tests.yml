@@ -19,6 +19,12 @@ jobs:
 
       - run: 'yarn test:unit -u'
 
-      - name: test coverage
+
+      - name: run install and build
+        run: |
+          yarn
+          yarn start
+
+      - name: Test coverage
         run: |
           yarn test:cov
