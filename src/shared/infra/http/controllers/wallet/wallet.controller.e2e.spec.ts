@@ -230,7 +230,7 @@ describe('Wallet Controller (E2E)', () => {
         findByIdMock.mockRejectedValue(new NotFoundException());
 
         await request(app.getHttpServer())
-          .get(`/wallets/${invalidWalletId}`)
+          .get(`/wallet/${invalidWalletId}`)
           .expect(HttpStatus.NOT_FOUND);
       });
     });
