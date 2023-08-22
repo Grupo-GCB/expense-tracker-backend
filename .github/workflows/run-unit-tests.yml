@@ -46,7 +46,7 @@ jobs:
 
       - name: Test coverage
         run: |
-          yarn test:cov
+          yarn test:unit-cov
 
       - name: Validate test coverage
         run: |
