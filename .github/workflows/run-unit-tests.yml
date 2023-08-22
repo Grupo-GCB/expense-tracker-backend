@@ -24,6 +24,12 @@ jobs:
           echo "DB_USER=academy" >> .env
           echo "DB_PASSWORD=academy" >> .env
           echo "DB_NAME=expense-tracker" >> .env
+          echo "SERVER_PORT=8080" >> .env
+          echo "DB_HOST=localhost" >> .env
+          echo "DB_PORT=5432" >> .env
+          echo "DB_USER=academy-dev" >> .env
+          echo "DB_PASSWORD=academy-dev" >> .env
+          echo "DB_NAME=expense-tracker-dev" >> .env
 
       - name: Install Docker Compose
         run: |
