@@ -2,7 +2,7 @@ name: Run Unit Tests
 
 on: [push]
 
-jobs: 
+jobs:
   run-unit-tests:
     name: Run Unit Tests
     runs-on: ubuntu-latest
@@ -19,11 +19,11 @@ jobs:
         run: |
           echo "NODE_ENV=dev" > .env
           echo "SERVER_PORT=8080" >> .env
-          echo "DB_HOST=postgres" >> .env
-          echo "DB_PORT=5432" >> .env
-          echo "DB_USER=academy" >> .env
-          echo "DB_PASSWORD=academy" >> .env
-          echo "DB_NAME=expense-tracker" >> .env
+          echo "DB_HOST=pg-dev" >> .env
+          echo "DB_PORT=${{ secrets.DB_PORT_DEV }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER_DEV }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD_DEV }}" >> .env
+          echo "DB_NAME=${{ secrets.DB_NAME_DEV }}" >> .env
 
       - name: Install Docker Compose
         run: |
@@ -32,9 +32,20 @@ jobs:
 
       - name: Start services with Docker Compose
         run: |
-          docker-compose up -d
+          sudo docker-compose up -d
 
+      - run: 'yarn install --frozen-lockfile'
 
+      - run: 'yarn test:unit -u'
+
+      - name: Stop and remove services with Docker Compose
+        run: |
+          sudo docker-compose down
+
+      - name: run install and build
+        run: |
+          yarn
+          yarn start
 
       - name: Test coverage
         run: |
