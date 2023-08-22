@@ -94,7 +94,7 @@ describe('Update Wallet Use Case', () => {
     expect(walletRepository.update).toHaveBeenCalledWith(updatedWallet);
   });
 
-  it.only('should not be able to update a wallet if wallet does not exist', async () => {
+  it('should not be able to update a wallet if wallet does not exist', async () => {
     const nonExistingWalletData: UpdateWalletDTO = {
       bank_id: validId,
       account_type: AccountType.CHECKING_ACCOUNT,
