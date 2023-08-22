@@ -18,3 +18,7 @@ jobs:
       - run: 'yarn install --frozen-lockfile'
 
       - run: 'yarn test:unit -u'
+
+      - name: test coverage
+        run: |
+          yarn test:cov
