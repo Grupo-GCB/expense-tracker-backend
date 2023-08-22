@@ -48,6 +48,14 @@ jobs:
         run: |
           yarn test:cov
 
+      - name: Validate test coverage
+        run: |
+          coverage=$(cat coverage/coverage-summary.json | jq -r '.total.lines.pct')
+          min_coverage=80
+          if (( $(echo "$coverage < $min_coverage" | bc -l) )); then
+            echo "O coverage de testes é $coverage e é inferior a $min_coverage%. Abortando o pull request."
+            exit 1
+          fi
       
       - name: Stop and remove services with Docker Compose
         run: |
