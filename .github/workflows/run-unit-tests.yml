@@ -17,4 +17,4 @@ jobs:
 
       - run: 'yarn install --frozen-lockfile'
 
-      - run: 'yarn test:unit'
+      - run: 'yarn test:unit -u'
