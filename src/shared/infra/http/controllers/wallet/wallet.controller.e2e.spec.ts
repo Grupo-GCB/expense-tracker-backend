@@ -48,7 +48,6 @@ describe('Wallet Controller (E2E)', () => {
   });
 
   const updatedWalletData: UpdateWalletDTO = {
-    id: '2a7fa85a-d5d8-4757-aff6-c0faf61639ec',
     bank_id: 'd344a168-60ad-48fc-9d57-64b412e4f6d4',
     account_type: AccountType.CASH,
     description: 'Nova descrição',
@@ -77,6 +76,7 @@ describe('Wallet Controller (E2E)', () => {
 
   const validWalletId = '2a7fa85a-d5d8-4757-aff6-c0faf61649ec';
   const invalidWalletId = '0a26e4a5-5d1b-4fba-a554-8ef49b76aafb';
+  const invalidBankId = '7a56e4a5-5d1b-4fba-a554-8ef49b76aafb';
 
   describe('/wallet (POST)', () => {
     it('should be defined', () => {
@@ -142,7 +142,7 @@ describe('Wallet Controller (E2E)', () => {
       updateWalletMock.mockResolvedValue(updatedWalletData);
 
       const response = await request(app.getHttpServer())
-        .put('/wallet/:id')
+        .put(`/wallet/${validWalletId}`)
         .send(updatedWalletData)
         .expect(HttpStatus.OK);
 
@@ -154,11 +154,11 @@ describe('Wallet Controller (E2E)', () => {
 
       const nonExistingBank: UpdateWalletDTO = {
         ...updatedWalletData,
-        bank_id: 'd534a168-60ad-48fc-9d57-64b412e4f6d5',
+        bank_id: invalidBankId,
       };
 
       await request(app.getHttpServer())
-        .put('/wallet/:id')
+        .put(`/wallet/${validWalletId}`)
         .send(nonExistingBank)
         .expect(HttpStatus.NOT_FOUND);
     });
@@ -166,14 +166,9 @@ describe('Wallet Controller (E2E)', () => {
     it('should not be able to update a wallet if wallet does not exist', async () => {
       updateWalletMock.mockRejectedValue(new NotFoundException());
 
-      const dtoWithNonExistingWallet: UpdateWalletDTO = {
-        ...updatedWalletData,
-        id: 'd534a168-60ad-48fc-9d57-64b412e4f6d5',
-      };
-
       await request(app.getHttpServer())
-        .put('/wallet/update')
-        .send(dtoWithNonExistingWallet)
+        .put(`/wallet/${invalidWalletId}`)
+        .send(updatedWalletData)
         .expect(HttpStatus.NOT_FOUND);
     });
 
