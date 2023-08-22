@@ -51,7 +51,7 @@ jobs:
       - name: Validate test coverage
         run: |
           coverage=$(cat coverage/coverage-summary.json | jq -r '.total.lines.pct')
-          min_coverage=80
+          min_coverage=100
           if (( $(echo "$coverage < $min_coverage" | bc -l) )); then
             echo "O coverage de testes é $coverage e é inferior a $min_coverage%. Abortando o pull request."
             exit 1
