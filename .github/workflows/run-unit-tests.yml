@@ -17,13 +17,13 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "NODE_ENV=dev" > .env
+          echo "NODE_ENV=prod" > .env
           echo "SERVER_PORT=8080" >> .env
-          echo "DB_HOST=pg-dev" >> .env
-          echo "DB_PORT=${{ secrets.DB_PORT_DEV }}" >> .env
-          echo "DB_USER=${{ secrets.DB_USER_DEV }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD_DEV }}" >> .env
-          echo "DB_NAME=${{ secrets.DB_NAME_DEV }}" >> .env
+          echo "DB_HOST=localhost" >> .env
+          echo "DB_PORT=5432" >> .env
+          echo "DB_USER=academy" >> .env
+          echo "DB_PASSWORD=academy" >> .env
+          echo "DB_NAME=expense-tracker" >> .env
 
       - name: Install Docker Compose
         run: |
