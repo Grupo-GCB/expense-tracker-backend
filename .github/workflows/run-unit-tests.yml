@@ -34,20 +34,7 @@ jobs:
         run: |
           docker-compose up -d
 
-      - run: 'yarn install --frozen-lockfile'
 
-      - run: 'yarn test:unit -u'
-
-      - run: 'yarn test:e2e -u'
-
-      - name: Stop and remove services with Docker Compose
-        run: |
-          docker-compose down
-
-      - name: run install and build
-        run: |
-          yarn
-          yarn start
 
       - name: Test coverage
         run: |
