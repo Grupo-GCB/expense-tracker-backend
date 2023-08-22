@@ -22,6 +22,7 @@ jobs:
       - name: run install and build
         run: |
           yarn
+          docker-compose up
           yarn start
 
       - name: test coverage
