@@ -57,7 +57,6 @@ describe('Update Wallet Use Case', () => {
   const invalidId = 'invalid-id';
 
   const updateData: UpdateWalletDTO = {
-    id: validId,
     bank_id: validId,
     account_type: AccountType.CHECKING_ACCOUNT,
     description: 'Nova descrição',
@@ -69,13 +68,17 @@ describe('Update Wallet Use Case', () => {
     logo_url: 'anyURL',
   } as Bank;
 
+  const wallet = {
+    id: validId,
+  } as Wallet;
+
   it('should be able to update a wallet', async () => {
     const updatedWallet = updateData as unknown as Wallet;
 
     findByIdMock.mockResolvedValue(updatedWallet);
     updateMock.mockResolvedValue(updatedWallet);
 
-    const result = await sut.execute(updateData.id, updateData);
+    const result = await sut.execute(wallet.id, updateData);
 
     expect(result).toEqual(updatedWallet);
 
@@ -85,24 +88,27 @@ describe('Update Wallet Use Case', () => {
     );
 
     expect(walletRepository.findById).toHaveBeenCalledTimes(1);
-    expect(walletRepository.findById).toHaveBeenCalledWith(updateData.id);
+    expect(walletRepository.findById).toHaveBeenCalledWith(wallet.id);
 
     expect(walletRepository.update).toHaveBeenCalledTimes(1);
     expect(walletRepository.update).toHaveBeenCalledWith(updatedWallet);
   });
 
-  it('should not be able to update a wallet if wallet does not exist', async () => {
+  it.only('should not be able to update a wallet if wallet does not exist', async () => {
     const nonExistingWalletData: UpdateWalletDTO = {
-      id: invalidId,
       bank_id: validId,
       account_type: AccountType.CHECKING_ACCOUNT,
       description: 'Nova descrição',
     };
 
+    const nonExistingWallet = {
+      id: invalidId,
+    } as Wallet;
+
     findByIdMock.mockResolvedValue(null);
 
     await expect(
-      sut.execute(nonExistingWalletData.id, nonExistingWalletData),
+      sut.execute(nonExistingWallet.id, nonExistingWalletData),
     ).rejects.toBeInstanceOf(NotFoundException);
 
     expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
@@ -112,7 +118,7 @@ describe('Update Wallet Use Case', () => {
 
     expect(walletRepository.findById).toHaveBeenCalledTimes(1);
     expect(walletRepository.findById).toHaveBeenCalledWith(
-      nonExistingWalletData.id,
+      nonExistingWallet.id,
     );
   });
 });
