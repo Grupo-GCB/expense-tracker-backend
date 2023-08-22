@@ -6,15 +6,6 @@ import { AccountType } from '@/shared/constants';
 export class UpdateWalletDTO {
   @ApiProperty({
     example: '4e8b5d94-6b16-4a42-b6d1-dc58b553d109',
-    description: 'Id da carteira.',
-  })
-  @IsNotEmpty({ message: 'Necessário informar o id da carteira.' })
-  @IsUUID('all', { message: 'Necessário que o id seja do tipo UUID.' })
-  @IsString({ message: 'Id deve ser uma string.' })
-  id: string;
-
-  @ApiProperty({
-    example: '4e8b5d94-6b16-4a42-b6d1-dc58b553d109',
     description: 'Id do banco associado à carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id do banco.' })
