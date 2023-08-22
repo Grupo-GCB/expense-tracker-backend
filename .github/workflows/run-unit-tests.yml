@@ -15,4 +15,6 @@ jobs:
           node-version: 18
           cache: 'npm'
 
-      - run: 'yarn ci'
+      - run: 'yarn install --frozen-lockfile'
+
+      - run: 'yarn test:unit'
