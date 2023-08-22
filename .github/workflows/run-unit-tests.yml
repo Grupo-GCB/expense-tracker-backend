@@ -7,18 +7,54 @@ jobs:
     name: Run Unit Tests
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_DB: ${{ secrets.DB_NAME }}
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+
     steps:
       - uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'npm'
+          cache: 'yarn'
+
+      - name: Create .env file
+        run: |
+          echo "NODE_ENV=dev" > .env
+          echo "SERVER_PORT=8080" >> .env
+          echo "DB_HOST=postgres" >> .env
+          echo "DB_PORT=5432" >> .env
+          echo "DB_USER=academy" >> .env
+          echo "DB_PASSWORD=academy" >> .env
+          echo "DB_NAME=expense-tracker" >> .env
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get -y update
+          sudo apt-get -y install docker-compose
+
+      - name: Start services with Docker Compose
+        run: |
+          docker-compose up -d
 
       - run: 'yarn install --frozen-lockfile'
 
       - run: 'yarn test:unit -u'
 
+      - run: 'yarn test:e2e -u'
+
+      - name: Stop and remove services with Docker Compose
+        run: |
+          docker-compose down
 
       - name: run install and build
         run: |
