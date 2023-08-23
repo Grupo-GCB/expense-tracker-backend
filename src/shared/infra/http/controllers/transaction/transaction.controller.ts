@@ -9,16 +9,12 @@ import {
 import { API_RESPONSES } from '@/shared/constants';
 import { CreateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
-import { ITransactionRepository } from '@/transaction/interface';
 import { RegisterTransactionUseCase } from '@/transaction/use-cases';
 
 @ApiTags('Transaction')
 @Controller('transaction')
 export class TransactionController {
-  constructor(
-    private readonly transactionRepository: ITransactionRepository,
-    private readonly registerUseCase: RegisterTransactionUseCase,
-  ) {}
+  constructor(private readonly registerUseCase: RegisterTransactionUseCase) {}
 
   @Post(':id')
   @ApiOperation({
