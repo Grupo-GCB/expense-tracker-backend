@@ -1,4 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 
 import {
   AccountType,
@@ -10,7 +11,6 @@ import { ITransactionRepository } from '@/transaction/interface';
 import { RegisterTransactionUseCase } from '@/transaction/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
-import { Test, TestingModule } from '@nestjs/testing';
 
 describe('Register Transaction Use Case', () => {
   let sut: RegisterTransactionUseCase;
@@ -18,7 +18,7 @@ describe('Register Transaction Use Case', () => {
   let transactionRepository: ITransactionRepository;
 
   const walletValidId = 'valid-id';
-  const walletInvalidId = 'inalid-id';
+  const walletInvalidId = 'invalid-id';
 
   const mockWallet = {
     id: walletValidId,

@@ -27,7 +27,7 @@ describe('Transaction Controller (E2E)', () => {
   let registerTransactionMock: RegisterTransactionUseCase;
 
   const transactionValidId = '407ae2db-4abc-461d-a368-6c0a9713bac5';
-  const transactionInvalidId = 'inalid-id';
+  const transactionInvalidId = 'invalid-id';
 
   const mockWallet = {
     id: transactionValidId,
