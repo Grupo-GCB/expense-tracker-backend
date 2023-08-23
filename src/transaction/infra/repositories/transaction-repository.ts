@@ -1,10 +1,11 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateTransactionDTO } from '@/transaction/dto';
 import { ITransactionRepository } from '@/transaction/interface';
 import { Transaction } from '@/transaction/infra/entities';
-import { Repository } from 'typeorm';
 import { Wallet } from '@/wallet/infra/entities';
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TransactionRepository implements ITransactionRepository {
@@ -26,6 +27,6 @@ export class TransactionRepository implements ITransactionRepository {
       wallet: { id: wallet_id } as Wallet,
     });
 
-    return await this.transactionRepository.save(transaction);
+    return this.transactionRepository.save(transaction);
   }
 }

@@ -6,7 +6,7 @@ import { Transaction } from '@/transaction/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
 import { TransactionRepository } from './infra/repositories';
 import { ITransactionRepository } from './interface';
-import { RegisterTransactionUseCase } from './use-cases/register/register';
+import { RegisterTransactionUseCase } from '@/transaction/use-cases';
 import { WalletRepository } from '@/wallet/infra/repositories';
 import { IWalletRepository } from '@/wallet/interfaces';
 

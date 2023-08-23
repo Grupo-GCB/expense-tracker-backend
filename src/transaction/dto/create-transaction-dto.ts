@@ -1,4 +1,3 @@
-import { Categories, TransactionType } from '@/shared/constants';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
@@ -10,13 +9,14 @@ import {
   IsString,
 } from 'class-validator';
 
+import { Categories, TransactionType } from '@/shared/constants';
 export class CreateTransactionDTO {
   @ApiProperty({
     enum: Categories,
     description: 'Categoria da transação.',
   })
   @IsNotEmpty({
-    message: 'Necessário informar uma categoria',
+    message: 'Necessário informar uma categoria.',
   })
   @IsEnum(Categories, {
     message:
@@ -56,7 +56,7 @@ export class CreateTransactionDTO {
   type: TransactionType;
 
   @ApiProperty({
-    example: '',
+    example: '10-07-23',
     description: 'Data da transação.',
   })
   @IsNotEmpty({
