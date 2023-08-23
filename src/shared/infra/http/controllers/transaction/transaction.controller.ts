@@ -31,6 +31,6 @@ export class TransactionController {
     @Param('id') wallet_id: string,
     @Body() data: CreateTransactionDTO,
   ): Promise<Transaction> {
-    return await this.transactionRepository.create(wallet_id, data);
+    return await this.registerUseCase.execute(wallet_id, data);
   }
 }
