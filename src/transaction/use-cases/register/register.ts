@@ -13,7 +13,7 @@ export class RegisterTransactionUseCase {
     private readonly walletRepository: IWalletRepository,
   ) {}
 
-  private adjustTransactionValue(data: CreateTransactionDTO): void {
+  private adjustValueForType(data: CreateTransactionDTO): void {
     data.value =
       data.type === TransactionType.EXPENSE ? -data.value : data.value;
   }
