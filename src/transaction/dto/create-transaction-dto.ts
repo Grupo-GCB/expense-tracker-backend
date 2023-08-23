@@ -9,7 +9,7 @@ import {
   IsString,
 } from 'class-validator';
 
-import { Categories, TransactionType } from '@/shared/constants';
+import { Categories, ENUM_ERROR, TransactionType } from '@/shared/constants';
 export class CreateTransactionDTO {
   @ApiProperty({
     enum: Categories,
@@ -19,8 +19,7 @@ export class CreateTransactionDTO {
     message: 'Necessário informar uma categoria.',
   })
   @IsEnum(Categories, {
-    message:
-      'Insira alguma dessas categorias: Casa, Eletrônicos, Educação, Lazer, Alimentação, Saúde, Supermercado, Roupas, Transporte, Viagem, Serviços, Presentes, Outros.',
+    message: ENUM_ERROR.CATEGORIES,
   })
   categories: Categories;
 
@@ -51,7 +50,7 @@ export class CreateTransactionDTO {
     message: 'Necessário informar um tipo de transação.',
   })
   @IsEnum(TransactionType, {
-    message: 'Insira um dos seguintes tipos: Receita, Despesa.',
+    message: ENUM_ERROR.TRANSACTION_TYPE,
   })
   type: TransactionType;
 
