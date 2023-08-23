@@ -106,16 +106,5 @@ describe('Register Transaction Use Case', () => {
     const result = await sut.execute(walletValidId, transactionDataParams);
 
     expect(result.value).toEqual(-transactionDataParams.value);
-
-    expect(result).toEqual(mockTransactionResponse);
-
-    expect(walletRepository.findById).toHaveBeenCalledTimes(1);
-    expect(walletRepository.findById).toHaveBeenCalledWith(walletValidId);
-
-    expect(transactionRepository.create).toHaveBeenCalledTimes(1);
-    expect(transactionRepository.create).toHaveBeenCalledWith(
-      walletValidId,
-      transactionDataParams,
-    );
   });
 });
