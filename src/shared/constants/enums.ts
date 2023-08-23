@@ -15,8 +15,8 @@ export enum Categories {
 }
 
 export enum TransactionType {
-  INCOME = 'Income',
-  EXPENSE = 'Expense',
+  INCOME = 'Receita',
+  EXPENSE = 'Despesa',
 }
 
 export enum AccountType {
