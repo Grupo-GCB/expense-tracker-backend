@@ -13,6 +13,11 @@ export class RegisterTransactionUseCase {
     private readonly walletRepository: IWalletRepository,
   ) {}
 
+  private adjustTransactionValue(data: CreateTransactionDTO): void {
+    data.value =
+      data.type === TransactionType.EXPENSE ? -data.value : data.value;
+  }
+
   async execute(
     wallet_id: string,
     data: CreateTransactionDTO,
@@ -20,8 +25,8 @@ export class RegisterTransactionUseCase {
     const wallet = await this.walletRepository.findById(wallet_id);
     if (!wallet) throw new NotFoundException('Carteira não encontrada.');
 
-    if (data.type === TransactionType.EXPENSE) data.value *= -1;
+    this.adjustTransactionValue(data);
 
-    return await this.transactionRepository.create(wallet_id, data);
+    return this.transactionRepository.create(wallet_id, data);
   }
 }
