@@ -5,6 +5,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -42,7 +43,6 @@ export class Wallet {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Transaction, (transaction) => transaction.wallets)
-  @JoinColumn({ name: 'transaction_id' })
-  transaction: Transaction;
+  @OneToMany(() => Transaction, (transaction) => transaction.wallet)
+  transactions: Transaction[];
 }

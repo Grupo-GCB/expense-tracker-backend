@@ -3,7 +3,8 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -40,6 +41,7 @@ export class Transaction {
   @DeleteDateColumn({ default: null })
   deleted_at?: Date;
 
-  @OneToMany(() => Wallet, (wallet) => wallet.transaction)
-  wallets: Wallet[];
+  @ManyToOne(() => Wallet)
+  @JoinColumn({ name: 'wallet_id' })
+  wallet: Wallet;
 }
