@@ -46,13 +46,6 @@ export class WalletRepository implements IWalletRepository {
     });
   }
 
-  async findAllTransactionsByUserId(user_id: string): Promise<Wallet[]> {
-    return this.walletRepository.find({
-      where: { user: { id: user_id } },
-      relations: ['transaction'],
-    });
-  }
-
   async findById(id: string): Promise<Wallet> {
     return this.walletRepository.findOne({
       where: { id },

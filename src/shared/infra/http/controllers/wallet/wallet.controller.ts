@@ -101,21 +101,4 @@ export class WalletController {
     const { wallet } = await this.findWalletById.execute(wallet_id);
     return wallet;
   }
-
-  @Get('all/transactions/:id')
-  @ApiOkResponse(API_RESPONSES.OK)
-  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
-  @ApiOperation({
-    summary: 'Listar todas as transações de um usuário pelo ID.',
-    description:
-      'Esta rota permite visualizar todas as transações de um usuário.',
-  })
-  async listAllTransactionByUserId(
-    @Param('id') user_id: string,
-  ): Promise<Wallet[]> {
-    const { transactions } = await this.findAllTransactionsByUserId.execute(
-      user_id,
-    );
-    return transactions;
-  }
 }
