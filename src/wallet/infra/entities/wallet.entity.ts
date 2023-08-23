@@ -42,7 +42,7 @@ export class Wallet {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Transaction, (transaction) => transaction.wallets)
+  @ManyToOne(() => Transaction, (transaction) => transaction.wallet)
   @JoinColumn({ name: 'transaction_id' })
   transaction: Transaction;
 }
