@@ -12,7 +12,7 @@ import { FindAllTransactionsByUserIdUseCase } from '@/transaction/use-cases';
 
 @ApiTags('Transaction')
 @Controller('transaction')
-export class WalletController {
+export class TransactionController {
   constructor(
     private readonly findAllTransactionsByUserId: FindAllTransactionsByUserIdUseCase,
   ) {}

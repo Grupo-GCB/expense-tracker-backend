@@ -7,6 +7,7 @@ import { IWalletRepository } from '@/wallet/interfaces';
 import { SaveWalletDTO } from '@/wallet/dto';
 import { User } from '@/user/infra/entities';
 import { Bank } from '@/bank/infra/entities';
+import { Transaction } from '@/transaction/infra/entities';
 
 @Injectable()
 export class WalletRepository implements IWalletRepository {
