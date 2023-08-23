@@ -20,6 +20,9 @@ import { UserRepository } from '@/user/infra/repositories';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { WalletRepository } from '@/wallet/infra/repositories';
 import { UpdateWalletUseCase } from '@/wallet/use-cases';
+import { FindAllTransactionsByUserIdUseCase } from '@/transaction/use-cases';
+import { ITransactionRepository } from '@/transaction/interfaces';
+import { TransactionRepository } from '@/transaction/infra/repositories/transaction.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Wallet, Bank, User])],
@@ -31,6 +34,7 @@ import { UpdateWalletUseCase } from '@/wallet/use-cases';
     FindAllWalletsByUserIdUseCase,
     UpdateWalletUseCase,
     DeleteWalletUseCase,
+    FindAllTransactionsByUserIdUseCase,
     {
       provide: IWalletRepository,
       useClass: WalletRepository,
@@ -42,6 +46,10 @@ import { UpdateWalletUseCase } from '@/wallet/use-cases';
     {
       provide: IUserRepository,
       useClass: UserRepository,
+    },
+    {
+      provide: ITransactionRepository,
+      useClass: TransactionRepository,
     },
   ],
   controllers: [WalletController],
