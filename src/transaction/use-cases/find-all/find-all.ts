@@ -1,18 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
-import {
-  ITransactionRepository,
-  ITransactionsResponse,
-} from '@/transaction/interfaces';
+import { ITransactionsResponse } from '@/transaction/interfaces';
+import { IWalletRepository } from '@/wallet/interfaces';
 
 @Injectable()
 export class FindAllTransactionsByUserIdUseCase {
-  constructor(private readonly transactionRepository: ITransactionRepository) {}
+  constructor(private readonly walletRepository: IWalletRepository) {}
 
   async execute(user_id: string): Promise<ITransactionsResponse> {
-    const transactions = await this.transactionRepository.findAllByUserId(
-      user_id,
-    );
+    const transactions = await this.walletRepository.findAllByUserId(user_id);
 
     return { transactions };
   }
