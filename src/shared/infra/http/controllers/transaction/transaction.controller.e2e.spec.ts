@@ -10,12 +10,11 @@ import { Categories, TransactionType } from '@/shared/constants';
 describe('Transaction Controller (E2E)', () => {
   let app: INestApplication;
   let validUserId: string;
-  let testModule: TestingModule;
   let transactionRepository: ITransactionRepository;
   let findAllByUserIdMock: jest.SpyInstance;
 
   beforeAll(async () => {
-    testModule = await Test.createTestingModule({
+    const testModule: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
       providers: [
         {
@@ -35,7 +34,7 @@ describe('Transaction Controller (E2E)', () => {
     app = testModule.createNestApplication();
     await app.init();
 
-    validUserId = 'auth0|user-id';
+    validUserId = 'google-oauth2|456734566205483104315';
   });
 
   afterAll(async () => {
@@ -63,11 +62,6 @@ describe('Transaction Controller (E2E)', () => {
   });
 
   describe('/transaction/:user_id (GET)', () => {
-    it('should be defined', () => {
-      expect(transactionRepository).toBeDefined();
-      expect(findAllByUserIdMock).toBeDefined();
-    });
-
     it('should be able to return transactions for a user', async () => {
       const mockTransactions: Transaction[] = [createMockTransaction()];
 
