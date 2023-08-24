@@ -16,9 +16,7 @@ export class FindTransactionsByUserUseCase {
   async execute(user_id: string): Promise<ITransactionResponse[]> {
     const user = await this.userRepository.findById(user_id);
 
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado.');
-    }
+    if (!user) throw new NotFoundException('Usuário não encontrado.');
 
     return await this.transactionRepository.findAllByUserId(user_id);
   }
