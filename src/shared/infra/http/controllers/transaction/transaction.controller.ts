@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
 } from '@nestjs/common';
@@ -44,7 +45,7 @@ export class TransactionController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Deleta uma transação.',
     description: 'Esta rota permite deletar uma transação de um usuário.',
