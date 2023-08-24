@@ -1,5 +1,5 @@
-import { Transaction } from '@/transaction/infra/entities';
+import { ITransactionResponse } from '@/transaction/interfaces';
 
 export abstract class ITransactionRepository {
-  abstract findAllByUserId(user_id: string): Promise<Transaction[]>;
+  abstract findAllByUserId(user_id: string): Promise<ITransactionResponse[]>;
 }
