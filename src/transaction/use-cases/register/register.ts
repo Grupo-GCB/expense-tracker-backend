@@ -25,7 +25,7 @@ export class RegisterTransactionUseCase {
     const wallet = await this.walletRepository.findById(wallet_id);
     if (!wallet) throw new NotFoundException('Carteira não encontrada.');
 
-    this.adjustTransactionValue(data);
+    this.adjustValueForType(data);
 
     return this.transactionRepository.create(wallet_id, data);
   }
