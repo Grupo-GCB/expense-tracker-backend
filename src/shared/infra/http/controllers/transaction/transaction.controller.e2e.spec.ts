@@ -57,9 +57,9 @@ describe('Transaction Controller (E2E)', () => {
 
   const serializeTransaction = (transaction: Transaction): any => ({
     ...transaction,
-    date: transaction.date.toISOString(), //
-    created_at: transaction.created_at.toISOString(), //
-    updated_at: transaction.updated_at.toISOString(), //
+    date: transaction.date.toISOString(),
+    created_at: transaction.created_at.toISOString(),
+    updated_at: transaction.updated_at.toISOString(),
   });
 
   describe('/transaction/:user_id (GET)', () => {
