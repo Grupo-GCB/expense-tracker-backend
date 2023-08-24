@@ -1,4 +1,12 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
@@ -7,14 +15,20 @@ import {
 } from '@nestjs/swagger';
 
 import { API_RESPONSES } from '@/shared/constants';
-import { CreateTransactionDTO } from '@/transaction/dto';
+import { CreateTransactionDTO, DeleteTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
-import { RegisterTransactionUseCase } from '@/transaction/use-cases';
+import {
+  DeleteTransactionUseCase,
+  RegisterTransactionUseCase,
+} from '@/transaction/use-cases';
 
 @ApiTags('Transaction')
 @Controller('transaction')
 export class TransactionController {
-  constructor(private readonly registerUseCase: RegisterTransactionUseCase) {}
+  constructor(
+    private readonly registerUseCase: RegisterTransactionUseCase,
+    private readonly deleteUseCase: DeleteTransactionUseCase,
+  ) {}
 
   @Post(':id')
   @ApiOperation({
@@ -28,5 +42,17 @@ export class TransactionController {
     @Body() data: CreateTransactionDTO,
   ): Promise<Transaction> {
     return this.registerUseCase.execute(wallet_id, data);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Deleta uma transação.',
+    description: 'Esta rota permite deletar uma transação de um usuário.',
+  })
+  @ApiCreatedResponse(API_RESPONSES.NO_CONTENT)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
+  async delete(@Param() data: DeleteTransactionDTO): Promise<void> {
+    await this.deleteUseCase.execute(data);
   }
 }

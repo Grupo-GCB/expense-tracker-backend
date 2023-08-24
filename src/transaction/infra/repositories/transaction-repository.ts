@@ -29,4 +29,12 @@ export class TransactionRepository implements ITransactionRepository {
 
     return this.transactionRepository.save(transaction);
   }
+
+  async findById(id: string): Promise<Transaction> {
+    return this.transactionRepository.findOne({ where: { id } });
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.transactionRepository.softDelete({ id });
+  }
 }

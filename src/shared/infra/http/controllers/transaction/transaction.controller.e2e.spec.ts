@@ -15,7 +15,10 @@ import {
 import { CreateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
 import { ITransactionRepository } from '@/transaction/interface';
-import { RegisterTransactionUseCase } from '@/transaction/use-cases';
+import {
+  DeleteTransactionUseCase,
+  RegisterTransactionUseCase,
+} from '@/transaction/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
 
@@ -25,12 +28,13 @@ describe('Transaction Controller (E2E)', () => {
   let walletRepository: IWalletRepository;
   let transactionRepository: ITransactionRepository;
   let registerTransactionMock: RegisterTransactionUseCase;
+  let deleteTransactionMock: DeleteTransactionUseCase;
 
-  const transactionValidId = '407ae2db-4abc-461d-a368-6c0a9713bac5';
-  const transactionInvalidId = 'invalid-id';
+  const validTransactionId = '5c20c7f5-26f2-4d36-bfa0-ad98795869ff';
+  const invalidTransactionId = 'invalid-id';
 
   const mockWallet = {
-    id: transactionValidId,
+    id: validTransactionId,
     account_type: AccountType.CHECKING_ACCOUNT,
     description: 'Primeira Descrição de carteira.',
   } as Wallet;
@@ -58,6 +62,8 @@ describe('Transaction Controller (E2E)', () => {
           provide: ITransactionRepository,
           useValue: {
             create: jest.fn(),
+            findById: jest.fn(),
+            delete: jest.fn(),
           },
         },
         {
@@ -75,6 +81,9 @@ describe('Transaction Controller (E2E)', () => {
     walletRepository = testModule.get<IWalletRepository>(IWalletRepository);
     registerTransactionMock = testModule.get<RegisterTransactionUseCase>(
       RegisterTransactionUseCase,
+    );
+    deleteTransactionMock = testModule.get<DeleteTransactionUseCase>(
+      DeleteTransactionUseCase,
     );
 
     app = testModule.createNestApplication();
@@ -94,7 +103,7 @@ describe('Transaction Controller (E2E)', () => {
         .mockResolvedValue(mockTransactionResponse);
       jest.spyOn(walletRepository, 'findById').mockResolvedValue(mockWallet);
       await request(app.getHttpServer())
-        .post(`/transaction/${transactionValidId}`)
+        .post(`/transaction/${validTransactionId}`)
         .send(transactionDataParams)
         .expect(HttpStatus.CREATED);
     });
@@ -106,8 +115,28 @@ describe('Transaction Controller (E2E)', () => {
         .mockRejectedValueOnce(new NotFoundException());
 
       await request(app.getHttpServer())
-        .post(`/transaction/${transactionInvalidId}`)
+        .post(`/transaction/${invalidTransactionId}`)
         .send(transactionDataParams)
+        .expect(HttpStatus.NOT_FOUND);
+    });
+  });
+
+  describe('/transaction/:id (DELETE)', () => {
+    it('should be able to delete a transaction', async () => {
+      jest.spyOn(deleteTransactionMock, 'execute').mockResolvedValue();
+
+      await request(app.getHttpServer())
+        .delete(`/transaction/${validTransactionId}`)
+        .expect(HttpStatus.NO_CONTENT);
+    });
+
+    it('should not be able to delete a transaction if transaction does not exist', async () => {
+      jest
+        .spyOn(transactionRepository, 'findById')
+        .mockRejectedValue(new NotFoundException());
+
+      await request(app.getHttpServer())
+        .delete(`/transaction/${invalidTransactionId}`)
         .expect(HttpStatus.NOT_FOUND);
     });
   });
