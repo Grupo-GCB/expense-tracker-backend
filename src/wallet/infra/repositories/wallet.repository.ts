@@ -32,7 +32,7 @@ export class WalletRepository implements IWalletRepository {
   }
 
   async update(wallet: Wallet): Promise<Wallet> {
-    return this.walletRepository.save(wallet);
+    return await this.walletRepository.save(wallet);
   }
 
   async delete(id: string): Promise<void> {

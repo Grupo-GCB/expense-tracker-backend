@@ -21,10 +21,12 @@ export class UpdateWalletUseCase {
     if (!bank) throw new NotFoundException('Banco não encontrado.');
     if (!wallet) throw new NotFoundException('Carteira não encontrada.');
 
+    wallet.bank.id = data.bank_id;
+
     Object.assign(wallet, data);
 
-    delete wallet.bank;
+    await this.walletRepository.update(wallet);
 
-    return this.walletRepository.update(wallet);
+    return await this.walletRepository.findById(id);
   }
 }

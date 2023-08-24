@@ -1,18 +1,18 @@
 import { Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import {
-  ApiOperation,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
   ApiTags,
   ApiUnauthorizedResponse,
-  ApiOkResponse,
-  ApiNotFoundResponse,
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
-import { FindUserByIdUseCase, SignInUseCase } from '@/user/use-cases';
+import { API_RESPONSES } from '@/shared/constants';
 import { UserTokenDTO } from '@/user/dto';
 import { User } from '@/user/infra/entities';
-import { API_RESPONSES } from '@/shared/constants';
+import { FindUserByIdUseCase, SignInUseCase } from '@/user/use-cases';
 
 @ApiTags('User')
 @Controller('user')
@@ -36,6 +36,7 @@ export class UserController {
     return res.status(status).json({ message });
   }
 
+  @Get(':id')
   @ApiTags('User')
   @ApiOperation({
     summary: 'Listar um usuário pelo ID.',
@@ -43,7 +44,6 @@ export class UserController {
   })
   @ApiOkResponse(API_RESPONSES.OK)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
-  @Get(':id')
   async findUser(@Param('id') user_id: string): Promise<User> {
     const { user } = await this.findUserUseCase.execute(user_id);
     return user;
