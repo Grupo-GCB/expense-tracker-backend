@@ -16,7 +16,7 @@ describe('Find All Transactions', () => {
     } as unknown as jest.Mocked<ITransactionRepository>;
 
     userRepository = {
-      findById: jest.fn(),
+      findById: jest.fn().mockResolvedValue({}),
     } as unknown as jest.Mocked<IUserRepository>;
 
     sut = new FindTransactionsByUserUseCase(
@@ -26,7 +26,8 @@ describe('Find All Transactions', () => {
     findAllByUserIdMock = jest.spyOn(transactionRepository, 'findAllByUserId');
   });
 
-  const validUserId = 'auth0|user-id';
+  const validUserId = 'google-oauth2|456734566205483104315';
+
   const transactions: Transaction[] = [
     {
       id: '01',
@@ -42,32 +43,34 @@ describe('Find All Transactions', () => {
     },
   ];
 
-  describe('Find All Transactions', () => {
-    it('should be defined', () => {
-      expect(transactionRepository).toBeDefined();
-      expect(userRepository).toBeDefined();
-      expect(sut).toBeDefined();
-    });
+  it('should be defined', () => {
+    expect(transactionRepository).toBeDefined();
+    expect(userRepository).toBeDefined();
+    expect(sut).toBeDefined();
+  });
 
-    it('should be able to return all transactions', async () => {
-      findAllByUserIdMock.mockResolvedValue(transactions);
+  it('should be able to return all transactions', async () => {
+    findAllByUserIdMock.mockResolvedValue(transactions);
 
-      const result = await sut.execute(validUserId);
+    const result = await sut.execute(validUserId);
 
-      expect(result).toEqual(
-        expect.arrayContaining(
-          transactions.map((transaction) => ({
-            transactions: expect.arrayContaining([transaction]),
-          })),
-        ),
-      );
-      expect(findAllByUserIdMock).toHaveBeenCalledTimes(1);
-    });
-    it('should not be able to return transactions if they were not found', async () => {
-      findAllByUserIdMock.mockResolvedValue([]);
-      const result = await sut.execute(validUserId);
-      expect(result).toEqual([]);
-      expect(findAllByUserIdMock).toHaveBeenCalledTimes(1);
-    });
+    expect(result).toEqual(
+      expect.arrayContaining(
+        transactions.map((transaction) => ({
+          transactions: expect.arrayContaining([transaction]),
+        })),
+      ),
+    );
+
+    expect(findAllByUserIdMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not be able to return transactions if they were not found', async () => {
+    findAllByUserIdMock.mockResolvedValue([]);
+
+    const result = await sut.execute(validUserId);
+
+    expect(result).toEqual([]);
+    expect(findAllByUserIdMock).toHaveBeenCalledTimes(1);
   });
 });
