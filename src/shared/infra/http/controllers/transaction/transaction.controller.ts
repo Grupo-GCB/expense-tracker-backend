@@ -1,36 +1,20 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiOkResponse,
-  ApiNotFoundResponse,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
-import { Wallet } from '@/wallet/infra/entities';
-import { API_RESPONSES } from '@/shared/constants';
-import { FindAllTransactionsByUserIdUseCase } from '@/transaction/use-cases';
+import { FindTransactionsByUserUseCase } from '@/transaction/use-cases';
+import { ITransactionResponse } from '@/transaction/interfaces';
 
 @ApiTags('Transaction')
 @Controller('transaction')
 export class TransactionController {
   constructor(
-    private readonly findAllTransactionsByUserId: FindAllTransactionsByUserIdUseCase,
+    private readonly findTransactionsByUserUseCase: FindTransactionsByUserUseCase,
   ) {}
 
-  @Get('all/:id')
-  @ApiOkResponse(API_RESPONSES.OK)
-  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
-  @ApiOperation({
-    summary: 'Listar todas as transações de um usuário pelo ID.',
-    description:
-      'Esta rota permite visualizar todas as transações de um usuário.',
-  })
-  async listAllWalletsByUserId(
-    @Param('id') user_id: string,
-  ): Promise<Wallet[]> {
-    const { transactions } = await this.findAllTransactionsByUserId.execute(
-      user_id,
-    );
-    return transactions;
+  @Get('/:user_id')
+  async findAllByUserId(
+    @Param('user_id') user_id: string,
+  ): Promise<ITransactionResponse[]> {
+    return this.findTransactionsByUserUseCase.execute(user_id);
   }
 }
