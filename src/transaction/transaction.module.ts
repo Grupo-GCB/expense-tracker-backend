@@ -10,6 +10,7 @@ import {
   DeleteTransactionUseCase,
   RegisterTransactionUseCase,
   UpdateTransactionUseCase,
+  FindTransactionsByUserUseCase,
 } from '@/transaction/use-cases';
 import { WalletRepository } from '@/wallet/infra/repositories';
 import { IWalletRepository } from '@/wallet/interfaces';
@@ -21,6 +22,7 @@ import { IWalletRepository } from '@/wallet/interfaces';
     RegisterTransactionUseCase,
     DeleteTransactionUseCase,
     UpdateTransactionUseCase,
+    FindTransactionsByUserUseCase,
     {
       provide: ITransactionRepository,
       useClass: TransactionRepository,
@@ -28,6 +30,12 @@ import { IWalletRepository } from '@/wallet/interfaces';
     {
       provide: IWalletRepository,
       useClass: WalletRepository,
+    },
+  ],
+  exports: [
+    {
+      provide: ITransactionRepository,
+      useClass: TransactionRepository,
     },
   ],
 })

@@ -29,6 +29,8 @@ describe('Transaction Controller (E2E)', () => {
   let transactionRepository: ITransactionRepository;
   let registerTransactionMock: RegisterTransactionUseCase;
   let deleteTransactionMock: DeleteTransactionUseCase;
+  let findAllByUserIdMock: jest.SpyInstance;
+  let validUserId: string;
 
   const validTransactionId = '5c20c7f5-26f2-4d36-bfa0-ad98795869ff';
   const invalidTransactionId = 'invalid-id';
@@ -53,6 +55,26 @@ describe('Transaction Controller (E2E)', () => {
     categories: Categories.HOME,
   } as Transaction;
 
+  const createMockTransaction = (): Transaction => ({
+    id: '01',
+    categories: Categories.CLOTHES,
+    description: 'Sample Transaction 1',
+    value: 100.0,
+    type: TransactionType.EXPENSE,
+    date: new Date(),
+    created_at: new Date(),
+    updated_at: new Date(),
+    deleted_at: null,
+    wallet: null,
+  });
+
+  const serializeTransaction = (transaction: Transaction): any => ({
+    ...transaction,
+    date: transaction.date.toISOString(),
+    created_at: transaction.created_at.toISOString(),
+    updated_at: transaction.updated_at.toISOString(),
+  });
+
   beforeEach(async () => {
     testModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -64,6 +86,7 @@ describe('Transaction Controller (E2E)', () => {
             create: jest.fn(),
             findById: jest.fn(),
             delete: jest.fn(),
+            findAllByUserId: jest.fn(),
           },
         },
         {
@@ -85,6 +108,12 @@ describe('Transaction Controller (E2E)', () => {
     deleteTransactionMock = testModule.get<DeleteTransactionUseCase>(
       DeleteTransactionUseCase,
     );
+    transactionRepository = testModule.get<ITransactionRepository>(
+      ITransactionRepository,
+    );
+    findAllByUserIdMock = jest.spyOn(transactionRepository, 'findAllByUserId');
+
+    validUserId = 'auth0|user-id';
 
     app = testModule.createNestApplication();
     await app.init();
@@ -139,5 +168,40 @@ describe('Transaction Controller (E2E)', () => {
         .delete(`/transaction/${invalidTransactionId}`)
         .expect(HttpStatus.NOT_FOUND);
     });
+  });
+
+  describe('/transaction/:user_id (GET)', () => {
+    it('should be defined', () => {
+      expect(transactionRepository).toBeDefined();
+      expect(findAllByUserIdMock).toBeDefined();
+    });
+
+    it('should be able to return transactions for a user', async () => {
+      const mockTransactions: Transaction[] = [createMockTransaction()];
+
+      findAllByUserIdMock.mockResolvedValue(mockTransactions);
+
+      const response = await request(app.getHttpServer())
+        .get(`/transaction/${validUserId}`)
+        .expect(HttpStatus.OK);
+
+      const expectedResponse = mockTransactions.map(serializeTransaction);
+
+      expect(response.body).toEqual(expectedResponse);
+    });
+
+    it('should be able to return an empty list of transactions', async () => {
+      findAllByUserIdMock.mockResolvedValue([]);
+
+      const response = await request(app.getHttpServer())
+        .get(`/transaction/${validUserId}`)
+        .expect(HttpStatus.OK);
+
+      expect(response.body).toEqual([]);
+    });
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });

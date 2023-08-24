@@ -11,7 +11,7 @@ import {
 import { BudgetGoal } from '@/budget-goal/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
 
-@Entity('users')
+@Entity('user')
 export class User {
   @PrimaryColumn()
   id: string;
