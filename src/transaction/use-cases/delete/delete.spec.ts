@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { Transaction } from '@/transaction/infra/entities';
 import { ITransactionRepository } from '@/transaction/interface';
-import { DeleteTransactionUseCase } from './delete';
+import { DeleteTransactionUseCase } from '@/transaction/use-cases';
 
 describe('Delete Transaction Use Case', () => {
   let transactionRepository: ITransactionRepository;
