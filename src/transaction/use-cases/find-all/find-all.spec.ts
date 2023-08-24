@@ -54,13 +54,7 @@ describe('Find All Transactions', () => {
 
     const result = await sut.execute(validUserId);
 
-    expect(result).toEqual(
-      expect.arrayContaining(
-        transactions.map((transaction) => ({
-          transactions: expect.arrayContaining([transaction]),
-        })),
-      ),
-    );
+    expect(result).toEqual(expect.arrayContaining(transactions));
 
     expect(findAllByUserIdMock).toHaveBeenCalledTimes(1);
   });
