@@ -27,7 +27,6 @@ import {
 import { Wallet } from '@/wallet/infra/entities';
 import { DeleteWalletDTO, SaveWalletDTO, UpdateWalletDTO } from '@/wallet/dto';
 import { API_RESPONSES } from '@/shared/constants';
-import { FindAllTransactionsByUserIdUseCase } from '@/transaction/use-cases';
 
 @ApiTags('Wallet')
 @Controller('wallet')
@@ -35,7 +34,6 @@ export class WalletController {
   constructor(
     private readonly walletUseCase: RegisterWalletUseCase,
     private readonly findAllWalletsByUserId: FindAllWalletsByUserIdUseCase,
-    private readonly findAllTransactionsByUserId: FindAllTransactionsByUserIdUseCase,
     private readonly findWalletById: FindWalletByIdUseCase,
     private readonly updateWalletUseCase: UpdateWalletUseCase,
     private readonly deleteWalletUseCase: DeleteWalletUseCase,
