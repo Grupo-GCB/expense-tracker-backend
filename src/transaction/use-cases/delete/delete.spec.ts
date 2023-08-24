@@ -9,11 +9,11 @@ describe('Delete Transaction Use Case', () => {
   let transactionRepository: ITransactionRepository;
   let sut: DeleteTransactionUseCase;
 
-  const validId = 'valid-id';
-  const invalidId = 'invalid-id';
+  const validTransactionId = 'valid-id';
+  const invalidTransactionId = 'invalid-id';
 
   const transaction: Transaction = {
-    id: validId,
+    id: validTransactionId,
   } as Transaction;
 
   beforeAll(async () => {
@@ -53,7 +53,7 @@ describe('Delete Transaction Use Case', () => {
 
     const nonExistingTransactionId: Transaction = {
       ...transaction,
-      id: invalidId,
+      id: invalidTransactionId,
     };
 
     await expect(sut.execute(nonExistingTransactionId)).rejects.toBeInstanceOf(
