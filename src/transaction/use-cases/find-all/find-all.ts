@@ -23,13 +23,6 @@ export class FindTransactionsByUserUseCase {
     const transactions = await this.transactionRepository.findAllByUserId(
       user_id,
     );
-
-    if (!transactions || transactions.length === 0) {
-      throw new NotFoundException(
-        'Transações não encontradas para este usuário.',
-      );
-    }
-
     return transactions;
   }
 }
