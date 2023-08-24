@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Transaction } from '@/transaction/infra/entities';
-import { ITransactionResponse } from '@/transaction/interfaces';
-import { ITransactionRepository } from '@/transaction/interfaces';
+import { ITransactionResponse } from '@/transaction/interface';
+import { ITransactionRepository } from '@/transaction/interface';
 
 @Injectable()
 export class TransactionRepository implements ITransactionRepository {

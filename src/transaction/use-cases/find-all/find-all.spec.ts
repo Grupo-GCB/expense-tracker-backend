@@ -1,5 +1,5 @@
 import { FindTransactionsByUserUseCase } from '@/transaction/use-cases';
-import { ITransactionRepository } from '@/transaction/interfaces';
+import { ITransactionRepository } from '@/transaction/interface';
 import { Transaction } from '@/transaction/infra/entities';
 import { Categories, TransactionType } from '@/shared/constants/enums';
 

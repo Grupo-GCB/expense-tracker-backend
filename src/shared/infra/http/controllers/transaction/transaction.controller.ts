@@ -2,7 +2,7 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { FindTransactionsByUserUseCase } from '@/transaction/use-cases';
-import { ITransactionResponse } from '@/transaction/interfaces';
+import { ITransactionResponse } from '@/transaction/interface';
 
 @ApiTags('Transaction')
 @Controller('transaction')

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import {
   ITransactionResponse,
   ITransactionRepository,
-} from '@/transaction/interfaces';
+} from '@/transaction/interface';
 
 @Injectable()
 export class FindTransactionsByUserUseCase {
