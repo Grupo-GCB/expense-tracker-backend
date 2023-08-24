@@ -20,9 +20,6 @@ export class FindTransactionsByUserUseCase {
       throw new NotFoundException('Usuário não encontrado.');
     }
 
-    const transactions = await this.transactionRepository.findAllByUserId(
-      user_id,
-    );
-    return transactions;
+    return await this.transactionRepository.findAllByUserId(user_id);
   }
 }
