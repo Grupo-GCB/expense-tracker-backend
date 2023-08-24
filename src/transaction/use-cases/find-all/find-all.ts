@@ -9,7 +9,7 @@ import {
 export class FindTransactionsByUserUseCase {
   constructor(private readonly transactionRepository: ITransactionRepository) {}
 
-  async execute(userId: string): Promise<ITransactionResponse[]> {
-    return this.transactionRepository.findAllByUserId(userId);
+  async execute(user_id: string): Promise<ITransactionResponse[]> {
+    return this.transactionRepository.findAllByUserId(user_id);
   }
 }
