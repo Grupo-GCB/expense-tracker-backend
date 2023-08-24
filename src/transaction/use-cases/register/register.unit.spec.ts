@@ -7,7 +7,7 @@ import {
   TransactionType,
 } from '@/shared/constants/enums';
 import { Transaction } from '@/transaction/infra/entities';
-import { ITransactionRepository } from '@/transaction/interface';
+import { ITransactionRepository } from '@/transaction/interfaces';
 import { RegisterTransactionUseCase } from '@/transaction/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';

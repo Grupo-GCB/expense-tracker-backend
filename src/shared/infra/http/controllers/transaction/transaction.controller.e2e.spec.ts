@@ -14,7 +14,7 @@ import {
 } from '@/shared/constants/enums';
 import { CreateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
-import { ITransactionRepository } from '@/transaction/interface';
+import { ITransactionRepository } from '@/transaction/interfaces';
 import {
   DeleteTransactionUseCase,
   RegisterTransactionUseCase,

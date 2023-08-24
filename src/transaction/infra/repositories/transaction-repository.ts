@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { CreateTransactionDTO } from '@/transaction/dto';
-import { ITransactionRepository } from '@/transaction/interface';
+import { ITransactionRepository } from '@/transaction/interfaces';
 import { Transaction } from '@/transaction/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
 
@@ -32,6 +32,10 @@ export class TransactionRepository implements ITransactionRepository {
 
   async findById(id: string): Promise<Transaction> {
     return this.transactionRepository.findOne({ where: { id } });
+  }
+
+  async update(transaction: Transaction): Promise<void> {
+    await this.transactionRepository.save(transaction);
   }
 
   async delete(id: string): Promise<void> {
