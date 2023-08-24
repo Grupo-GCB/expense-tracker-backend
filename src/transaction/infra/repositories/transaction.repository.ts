@@ -20,12 +20,12 @@ export class TransactionRepository implements ITransactionRepository {
       .leftJoin('wallet.bank', 'bank')
       .where('wallet.user = :user_id', { user_id })
       .select([
-        'transaction.id',
-        'transaction.categories',
-        'transaction.description',
-        'transaction.value',
-        'transaction.type',
-        'transaction.date',
+        'transaction.id as id',
+        'transaction.categories as category',
+        'transaction.description as description',
+        'transaction.value as value',
+        'transaction.type as type',
+        'transaction.date as date',
         'wallet.id as wallet_id',
         'bank.name as bank_name',
       ])
