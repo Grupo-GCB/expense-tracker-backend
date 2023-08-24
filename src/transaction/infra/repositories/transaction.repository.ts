@@ -17,6 +17,7 @@ export class TransactionRepository implements ITransactionRepository {
     const transactions = await this.transactionRepository
       .createQueryBuilder('transaction')
       .innerJoin('transaction.wallet', 'wallet')
+      .leftJoin('wallet.bank', 'bank')
       .where('wallet.user = :user_id', { user_id })
       .select([
         'transaction.id',
@@ -26,6 +27,7 @@ export class TransactionRepository implements ITransactionRepository {
         'transaction.type',
         'transaction.date',
         'wallet.id as wallet_id',
+        'bank.name as bank_name',
       ])
       .getRawMany();
 
