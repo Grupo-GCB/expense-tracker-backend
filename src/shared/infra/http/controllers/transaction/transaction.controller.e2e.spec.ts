@@ -130,7 +130,7 @@ describe('Transaction Controller (E2E)', () => {
         .expect(HttpStatus.NO_CONTENT);
     });
 
-    it('should not be able to delete a wallet if wallet does not exist', async () => {
+    it('should not be able to delete a transaction if transaction does not exist', async () => {
       jest
         .spyOn(transactionRepository, 'findById')
         .mockRejectedValue(new NotFoundException());
