@@ -62,7 +62,7 @@ describe('Transaction Controller (E2E)', () => {
   });
 
   describe('/transaction/:user_id (GET)', () => {
-    it('should be able to return transactions for a user', async () => {
+    it('should be able to return all transactions of an user', async () => {
       const mockTransactions: Transaction[] = [createMockTransaction()];
 
       findAllByUserIdMock.mockResolvedValue(mockTransactions);
