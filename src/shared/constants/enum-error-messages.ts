@@ -1,4 +1,4 @@
-export const ENUM_ERROR = {
+export const EnumError = {
   TRANSACTION_TYPE: 'Insira um dos seguintes tipos: Receita, Despesa.',
 
   CATEGORIES: 'Erro de validação. Veja a mensagem de erro para mais detalhes.',
