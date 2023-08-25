@@ -1,6 +1,6 @@
+import { ITransactionResponse } from '@/transaction/interface';
 import { CreateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
-import { ITransactionResponse } from './transactions-response';
 
 export abstract class ITransactionRepository {
   abstract create(

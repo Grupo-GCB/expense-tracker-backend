@@ -2,7 +2,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { Transaction } from '@/transaction/infra/entities';
-import { ITransactionRepository } from '@/transaction/interfaces';
+import { ITransactionRepository } from '@/transaction/interface';
 import { DeleteTransactionUseCase } from '@/transaction/use-cases';
 
 describe('Delete Transaction Use Case', () => {

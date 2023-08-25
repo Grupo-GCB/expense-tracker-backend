@@ -22,11 +22,11 @@ import { UpdateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
 import {
   DeleteTransactionUseCase,
+  FindTransactionsByUserUseCase,
   RegisterTransactionUseCase,
   UpdateTransactionUseCase,
-  FindTransactionsByUserUseCase,
 } from '@/transaction/use-cases';
-import { ITransactionResponse } from '@/transaction/interfaces';
+import { ITransactionResponse } from '@/transaction/interface';
 
 @ApiTags('Transaction')
 @Controller('transaction')
@@ -66,6 +66,13 @@ export class TransactionController {
     return this.updateUseCase.execute(id, data);
   }
 
+  @Get('/:user_id')
+  async findAllByUserId(
+    @Param('user_id') user_id: string,
+  ): Promise<ITransactionResponse[]> {
+    return this.findTransactionsByUserUseCase.execute(user_id);
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
@@ -76,12 +83,5 @@ export class TransactionController {
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async delete(@Param() data: DeleteTransactionDTO): Promise<void> {
     await this.deleteUseCase.execute(data);
-  }
-
-  @Get('/:user_id')
-  async findAllByUserId(
-    @Param('user_id') user_id: string,
-  ): Promise<ITransactionResponse[]> {
-    return this.findTransactionsByUserUseCase.execute(user_id);
   }
 }

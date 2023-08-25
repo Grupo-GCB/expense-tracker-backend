@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { adjustValueForType } from '@/shared/utils';
 import { CreateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
-import { ITransactionRepository } from '@/transaction/interfaces';
+import { ITransactionRepository } from '@/transaction/interface';
 import { IWalletRepository } from '@/wallet/interfaces';
 
 @Injectable()

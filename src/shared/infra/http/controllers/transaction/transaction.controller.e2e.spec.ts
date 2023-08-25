@@ -12,9 +12,9 @@ import {
   Categories,
   TransactionType,
 } from '@/shared/constants/enums';
-import { CreateTransactionDTO } from '@/transaction/dto';
+import { CreateTransactionDTO, UpdateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
-import { ITransactionRepository } from '@/transaction/interfaces';
+import { ITransactionRepository } from '@/transaction/interface';
 import {
   DeleteTransactionUseCase,
   RegisterTransactionUseCase,
@@ -22,18 +22,16 @@ import {
 } from '@/transaction/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
-import { UpdateTransactionDTO } from '@/transaction/dto';
 
 describe('Transaction Controller (E2E)', () => {
   let app: INestApplication;
-  let testModule: TestingModule;
   let walletRepository: IWalletRepository;
+  let validUserId: string;
   let transactionRepository: ITransactionRepository;
   let registerTransactionMock: RegisterTransactionUseCase;
   let updateTransactionMock: UpdateTransactionUseCase;
-  let deleteTransactionMock: DeleteTransactionUseCase;
   let findAllByUserIdMock: jest.SpyInstance;
-  let validUserId: string;
+  let deleteTransactionMock: DeleteTransactionUseCase;
 
   const validTransactionId = '5c20c7f5-26f2-4d36-bfa0-ad98795869ff';
   const invalidTransactionId = 'invalid-id';
@@ -104,19 +102,19 @@ describe('Transaction Controller (E2E)', () => {
     updated_at: transaction.updated_at.toISOString(),
   });
 
-  beforeEach(async () => {
-    testModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const testModule: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
       providers: [
         RegisterTransactionUseCase,
         {
           provide: ITransactionRepository,
           useValue: {
-            create: jest.fn(),
+            findAllByUserId: jest.fn(),
             update: jest.fn(),
+            create: jest.fn(),
             findById: jest.fn(),
             delete: jest.fn(),
-            findAllByUserId: jest.fn(),
           },
         },
         {
@@ -128,28 +126,27 @@ describe('Transaction Controller (E2E)', () => {
       ],
     }).compile();
 
+    walletRepository = testModule.get<IWalletRepository>(IWalletRepository);
+
     transactionRepository = testModule.get<ITransactionRepository>(
       ITransactionRepository,
-    );
-    walletRepository = testModule.get<IWalletRepository>(IWalletRepository);
-    registerTransactionMock = testModule.get<RegisterTransactionUseCase>(
-      RegisterTransactionUseCase,
     );
     updateTransactionMock = testModule.get<UpdateTransactionUseCase>(
       UpdateTransactionUseCase,
     );
+    registerTransactionMock = testModule.get<RegisterTransactionUseCase>(
+      RegisterTransactionUseCase,
+    );
     deleteTransactionMock = testModule.get<DeleteTransactionUseCase>(
       DeleteTransactionUseCase,
     );
-    transactionRepository = testModule.get<ITransactionRepository>(
-      ITransactionRepository,
-    );
-    findAllByUserIdMock = jest.spyOn(transactionRepository, 'findAllByUserId');
 
-    validUserId = 'auth0|user-id';
+    findAllByUserIdMock = jest.spyOn(transactionRepository, 'findAllByUserId');
 
     app = testModule.createNestApplication();
     await app.init();
+
+    validUserId = 'google-oauth2|456734566205483104315';
   });
 
   describe('/transaction/:id (POST)', () => {
@@ -162,11 +159,8 @@ describe('Transaction Controller (E2E)', () => {
     it('should register a transaction', async () => {
       jest
         .spyOn(registerTransactionMock, 'execute')
-        .mockResolvedValueOnce(mockTransactionResponse);
-      jest
-        .spyOn(walletRepository, 'findById')
-        .mockResolvedValueOnce(mockWallet);
-
+        .mockResolvedValue(mockTransactionResponse);
+      jest.spyOn(walletRepository, 'findById').mockResolvedValue(mockWallet);
       await request(app.getHttpServer())
         .post(`/transaction/${validTransactionId}`)
         .send(transactionDataParams)
@@ -228,12 +222,27 @@ describe('Transaction Controller (E2E)', () => {
     });
   });
 
-  describe('/transaction/:user_id (GET)', () => {
-    it('should be defined', () => {
-      expect(transactionRepository).toBeDefined();
-      expect(findAllByUserIdMock).toBeDefined();
+  describe('/transaction/:id (DELETE)', () => {
+    it('should be able to delete a transaction', async () => {
+      jest.spyOn(deleteTransactionMock, 'execute').mockResolvedValue();
+
+      await request(app.getHttpServer())
+        .delete(`/transaction/${validTransactionId}`)
+        .expect(HttpStatus.NO_CONTENT);
     });
 
+    it('should not be able to delete a transaction if transaction does not exist', async () => {
+      jest
+        .spyOn(transactionRepository, 'findById')
+        .mockRejectedValue(new NotFoundException());
+
+      await request(app.getHttpServer())
+        .delete(`/transaction/${invalidTransactionId}`)
+        .expect(HttpStatus.NOT_FOUND);
+    });
+  });
+
+  describe('/transaction/:user_id (GET)', () => {
     it('should be able to return transactions for a user', async () => {
       const mockTransactions: Transaction[] = [createMockTransaction()];
 
@@ -256,26 +265,6 @@ describe('Transaction Controller (E2E)', () => {
         .expect(HttpStatus.OK);
 
       expect(response.body).toEqual([]);
-    });
-  });
-
-  describe('/transaction/:id (DELETE)', () => {
-    it('should be able to delete a transaction', async () => {
-      jest.spyOn(deleteTransactionMock, 'execute').mockResolvedValue();
-
-      await request(app.getHttpServer())
-        .delete(`/transaction/${validTransactionId}`)
-        .expect(HttpStatus.NO_CONTENT);
-    });
-
-    it('should not be able to delete a transaction if transaction does not exist', async () => {
-      jest
-        .spyOn(transactionRepository, 'findById')
-        .mockRejectedValue(new NotFoundException());
-
-      await request(app.getHttpServer())
-        .delete(`/transaction/${invalidTransactionId}`)
-        .expect(HttpStatus.NOT_FOUND);
     });
   });
 

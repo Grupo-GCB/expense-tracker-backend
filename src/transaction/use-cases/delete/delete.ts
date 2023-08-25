@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { DeleteTransactionDTO } from '@/transaction/dto';
-import { ITransactionRepository } from '@/transaction/interfaces';
+import { ITransactionRepository } from '@/transaction/interface';
 
 @Injectable()
 export class DeleteTransactionUseCase {

@@ -1,23 +1,32 @@
 import { FindTransactionsByUserUseCase } from '@/transaction/use-cases';
-import { ITransactionRepository } from '@/transaction/interfaces';
+import { ITransactionRepository } from '@/transaction/interface';
 import { Transaction } from '@/transaction/infra/entities';
 import { Categories, TransactionType } from '@/shared/constants/enums';
+import { IUserRepository } from '@/user/interfaces';
 
 describe('Find All Transactions', () => {
   let sut: FindTransactionsByUserUseCase;
   let findAllByUserIdMock: jest.SpyInstance;
   let transactionRepository: jest.Mocked<ITransactionRepository>;
+  let userRepository: jest.Mocked<IUserRepository>;
 
   beforeAll(async () => {
     transactionRepository = {
       findAllByUserId: jest.fn(),
     } as unknown as jest.Mocked<ITransactionRepository>;
 
-    sut = new FindTransactionsByUserUseCase(transactionRepository);
+    userRepository = {
+      findById: jest.fn().mockResolvedValue({}),
+    } as unknown as jest.Mocked<IUserRepository>;
+
+    sut = new FindTransactionsByUserUseCase(
+      transactionRepository,
+      userRepository,
+    );
     findAllByUserIdMock = jest.spyOn(transactionRepository, 'findAllByUserId');
   });
 
-  const validUserId = 'auth0|user-id';
+  const validUserId = 'google-oauth2|456734566205483104315';
 
   const transactions: Transaction[] = [
     {
@@ -36,21 +45,16 @@ describe('Find All Transactions', () => {
 
   it('should be defined', () => {
     expect(transactionRepository).toBeDefined();
+    expect(userRepository).toBeDefined();
     expect(sut).toBeDefined();
   });
 
   it('should be able to return all transactions', async () => {
-    findAllByUserIdMock.mockResolvedValue([{ transactions }]);
+    findAllByUserIdMock.mockResolvedValue(transactions);
 
     const result = await sut.execute(validUserId);
 
-    expect(result).toEqual(
-      expect.arrayContaining(
-        transactions.map((transaction) => ({
-          transactions: expect.arrayContaining([transaction]),
-        })),
-      ),
-    );
+    expect(result).toEqual(expect.arrayContaining(transactions));
 
     expect(findAllByUserIdMock).toHaveBeenCalledTimes(1);
   });

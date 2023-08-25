@@ -6,7 +6,7 @@ import { CreateTransactionDTO } from '@/transaction/dto';
 import {
   ITransactionRepository,
   ITransactionResponse,
-} from '@/transaction/interfaces';
+} from '@/transaction/interface';
 import { Transaction } from '@/transaction/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
 
@@ -41,15 +41,17 @@ export class TransactionRepository implements ITransactionRepository {
     const transactions = await this.transactionRepository
       .createQueryBuilder('transaction')
       .innerJoin('transaction.wallet', 'wallet')
+      .leftJoin('wallet.bank', 'bank')
       .where('wallet.user = :user_id', { user_id })
       .select([
-        'transaction.id',
-        'transaction.categories',
-        'transaction.description',
-        'transaction.value',
-        'transaction.type',
-        'transaction.date',
+        'transaction.id as id',
+        'transaction.categories as category',
+        'transaction.description as description',
+        'transaction.value as value',
+        'transaction.type as type',
+        'transaction.date as date',
         'wallet.id as wallet_id',
+        'bank.name as bank_name',
       ])
       .getRawMany();
 
