@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 
 import { Categories, TransactionType } from '@/shared/constants/enums';
+import { ColumnNumericTransformer } from '@/shared/transformers';
 import { Wallet } from '@/wallet/infra/entities';
 
 @Entity()
@@ -23,7 +24,10 @@ export class Transaction {
   @Column()
   description: string;
 
-  @Column('decimal')
+  @Column('numeric', {
+    name: 'value',
+    transformer: new ColumnNumericTransformer(),
+  })
   value: number;
 
   @Column()
