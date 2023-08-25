@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 
 import { CreateTransactionDTO } from '@/transaction/dto';
 import {
+  ISummaryResponse,
   ITransactionRepository,
   ITransactionsResponse,
 } from '@/transaction/interface';
@@ -61,6 +62,16 @@ export class TransactionRepository implements ITransactionRepository {
       .getRawMany();
 
     return transactions;
+  }
+
+  async findAllByWalletId(wallet_id: string): Promise<ISummaryResponse> {
+    const transactions = await this.transactionRepository.find({
+      where: { wallet: wallet_id },
+    });
+
+    return {
+      transactions,
+    };
   }
 
   async findById(id: string): Promise<Transaction> {
