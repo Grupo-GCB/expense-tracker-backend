@@ -26,7 +26,11 @@ import {
   RegisterTransactionUseCase,
   UpdateTransactionUseCase,
 } from '@/transaction/use-cases';
-import { ITransactionsResponse } from '@/transaction/interface';
+import {
+  ISummaryResponse,
+  ITransactionsResponse,
+} from '@/transaction/interface';
+import { FindAllByWalletIdUseCase } from '@/transaction/use-cases/summary/summary';
 
 @ApiTags('Transaction')
 @Controller('transaction')
@@ -36,6 +40,7 @@ export class TransactionController {
     private readonly deleteUseCase: DeleteTransactionUseCase,
     private readonly updateUseCase: UpdateTransactionUseCase,
     private readonly findTransactionsByUserUseCase: FindTransactionsByUserUseCase,
+    private readonly findAllByWalletIdUseCase: FindAllByWalletIdUseCase,
   ) {}
 
   @Post(':id')
@@ -71,6 +76,13 @@ export class TransactionController {
     @Param('user_id') user_id: string,
   ): Promise<ITransactionsResponse[]> {
     return this.findTransactionsByUserUseCase.execute(user_id);
+  }
+
+  @Get('/wallet/:walletId')
+  async findAllByWalletId(
+    @Param('walletId') walletId: string,
+  ): Promise<ISummaryResponse> {
+    return this.findAllByWalletIdUseCase.execute(walletId);
   }
 
   @Delete(':id')
