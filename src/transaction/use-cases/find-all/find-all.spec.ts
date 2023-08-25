@@ -23,7 +23,7 @@ describe('Find All Transactions', () => {
     {
       id: '01',
       categories: Categories.CLOTHES,
-      description: 'Sample Transaction 1',
+      description: 'Descrição',
       value: 100.0,
       type: TransactionType.EXPENSE,
       date: new Date(),
