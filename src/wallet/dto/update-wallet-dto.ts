@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { AccountType } from '@/shared/constants';
+import { AccountType, ENUM_ERROR } from '@/shared/constants';
 
 export class UpdateWalletDTO {
   @ApiProperty({
@@ -21,8 +21,7 @@ export class UpdateWalletDTO {
     message: 'Necessário informar um tipo de conta.',
   })
   @IsEnum(AccountType, {
-    message:
-      'Insira um dos seguintes tipos: Conta-Corrente, Conta-Poupança, Investimento, Dinheiro ou Outros.',
+    message: ENUM_ERROR.ACCOUNT_TYPE,
   })
   @IsString({ message: 'Tipo da conta deve ser uma string.' })
   account_type: AccountType;

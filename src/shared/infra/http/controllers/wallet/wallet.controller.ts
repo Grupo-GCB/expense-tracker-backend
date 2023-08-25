@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -66,7 +67,11 @@ export class WalletController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @ApiOperation({
+    summary: 'Deleção de uma carteira.',
+    description: 'Esta rota permite deletar a carteira de um usuário.',
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse(API_RESPONSES.NO_CONTENT)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async deleteWallet(@Param() data: DeleteWalletDTO): Promise<void> {

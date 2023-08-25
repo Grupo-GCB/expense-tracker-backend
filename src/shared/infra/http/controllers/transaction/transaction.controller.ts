@@ -1,20 +1,69 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Get,
+} from '@nestjs/common';
+import {
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
-import { FindTransactionsByUserUseCase } from '@/transaction/use-cases';
+import { API_RESPONSES } from '@/shared/constants';
+import { CreateTransactionDTO, DeleteTransactionDTO } from '@/transaction/dto';
+import { Transaction } from '@/transaction/infra/entities';
+import {
+  DeleteTransactionUseCase,
+  FindTransactionsByUserUseCase,
+  RegisterTransactionUseCase,
+} from '@/transaction/use-cases';
 import { ITransactionResponse } from '@/transaction/interface';
 
 @ApiTags('Transaction')
 @Controller('transaction')
 export class TransactionController {
   constructor(
+    private readonly registerUseCase: RegisterTransactionUseCase,
+    private readonly deleteUseCase: DeleteTransactionUseCase,
     private readonly findTransactionsByUserUseCase: FindTransactionsByUserUseCase,
   ) {}
+
+  @Post(':id')
+  @ApiOperation({
+    summary: 'Registrar uma transação.',
+    description: 'Esta rota permite registrar uma transação de um usuário.',
+  })
+  @ApiCreatedResponse(API_RESPONSES.CREATED)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
+  async create(
+    @Param('id') wallet_id: string,
+    @Body() data: CreateTransactionDTO,
+  ): Promise<Transaction> {
+    return this.registerUseCase.execute(wallet_id, data);
+  }
 
   @Get('/:user_id')
   async findAllByUserId(
     @Param('user_id') user_id: string,
   ): Promise<ITransactionResponse[]> {
     return this.findTransactionsByUserUseCase.execute(user_id);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Deleta uma transação.',
+    description: 'Esta rota permite deletar uma transação de um usuário.',
+  })
+  @ApiCreatedResponse(API_RESPONSES.NO_CONTENT)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
+  async delete(@Param() data: DeleteTransactionDTO): Promise<void> {
+    await this.deleteUseCase.execute(data);
   }
 }
