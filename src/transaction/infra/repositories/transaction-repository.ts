@@ -9,6 +9,7 @@ import {
 } from '@/transaction/interfaces';
 import { Transaction } from '@/transaction/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
+import { Bank } from '@/bank/infra/entities';
 
 @Injectable()
 export class TransactionRepository implements ITransactionRepository {
@@ -17,12 +18,17 @@ export class TransactionRepository implements ITransactionRepository {
     private readonly transactionRepository: Repository<Transaction>,
     @InjectRepository(Wallet)
     private readonly walletRepository: Repository<Wallet>,
-  ) {}
+  ) { }
 
   async create(
     wallet_id: string,
     data: CreateTransactionDTO,
   ): Promise<Transaction> {
+    const wallet = await this.walletRepository.findOne({
+      where: { id: wallet_id },
+      relations: ['bank'],
+    });
+
     const transaction = this.transactionRepository.create({
       categories: data.categories,
       description: data.description,
@@ -31,6 +37,7 @@ export class TransactionRepository implements ITransactionRepository {
       date: data.date,
       wallet: {
         id: wallet_id,
+        bank: { name: wallet.bank.name } as Bank,
       } as Wallet,
     });
 
