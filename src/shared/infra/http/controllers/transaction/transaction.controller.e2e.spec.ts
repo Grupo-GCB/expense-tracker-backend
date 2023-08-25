@@ -156,7 +156,7 @@ describe('Transaction Controller (E2E)', () => {
   const createMockTransaction = (): Transaction => ({
     id: '01',
     categories: Categories.CLOTHES,
-    description: 'Sample Transaction 1',
+    description: 'Exemplo de transação',
     value: 100.0,
     type: TransactionType.EXPENSE,
     date: new Date(),
