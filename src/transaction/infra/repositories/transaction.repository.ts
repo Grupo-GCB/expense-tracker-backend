@@ -11,7 +11,6 @@ import {
 import { Transaction } from '@/transaction/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
 import { Bank } from '@/bank/infra/entities';
-import { TransactionType } from '@/shared/constants';
 
 @Injectable()
 export class TransactionRepository implements ITransactionRepository {
@@ -68,18 +67,10 @@ export class TransactionRepository implements ITransactionRepository {
   }
 
   async findAllByWalletId(wallet_id: string): Promise<ISummaryResponse> {
+    const balance = 0;
     const transactions = await this.transactionRepository.find({
       where: { wallet: { id: wallet_id } },
     });
-
-    const balance = transactions.reduce((total, transaction) => {
-      if (transaction.type === TransactionType.INCOME) {
-        return total + transaction.value;
-      } else if (transaction.type === TransactionType.EXPENSE) {
-        return total - transaction.value;
-      }
-      return total;
-    }, 0);
 
     return {
       transactions,

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ISummaryResponse } from '@/transaction/interface';
 import { ITransactionRepository } from '@/transaction/interface';
-import { TransactionType } from '@/shared/constants/enums'; // Certifique-se de importar o enum corretamente
 
 @Injectable()
 export class FindAllByWalletIdUseCase {
@@ -13,12 +12,7 @@ export class FindAllByWalletIdUseCase {
     );
 
     const balance = transactions.reduce((total, transaction) => {
-      if (transaction.type === TransactionType.INCOME) {
-        return total + transaction.value;
-      } else if (transaction.type === TransactionType.EXPENSE) {
-        return total - transaction.value;
-      }
-      return total;
+      return total + transaction.value;
     }, 0);
 
     return {
