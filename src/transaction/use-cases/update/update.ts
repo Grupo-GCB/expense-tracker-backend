@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { UpdateTransactionDTO } from '@/transaction/dto/update-transaction-dto';
+import { UpdateTransactionDTO } from '@/transaction/dto';
 import { ITransactionRepository } from '@/transaction/interfaces';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { Transaction } from '@/transaction/infra/entities';

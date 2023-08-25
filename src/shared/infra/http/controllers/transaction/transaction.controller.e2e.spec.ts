@@ -22,7 +22,7 @@ import {
 } from '@/transaction/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
-import { UpdateTransactionDTO } from '@/transaction/dto/update-transaction-dto';
+import { UpdateTransactionDTO } from '@/transaction/dto';
 
 describe('Transaction Controller (E2E)', () => {
   let app: INestApplication;

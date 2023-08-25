@@ -1,7 +1,7 @@
 import { Categories, ENUM_ERROR, TransactionType } from '@/shared/constants';
 import { ApiProperty } from '@nestjs/swagger';
-
 import { Transform } from 'class-transformer';
+
 import {
   IsEnum,
   IsDate,
