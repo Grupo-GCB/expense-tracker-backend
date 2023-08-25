@@ -8,6 +8,7 @@ export abstract class ITransactionRepository {
     data: CreateTransactionDTO,
   ): Promise<Transaction>;
   abstract findById(id: string): Promise<Transaction>;
-  abstract findAllByUserId(user_id: string): Promise<ITransactionResponse[]>;
   abstract delete(id: string): Promise<void>;
+  abstract update(transaction: Transaction): Promise<void>;
+  abstract findAllByUserId(user_id: string): Promise<ITransactionResponse[]>;
 }

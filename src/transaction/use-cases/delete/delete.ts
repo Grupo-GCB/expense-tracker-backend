@@ -7,7 +7,7 @@ import { ITransactionRepository } from '@/transaction/interface';
 export class DeleteTransactionUseCase {
   constructor(private readonly transactionRepository: ITransactionRepository) {}
 
-  async execute({ id }: DeleteTransactionDTO) {
+  async execute({ id }: DeleteTransactionDTO): Promise<void> {
     const transaction = await this.transactionRepository.findById(id);
     if (!transaction) throw new NotFoundException('Transação não encontrada.');
 

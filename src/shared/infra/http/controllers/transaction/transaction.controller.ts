@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Get,
 } from '@nestjs/common';
 import {
@@ -17,11 +18,13 @@ import {
 
 import { API_RESPONSES } from '@/shared/constants';
 import { CreateTransactionDTO, DeleteTransactionDTO } from '@/transaction/dto';
+import { UpdateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
 import {
   DeleteTransactionUseCase,
   FindTransactionsByUserUseCase,
   RegisterTransactionUseCase,
+  UpdateTransactionUseCase,
 } from '@/transaction/use-cases';
 import { ITransactionResponse } from '@/transaction/interface';
 
@@ -31,6 +34,7 @@ export class TransactionController {
   constructor(
     private readonly registerUseCase: RegisterTransactionUseCase,
     private readonly deleteUseCase: DeleteTransactionUseCase,
+    private readonly updateUseCase: UpdateTransactionUseCase,
     private readonly findTransactionsByUserUseCase: FindTransactionsByUserUseCase,
   ) {}
 
@@ -46,6 +50,20 @@ export class TransactionController {
     @Body() data: CreateTransactionDTO,
   ): Promise<Transaction> {
     return this.registerUseCase.execute(wallet_id, data);
+  }
+
+  @Put(':id')
+  @ApiOperation({
+    summary: 'Atualiza uma transação.',
+    description: 'Esta rota permite atualizar uma transação de um usuário.',
+  })
+  @ApiCreatedResponse(API_RESPONSES.OK)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
+  async update(
+    @Param('id') id: string,
+    @Body() data: UpdateTransactionDTO,
+  ): Promise<Transaction> {
+    return this.updateUseCase.execute(id, data);
   }
 
   @Get('/:user_id')
