@@ -78,7 +78,7 @@ export class TransactionController {
     return this.findTransactionsByUserUseCase.execute(user_id);
   }
 
-  @Get('/wallet/:walletId')
+  @Get('/summary/:walletId')
   async findAllByWalletId(
     @Param('walletId') walletId: string,
   ): Promise<ISummaryResponse> {
