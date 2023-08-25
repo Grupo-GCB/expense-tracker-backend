@@ -4,6 +4,7 @@ import { UpdateTransactionDTO } from '@/transaction/dto/update-transaction-dto';
 import { ITransactionRepository } from '@/transaction/interfaces';
 import { IWalletRepository } from '@/wallet/interfaces';
 import { Transaction } from '@/transaction/infra/entities';
+import { adjustValueForType } from '@/shared/utils';
 
 @Injectable()
 export class UpdateTransactionUseCase {
@@ -14,7 +15,7 @@ export class UpdateTransactionUseCase {
 
   async execute(id: string, data: UpdateTransactionDTO): Promise<Transaction> {
     const [transaction, wallet] = await Promise.all([
-      await this.transactionRepository.findById(id),
+      this.transactionRepository.findById(id),
       this.walletRepository.findById(data.wallet_id),
     ]);
 
@@ -22,6 +23,8 @@ export class UpdateTransactionUseCase {
     if (!wallet) throw new NotFoundException('Carteira não encontrada.');
 
     transaction.wallet.id = data.wallet_id;
+
+    adjustValueForType(data);
 
     Object.assign(transaction, data);
 
