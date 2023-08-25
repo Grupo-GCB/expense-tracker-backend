@@ -9,6 +9,7 @@ import {
 } from '@/transaction/interface';
 import { Transaction } from '@/transaction/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
+import { Bank } from '@/bank/infra/entities';
 
 @Injectable()
 export class TransactionRepository implements ITransactionRepository {
@@ -23,6 +24,11 @@ export class TransactionRepository implements ITransactionRepository {
     wallet_id: string,
     data: CreateTransactionDTO,
   ): Promise<Transaction> {
+    const wallet = await this.walletRepository.findOne({
+      where: { id: wallet_id },
+      relations: ['bank'],
+    });
+
     const transaction = this.transactionRepository.create({
       categories: data.categories,
       description: data.description,
@@ -31,6 +37,7 @@ export class TransactionRepository implements ITransactionRepository {
       date: data.date,
       wallet: {
         id: wallet_id,
+        bank: { name: wallet.bank.name } as Bank,
       } as Wallet,
     });
 
@@ -41,17 +48,15 @@ export class TransactionRepository implements ITransactionRepository {
     const transactions = await this.transactionRepository
       .createQueryBuilder('transaction')
       .innerJoin('transaction.wallet', 'wallet')
-      .leftJoin('wallet.bank', 'bank')
       .where('wallet.user = :user_id', { user_id })
       .select([
-        'transaction.id as id',
-        'transaction.categories as category',
-        'transaction.description as description',
-        'transaction.value as value',
-        'transaction.type as type',
-        'transaction.date as date',
+        'transaction.id',
+        'transaction.categories',
+        'transaction.description',
+        'transaction.value',
+        'transaction.type',
+        'transaction.date',
         'wallet.id as wallet_id',
-        'bank.name as bank_name',
       ])
       .getRawMany();
 
