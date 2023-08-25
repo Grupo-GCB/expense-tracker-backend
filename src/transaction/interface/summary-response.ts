@@ -1,6 +1,6 @@
 import { Transaction } from '@/transaction/infra/entities';
 
-export interface ITransactionResponse {
+export interface ISummaryResponse {
   transactions: Transaction[];
   balance: number;
 }
