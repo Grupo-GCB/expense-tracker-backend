@@ -27,6 +27,6 @@ export class UpdateWalletUseCase {
 
     await this.walletRepository.update(wallet);
 
-    return await this.walletRepository.findById(id);
+    return this.walletRepository.findById(id);
   }
 }
