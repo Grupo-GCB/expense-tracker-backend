@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { TransactionType } from '@/shared/constants';
+import { adjustValueForType } from '@/shared/utils';
 import { CreateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
 import { ITransactionRepository } from '@/transaction/interfaces';
@@ -13,11 +13,6 @@ export class RegisterTransactionUseCase {
     private readonly walletRepository: IWalletRepository,
   ) {}
 
-  private adjustValueForType(data: CreateTransactionDTO): void {
-    data.value =
-      data.type === TransactionType.EXPENSE ? -data.value : data.value;
-  }
-
   async execute(
     wallet_id: string,
     data: CreateTransactionDTO,
@@ -25,7 +20,7 @@ export class RegisterTransactionUseCase {
     const wallet = await this.walletRepository.findById(wallet_id);
     if (!wallet) throw new NotFoundException('Carteira não encontrada.');
 
-    this.adjustValueForType(data);
+    adjustValueForType(data);
 
     return this.transactionRepository.create(wallet_id, data);
   }
