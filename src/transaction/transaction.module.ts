@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Transaction } from '@/transaction/infra/entities';
-import { TransactionController } from '@/shared/infra/http/controllers/transaction/transaction.controller';
+import { TransactionController } from '@/shared/infra/http/controllers';
 import {
   DeleteTransactionUseCase,
   RegisterTransactionUseCase,
