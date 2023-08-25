@@ -82,13 +82,13 @@ describe('Update Transaction Use Case', () => {
     walletRepository = module.get<IWalletRepository>(IWalletRepository);
   });
 
-  it('shold be defined', () => {
+  it('should be defined', () => {
     expect(sut).toBeDefined();
     expect(transactionRepository).toBeDefined();
     expect(walletRepository).toBeDefined();
   });
 
-  it('shold be able to update a transaction', async () => {
+  it('should be able to update a transaction', async () => {
     const result = await sut.execute(validTransactionId, mockUpdateDTOData);
 
     expect(transactionRepository.findById).toHaveBeenCalledTimes(2);
@@ -109,7 +109,7 @@ describe('Update Transaction Use Case', () => {
     expect(result).toEqual(mockTransactionResponse);
   });
 
-  it('shold not be able to update a transaction if transaction does not exist', async () => {
+  it('should not be able to update a transaction if transaction does not exist', async () => {
     jest.spyOn(transactionRepository, 'findById').mockResolvedValueOnce(null);
 
     await expect(
@@ -122,7 +122,7 @@ describe('Update Transaction Use Case', () => {
     );
   });
 
-  it('shold not be able to update a transaction if wallet does not exist', async () => {
+  it('should not be able to update a transaction if wallet does not exist', async () => {
     jest.spyOn(walletRepository, 'findById').mockResolvedValueOnce(null);
 
     mockUpdateDTOData.wallet_id = invalidWalletId;
@@ -137,7 +137,7 @@ describe('Update Transaction Use Case', () => {
     );
   });
 
-  it('shold be able to transform the value into negative if the transaction type is expense', async () => {
+  it('should be able to transform the value into negative if the transaction type is expense', async () => {
     mockUpdateDTOData.type = TransactionType.EXPENSE;
 
     const result = await sut.execute(validTransactionId, mockUpdateDTOData);
