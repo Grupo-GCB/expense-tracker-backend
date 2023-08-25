@@ -50,8 +50,15 @@ export class TransactionRepository implements ITransactionRepository {
     const transactions = await this.transactionRepository
       .createQueryBuilder('transaction')
       .innerJoin('transaction.wallet', 'wallet')
+      .leftJoin('wallet.bank', 'bank')
       .where('wallet.user = :user_id', { user_id })
       .select([
+        'transaction.id as id',
+        'transaction.categories as category',
+        'transaction.description as description',
+        'transaction.value as value',
+        'transaction.type as type',
+        'transaction.date as date',
         'transaction.id',
         'transaction.categories',
         'transaction.description',
@@ -59,6 +66,7 @@ export class TransactionRepository implements ITransactionRepository {
         'transaction.type',
         'transaction.date',
         'wallet.id as wallet_id',
+        'bank.name as bank_name',
       ])
       .getRawMany();
 
@@ -70,7 +78,19 @@ export class TransactionRepository implements ITransactionRepository {
       where: { wallet: { id: wallet_id } },
     });
 
-    return { transactions };
+    const balance = transactions.reduce((total, transaction) => {
+      if (transaction.type === TransactionType.INCOME) {
+        return total + transaction.value;
+      } else if (transaction.type === TransactionType.EXPENSE) {
+        return total - transaction.value;
+      }
+      return total;
+    }, 0);
+
+    return {
+      transactions,
+      balance,
+    };
   }
 
   async findById(id: string): Promise<Transaction> {
