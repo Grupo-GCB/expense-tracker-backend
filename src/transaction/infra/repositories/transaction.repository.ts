@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -68,9 +68,16 @@ export class TransactionRepository implements ITransactionRepository {
 
   async findAllByWalletId(wallet_id: string): Promise<ISummaryResponse> {
     const balance = 0;
+
+    const wallet = await this.walletRepository.findOne({
+      where: { id: wallet_id },
+    });
+
     const transactions = await this.transactionRepository.find({
       where: { wallet: { id: wallet_id } },
     });
+
+    if (!wallet) throw new NotFoundException('Carteira não encontrada.');
 
     return {
       transactions,
