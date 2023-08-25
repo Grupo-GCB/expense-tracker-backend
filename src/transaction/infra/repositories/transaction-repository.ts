@@ -15,6 +15,8 @@ export class TransactionRepository implements ITransactionRepository {
   constructor(
     @InjectRepository(Transaction)
     private readonly transactionRepository: Repository<Transaction>,
+    @InjectRepository(Wallet)
+    private readonly walletRepository: Repository<Wallet>,
   ) {}
 
   async create(
@@ -27,7 +29,9 @@ export class TransactionRepository implements ITransactionRepository {
       value: data.value,
       type: data.type,
       date: data.date,
-      wallet: { id: wallet_id } as Wallet,
+      wallet: {
+        id: wallet_id,
+      } as Wallet,
     });
 
     return this.transactionRepository.save(transaction);
@@ -53,7 +57,26 @@ export class TransactionRepository implements ITransactionRepository {
   }
 
   async findById(id: string): Promise<Transaction> {
-    return this.transactionRepository.findOne({ where: { id } });
+    const transaction = await this.transactionRepository
+      .createQueryBuilder('transaction')
+      .leftJoinAndSelect('transaction.wallet', 'wallet')
+      .leftJoin('wallet.bank', 'bank')
+      .select([
+        'transaction.id',
+        'transaction.categories',
+        'transaction.description',
+        'transaction.value',
+        'transaction.type',
+        'transaction.date',
+        'transaction.created_at',
+        'transaction.updated_at',
+        'wallet.id',
+        'bank.name',
+      ])
+      .where('transaction.id = :id', { id })
+      .getOne();
+
+    return transaction;
   }
 
   async update(transaction: Transaction): Promise<void> {
