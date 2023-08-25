@@ -59,13 +59,6 @@ export class TransactionRepository implements ITransactionRepository {
         'transaction.value as value',
         'transaction.type as type',
         'transaction.date as date',
-        'transaction.id',
-        'transaction.categories',
-        'transaction.description',
-        'transaction.value',
-        'transaction.type',
-        'transaction.date',
-        'wallet.id as wallet_id',
         'bank.name as bank_name',
       ])
       .getRawMany();
