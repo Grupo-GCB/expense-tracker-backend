@@ -27,7 +27,7 @@ describe('Update Transaction Use Case', () => {
   const mockTransactionResponse = {
     id: validTransactionId,
     categories: Categories.ELECTRONICS,
-    description: 'atualizou',
+    description: 'Compra televisão',
     value: 25,
     type: TransactionType.EXPENSE,
     wallet: {
@@ -38,7 +38,7 @@ describe('Update Transaction Use Case', () => {
   const mockUpdateDTOData: UpdateTransactionDTO = {
     wallet_id: validWalletId,
     categories: Categories.HOME,
-    description: 'atualizou',
+    description: 'Conta luz',
     value: 50,
     type: TransactionType.INCOME,
     date: new Date('2023-11-10'),
@@ -47,7 +47,7 @@ describe('Update Transaction Use Case', () => {
   const mockUpdatedTransaction = {
     id: validTransactionId,
     categories: Categories.HOME,
-    description: 'atualizou',
+    description: 'Conta de água',
     value: 50,
     type: TransactionType.INCOME,
     wallet: {
