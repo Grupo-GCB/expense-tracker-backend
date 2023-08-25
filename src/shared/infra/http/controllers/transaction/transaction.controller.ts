@@ -26,7 +26,7 @@ import {
   RegisterTransactionUseCase,
   UpdateTransactionUseCase,
 } from '@/transaction/use-cases';
-import { ITransactionResponse } from '@/transaction/interface';
+import { ITransactionsResponse } from '@/transaction/interface';
 
 @ApiTags('Transaction')
 @Controller('transaction')
@@ -69,7 +69,7 @@ export class TransactionController {
   @Get('/:user_id')
   async findAllByUserId(
     @Param('user_id') user_id: string,
-  ): Promise<ITransactionResponse[]> {
+  ): Promise<ITransactionsResponse[]> {
     return this.findTransactionsByUserUseCase.execute(user_id);
   }
 

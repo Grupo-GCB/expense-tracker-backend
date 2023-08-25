@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateTransactionDTO } from '@/transaction/dto';
 import {
   ITransactionRepository,
-  ITransactionResponse,
+  ITransactionsResponse,
 } from '@/transaction/interface';
 import { Transaction } from '@/transaction/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
@@ -44,7 +44,7 @@ export class TransactionRepository implements ITransactionRepository {
     return this.transactionRepository.save(transaction);
   }
 
-  async findAllByUserId(user_id: string): Promise<ITransactionResponse[]> {
+  async findAllByUserId(user_id: string): Promise<ITransactionsResponse[]> {
     const transactions = await this.transactionRepository
       .createQueryBuilder('transaction')
       .innerJoin('transaction.wallet', 'wallet')

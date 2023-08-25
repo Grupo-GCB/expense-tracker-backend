@@ -1,4 +1,4 @@
-import { ITransactionResponse } from '@/transaction/interface';
+import { ITransactionsResponse } from '@/transaction/interface';
 import { CreateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
 
@@ -10,5 +10,5 @@ export abstract class ITransactionRepository {
   abstract findById(id: string): Promise<Transaction>;
   abstract delete(id: string): Promise<void>;
   abstract update(transaction: Transaction): Promise<void>;
-  abstract findAllByUserId(user_id: string): Promise<ITransactionResponse[]>;
+  abstract findAllByUserId(user_id: string): Promise<ITransactionsResponse[]>;
 }
