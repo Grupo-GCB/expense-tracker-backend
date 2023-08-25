@@ -72,6 +72,12 @@ export class TransactionController {
   }
 
   @Get('/:user_id')
+  @ApiOperation({
+    summary: 'Busca todas as transações de um usuário.',
+    description: 'Esta rota permite buscar as transações de um usuário.',
+  })
+  @ApiCreatedResponse(API_RESPONSES.OK)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async findAllByUserId(
     @Param('user_id') user_id: string,
   ): Promise<ITransactionsResponse[]> {
