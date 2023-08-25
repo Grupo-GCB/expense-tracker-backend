@@ -61,6 +61,7 @@ export class TransactionRepository implements ITransactionRepository {
       .createQueryBuilder('transaction')
       .leftJoinAndSelect('transaction.wallet', 'wallet')
       .leftJoin('wallet.bank', 'bank')
+      .where('transaction.id = :id', { id })
       .select([
         'transaction.id',
         'transaction.categories',
@@ -73,7 +74,6 @@ export class TransactionRepository implements ITransactionRepository {
         'wallet.id',
         'bank.name',
       ])
-      .where('transaction.id = :id', { id })
       .getOne();
 
     return transaction;
