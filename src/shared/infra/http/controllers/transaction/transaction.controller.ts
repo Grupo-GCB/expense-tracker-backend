@@ -18,7 +18,7 @@ import {
 
 import { API_RESPONSES } from '@/shared/constants';
 import { CreateTransactionDTO, DeleteTransactionDTO } from '@/transaction/dto';
-import { UpdateTransactionDTO } from '@/transaction/dto/update-transaction-dto';
+import { UpdateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
 import {
   DeleteTransactionUseCase,

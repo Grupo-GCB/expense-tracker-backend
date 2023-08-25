@@ -22,7 +22,7 @@ import {
 } from '@/transaction/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
-import { UpdateTransactionDTO } from '@/transaction/dto/update-transaction-dto';
+import { UpdateTransactionDTO } from '@/transaction/dto';
 
 describe('Transaction Controller (E2E)', () => {
   let app: INestApplication;
@@ -49,7 +49,7 @@ describe('Transaction Controller (E2E)', () => {
 
   const mockTransactionResponse = {
     id: validTransactionId,
-    description: 'atualizou',
+    description: 'Comida japonesa',
     value: 50,
     type: TransactionType.INCOME,
     wallet: {
@@ -60,15 +60,14 @@ describe('Transaction Controller (E2E)', () => {
   const transactionDataParams: CreateTransactionDTO = {
     value: 50,
     type: TransactionType.INCOME,
-    description: 'Descrição',
+    description: 'Conta de luz',
     categories: Categories.HOME,
   } as Transaction;
 
   const mockUpdateDTOData: UpdateTransactionDTO = {
     wallet_id: validWalletId,
     categories: Categories.HOME,
-    description: 'atualizou',
-    value: 50,
+    description: 'Conta de luz',
     type: TransactionType.INCOME,
     date: new Date('2023-11-10'),
   };
@@ -76,7 +75,7 @@ describe('Transaction Controller (E2E)', () => {
   const mockUpdatedTransaction = {
     id: validTransactionId,
     categories: Categories.HOME,
-    description: 'atualizou',
+    description: 'Conta de luz',
     value: 50,
     type: TransactionType.INCOME,
     wallet: {
@@ -87,7 +86,7 @@ describe('Transaction Controller (E2E)', () => {
   const createMockTransaction = (): Transaction => ({
     id: '01',
     categories: Categories.CLOTHES,
-    description: 'Sample Transaction 1',
+    description: 'Compra no shopping',
     value: 100.0,
     type: TransactionType.EXPENSE,
     date: new Date(),

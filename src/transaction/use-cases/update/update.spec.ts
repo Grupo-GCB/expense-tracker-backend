@@ -7,7 +7,7 @@ import { ITransactionRepository } from '@/transaction/interfaces';
 import { UpdateTransactionUseCase } from '@/transaction/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
-import { UpdateTransactionDTO } from '@/transaction/dto/update-transaction-dto';
+import { UpdateTransactionDTO } from '@/transaction/dto';
 
 describe('Update Transaction Use Case', () => {
   let sut: UpdateTransactionUseCase;
