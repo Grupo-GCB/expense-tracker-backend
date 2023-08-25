@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class InsertBankData1691535197861 implements MigrationInterface {
+export class InsertBankData1692823471205 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
          INSERT INTO public.bank VALUES ('87b2a64b-2651-422a-8659-c85fedafdc78', 'Santander', 'https://gcb-academy-expense-tracker.s3.sa-east-1.amazonaws.com/santander.webp');

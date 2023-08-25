@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Get,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -19,8 +20,10 @@ import { CreateTransactionDTO, DeleteTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
 import {
   DeleteTransactionUseCase,
+  FindTransactionsByUserUseCase,
   RegisterTransactionUseCase,
 } from '@/transaction/use-cases';
+import { ITransactionResponse } from '@/transaction/interface';
 
 @ApiTags('Transaction')
 @Controller('transaction')
@@ -28,6 +31,7 @@ export class TransactionController {
   constructor(
     private readonly registerUseCase: RegisterTransactionUseCase,
     private readonly deleteUseCase: DeleteTransactionUseCase,
+    private readonly findTransactionsByUserUseCase: FindTransactionsByUserUseCase,
   ) {}
 
   @Post(':id')
@@ -42,6 +46,13 @@ export class TransactionController {
     @Body() data: CreateTransactionDTO,
   ): Promise<Transaction> {
     return this.registerUseCase.execute(wallet_id, data);
+  }
+
+  @Get('/:user_id')
+  async findAllByUserId(
+    @Param('user_id') user_id: string,
+  ): Promise<ITransactionResponse[]> {
+    return this.findTransactionsByUserUseCase.execute(user_id);
   }
 
   @Delete(':id')

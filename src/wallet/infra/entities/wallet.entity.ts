@@ -7,7 +7,6 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  Relation,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -45,5 +44,5 @@ export class Wallet {
   user: User;
 
   @OneToMany(() => Transaction, (transaction) => transaction.wallet)
-  transactions: Relation<Transaction[]>;
+  transactions: Transaction[];
 }
