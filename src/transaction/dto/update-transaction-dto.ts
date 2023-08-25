@@ -1,4 +1,4 @@
-import { Categories, ENUM_ERROR, TransactionType } from '@/shared/constants';
+import { Categories, EnumError, TransactionType } from '@/shared/constants';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { Transform } from 'class-transformer';
@@ -18,16 +18,16 @@ export class UpdateTransactionDTO {
   })
   @IsString({ message: 'Id deve ser uma string.' })
   @IsUUID('all', { message: 'Necessário que o id seja do tipo UUID.' })
-  wallet_id: string;
+  wallet_id?: string;
 
   @ApiProperty({
     enum: Categories,
     description: 'Categoria da transação.',
   })
   @IsEnum(Categories, {
-    message: ENUM_ERROR.CATEGORIES,
+    message: EnumError.CATEGORIES,
   })
-  categories: Categories;
+  categories?: Categories;
 
   @ApiProperty({
     example: 'Compra no supermercado.',
@@ -42,16 +42,16 @@ export class UpdateTransactionDTO {
   })
   @IsNumber({}, { message: 'Value deve ser um número.' })
   @Min(0.01, { message: 'Valor não pode ser menor ou igual a zero.' })
-  value: number;
+  value?: number;
 
   @ApiProperty({
     enum: TransactionType,
     description: 'Tipo da transação.',
   })
   @IsEnum(TransactionType, {
-    message: ENUM_ERROR.TRANSACTION_TYPE,
+    message: EnumError.TRANSACTION_TYPE,
   })
-  type: TransactionType;
+  type?: TransactionType;
 
   @ApiProperty({
     example: '10-07-23',
@@ -59,5 +59,5 @@ export class UpdateTransactionDTO {
   })
   @IsDate({ message: 'Deve ser uma data.' })
   @Transform(({ value }) => new Date(value))
-  date: Date;
+  date?: Date;
 }
