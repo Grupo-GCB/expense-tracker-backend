@@ -85,6 +85,13 @@ export class TransactionController {
   }
 
   @Get('/summary/:walletId')
+  @ApiOperation({
+    summary: 'Busca todas as transações atreladas a uma carteira.',
+    description:
+      'Esta rota permite buscar todas as transações atreladas a uma carteira.',
+  })
+  @ApiCreatedResponse(API_RESPONSES.OK)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async findAllByWalletId(
     @Param('walletId') walletId: string,
   ): Promise<ISummaryResponse> {
