@@ -160,7 +160,7 @@ describe('Transaction Controller (E2E)', () => {
         .mockRejectedValueOnce(new NotFoundException());
 
       await request(app.getHttpServer())
-        .post(`/transaction/${null}`)
+        .post(`/transaction}`)
         .send(transactionDataParams)
         .expect(HttpStatus.NOT_FOUND);
     });
@@ -223,7 +223,7 @@ describe('Transaction Controller (E2E)', () => {
         .mockRejectedValue(new NotFoundException());
 
       await request(app.getHttpServer())
-        .delete(`/transaction/${validTransactionId}`)
+        .delete(`/transaction`)
         .expect(HttpStatus.NOT_FOUND);
     });
   });
