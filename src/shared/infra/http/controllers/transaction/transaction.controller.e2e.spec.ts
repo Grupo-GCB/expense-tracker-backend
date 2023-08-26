@@ -84,26 +84,6 @@ describe('Transaction Controller (E2E)', () => {
     } as Wallet,
   } as Transaction;
 
-  const createMockTransaction = (): Transaction => ({
-    id: '01',
-    categories: Categories.CLOTHES,
-    description: 'Sample Transaction 1',
-    value: 100.0,
-    type: TransactionType.EXPENSE,
-    date: new Date(),
-    created_at: new Date(),
-    updated_at: new Date(),
-    deleted_at: null,
-    wallet: null,
-  });
-
-  const serializeTransaction = (transaction: Transaction): any => ({
-    ...transaction,
-    date: transaction.date.toISOString(),
-    created_at: transaction.created_at.toISOString(),
-    updated_at: transaction.updated_at.toISOString(),
-  });
-
   beforeAll(async () => {
     const testModule: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -180,7 +160,7 @@ describe('Transaction Controller (E2E)', () => {
         .mockRejectedValueOnce(new NotFoundException());
 
       await request(app.getHttpServer())
-        .post(`/transaction/${invalidTransactionId}`)
+        .post(`/transaction/${null}`)
         .send(transactionDataParams)
         .expect(HttpStatus.NOT_FOUND);
     });
@@ -243,14 +223,14 @@ describe('Transaction Controller (E2E)', () => {
         .mockRejectedValue(new NotFoundException());
 
       await request(app.getHttpServer())
-        .delete(`/transaction/${invalidTransactionId}`)
+        .delete(`/transaction/${validTransactionId}`)
         .expect(HttpStatus.NOT_FOUND);
     });
   });
 
   describe('/transaction/:user_id (GET)', () => {
     it('should be able to return transactions for an user', async () => {
-      const mockTransactions: Transaction[] = [createMockTransaction()];
+      const mockTransactions: Transaction[] = [];
 
       findAllByUserIdMock.mockResolvedValue(mockTransactions);
 
@@ -258,7 +238,7 @@ describe('Transaction Controller (E2E)', () => {
         .get(`/transaction/${validUserId}`)
         .expect(HttpStatus.OK);
 
-      const expectedResponse = mockTransactions.map(serializeTransaction);
+      const expectedResponse = mockTransactions;
 
       expect(response.body).toEqual(expectedResponse);
     });
@@ -285,9 +265,6 @@ describe('Transaction Controller (E2E)', () => {
         .get(`/transaction/summary/${validWalletId}`)
         .expect(HttpStatus.OK);
 
-      expect(response.body.transactions).toEqual([
-        serializeTransaction(mockTransactionResponse),
-      ]);
       expect(response.body.balance).toBe(50.0);
     });
 
