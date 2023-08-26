@@ -55,7 +55,7 @@ describe('Find All Transactions By Wallet ID', () => {
     expect(sut).toBeDefined();
   });
 
-  it('should return transactions and balance if wallet is found', async () => {
+  it('should be able to return transactions and balance', async () => {
     findAllByWalletIdMock.mockResolvedValue({
       transactions,
     });
