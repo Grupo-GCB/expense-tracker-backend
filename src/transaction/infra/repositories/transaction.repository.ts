@@ -2,12 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateTransactionDTO } from '@/transaction/dto';
 import {
   ISummaryResponse,
   ITransactionRepository,
   ITransactionsResponse,
 } from '@/transaction/interface';
+import { CreateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
 import { Bank } from '@/bank/infra/entities';
