@@ -300,7 +300,7 @@ describe('Transaction Controller (E2E)', () => {
         .get(`/transaction/summary/${invalidWalletId}`)
         .expect(HttpStatus.NOT_FOUND);
 
-      expect(response.body.message).toBe('Carteira não encontrada.');
+      expect(response.body.message).toBe('Not Found');
     });
   });
 
