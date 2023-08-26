@@ -291,7 +291,7 @@ describe('Transaction Controller (E2E)', () => {
       expect(response.body.balance).toBe(50.0);
     });
 
-    it('should return 404 if wallet is not found', async () => {
+    it('should be able to return Not Found Exception if wallet is not found', async () => {
       jest
         .spyOn(findAllByWalletIdMock, 'execute')
         .mockRejectedValue(new NotFoundException());
@@ -300,7 +300,7 @@ describe('Transaction Controller (E2E)', () => {
         .get(`/transaction/summary/${invalidWalletId}`)
         .expect(HttpStatus.NOT_FOUND);
 
-      expect(response.body.message).toBe('Wallet not found');
+      expect(response.body.message).toBe('Carteira não encontrada.');
     });
   });
 
