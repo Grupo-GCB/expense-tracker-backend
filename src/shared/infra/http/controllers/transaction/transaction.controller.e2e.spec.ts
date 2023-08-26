@@ -268,7 +268,7 @@ describe('Transaction Controller (E2E)', () => {
       expect(response.body.balance).toBe(50.0);
     });
 
-    it('should be able to return Not Found Exception if wallet is not found', async () => {
+    it('should be able to return not found exception if wallet is not found', async () => {
       jest
         .spyOn(findAllByWalletIdMock, 'execute')
         .mockRejectedValue(new NotFoundException());

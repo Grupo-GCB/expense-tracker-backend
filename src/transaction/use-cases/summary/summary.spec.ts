@@ -1,4 +1,4 @@
-import { FindAllByWalletIdUseCase } from '@/transaction/use-cases/summary/summary';
+import { FindAllByWalletIdUseCase } from '@/transaction/use-cases';
 import {
   ITransactionRepository,
   ISummaryResponse,
@@ -6,7 +6,7 @@ import {
 import { Transaction } from '@/transaction/infra/entities';
 import { Categories, TransactionType } from '@/shared/constants';
 
-describe('Find All Transactions By Wallet ID', () => {
+describe('Find All Transactions By Wallet Id Use Case', () => {
   let sut: FindAllByWalletIdUseCase;
   let findAllByWalletIdMock: jest.SpyInstance;
   let transactionRepository: jest.Mocked<ITransactionRepository>;
