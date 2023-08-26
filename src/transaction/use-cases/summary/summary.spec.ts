@@ -29,7 +29,7 @@ describe('Find All Transactions By Wallet ID', () => {
     {
       id: '01',
       categories: Categories.CLOTHES,
-      description: 'Transaction 1',
+      description: 'Compra na Riachuelo',
       value: 100.0,
       type: TransactionType.INCOME,
       date: new Date(),
@@ -40,7 +40,7 @@ describe('Find All Transactions By Wallet ID', () => {
     {
       id: '02',
       categories: Categories.FOOD,
-      description: 'Transaction 2',
+      description: 'Balde do KFC',
       value: 50.0,
       type: TransactionType.EXPENSE,
       date: new Date(),
