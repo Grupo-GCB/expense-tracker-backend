@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Transaction } from '@/transaction/infra/entities';
 import {
   DeleteTransactionUseCase,
   RegisterTransactionUseCase,
@@ -9,15 +8,16 @@ import {
   FindTransactionsByUserUseCase,
   FindAllByWalletIdUseCase,
 } from '@/transaction/use-cases';
-import { ITransactionRepository } from '@/transaction/interface';
-import { TransactionRepository } from '@/transaction/infra/repositories';
-import { IUserRepository } from '@/user/interfaces';
-import { UserRepository } from '@/user/infra/repositories';
 import { FindUserByIdUseCase } from '@/user/use-cases';
-import { User } from '@/user/infra/entities';
+import { ITransactionRepository } from '@/transaction/interface';
 import { IWalletRepository } from '@/wallet/interfaces';
+import { IUserRepository } from '@/user/interfaces';
+import { TransactionRepository } from '@/transaction/infra/repositories';
+import { UserRepository } from '@/user/infra/repositories';
 import { WalletRepository } from '@/wallet/infra/repositories';
+import { User } from '@/user/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
+import { Transaction } from '@/transaction/infra/entities';
 import { TransactionController } from '@/shared/infra/http/controllers';
 
 @Module({
