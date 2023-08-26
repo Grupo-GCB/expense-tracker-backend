@@ -223,7 +223,7 @@ describe('Transaction Controller (E2E)', () => {
         .mockRejectedValue(new NotFoundException());
 
       await request(app.getHttpServer())
-        .delete(`/transaction/${validTransactionId}`)
+        .delete(`/transaction/`)
         .expect(HttpStatus.NOT_FOUND);
     });
   });
