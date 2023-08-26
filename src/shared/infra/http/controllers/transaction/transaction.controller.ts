@@ -26,7 +26,11 @@ import {
   RegisterTransactionUseCase,
   UpdateTransactionUseCase,
 } from '@/transaction/use-cases';
-import { ITransactionResponse } from '@/transaction/interface';
+import {
+  ISummaryResponse,
+  ITransactionsResponse,
+} from '@/transaction/interface';
+import { FindAllByWalletIdUseCase } from '@/transaction/use-cases/summary/summary';
 
 @ApiTags('Transaction')
 @Controller('transaction')
@@ -36,11 +40,12 @@ export class TransactionController {
     private readonly deleteUseCase: DeleteTransactionUseCase,
     private readonly updateUseCase: UpdateTransactionUseCase,
     private readonly findTransactionsByUserUseCase: FindTransactionsByUserUseCase,
+    private readonly findAllByWalletIdUseCase: FindAllByWalletIdUseCase,
   ) {}
 
   @Post(':id')
   @ApiOperation({
-    summary: 'Registrar uma transação.',
+    summary: 'Registra uma transação.',
     description: 'Esta rota permite registrar uma transação de um usuário.',
   })
   @ApiCreatedResponse(API_RESPONSES.CREATED)
@@ -67,10 +72,30 @@ export class TransactionController {
   }
 
   @Get('/:user_id')
+  @ApiOperation({
+    summary: 'Busca todas as transações de um usuário.',
+    description: 'Esta rota permite buscar as transações de um usuário.',
+  })
+  @ApiCreatedResponse(API_RESPONSES.OK)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async findAllByUserId(
     @Param('user_id') user_id: string,
-  ): Promise<ITransactionResponse[]> {
+  ): Promise<ITransactionsResponse[]> {
     return this.findTransactionsByUserUseCase.execute(user_id);
+  }
+
+  @Get('/summary/:walletId')
+  @ApiOperation({
+    summary: 'Busca todas as transações atreladas a uma carteira.',
+    description:
+      'Esta rota permite buscar todas as transações atreladas a uma carteira.',
+  })
+  @ApiCreatedResponse(API_RESPONSES.OK)
+  @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
+  async findAllByWalletId(
+    @Param('walletId') walletId: string,
+  ): Promise<ISummaryResponse> {
+    return this.findAllByWalletIdUseCase.execute(walletId);
   }
 
   @Delete(':id')

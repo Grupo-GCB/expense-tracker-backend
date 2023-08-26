@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 
 import { Categories, ENUM_ERROR, TransactionType } from '@/shared/constants';
+
 export class CreateTransactionDTO {
   @ApiProperty({
     enum: Categories,

@@ -1,5 +1,5 @@
 import { Transaction } from 'typeorm';
 
-export interface ITransactionResponse {
+export interface ITransactionsResponse {
   transactions: Transaction[];
 }

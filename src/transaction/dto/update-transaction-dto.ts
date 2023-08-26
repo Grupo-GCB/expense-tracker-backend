@@ -15,7 +15,7 @@ import { Categories, ENUM_ERROR, TransactionType } from '@/shared/constants';
 export class UpdateTransactionDTO {
   @ApiProperty({
     example: '4e8b5d94-6b16-4a42-b6d1-dc58b553d109',
-    description: 'Id da wallet associada à transação.',
+    description: 'Id da carteira associada à transação.',
   })
   @IsString({ message: 'Id deve ser uma string.' })
   @IsUUID('all', { message: 'Necessário que o id seja do tipo UUID.' })
