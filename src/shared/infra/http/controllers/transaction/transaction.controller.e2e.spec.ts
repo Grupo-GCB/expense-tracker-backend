@@ -17,6 +17,7 @@ import { Transaction } from '@/transaction/infra/entities';
 import { ITransactionRepository } from '@/transaction/interface';
 import {
   DeleteTransactionUseCase,
+  FindAllByWalletIdUseCase,
   RegisterTransactionUseCase,
   UpdateTransactionUseCase,
 } from '@/transaction/use-cases';
@@ -32,6 +33,7 @@ describe('Transaction Controller (E2E)', () => {
   let updateTransactionMock: UpdateTransactionUseCase;
   let findAllByUserIdMock: jest.SpyInstance;
   let deleteTransactionMock: DeleteTransactionUseCase;
+  let findAllByWalletIdMock: FindAllByWalletIdUseCase;
 
   const validTransactionId = '5c20c7f5-26f2-4d36-bfa0-ad98795869ff';
   const invalidTransactionId = 'invalid-id';
@@ -115,6 +117,7 @@ describe('Transaction Controller (E2E)', () => {
             create: jest.fn(),
             findById: jest.fn(),
             delete: jest.fn(),
+            findAllByWalletId: jest.fn(),
           },
         },
         {
@@ -139,6 +142,9 @@ describe('Transaction Controller (E2E)', () => {
     );
     deleteTransactionMock = testModule.get<DeleteTransactionUseCase>(
       DeleteTransactionUseCase,
+    );
+    findAllByWalletIdMock = testModule.get<FindAllByWalletIdUseCase>(
+      FindAllByWalletIdUseCase,
     );
 
     findAllByUserIdMock = jest.spyOn(transactionRepository, 'findAllByUserId');
@@ -265,6 +271,36 @@ describe('Transaction Controller (E2E)', () => {
         .expect(HttpStatus.OK);
 
       expect(response.body).toEqual([]);
+    });
+  });
+
+  describe('GET /transaction/summary/:walletId', () => {
+    it('should be able to return transactions and balance for a wallet', async () => {
+      jest.spyOn(findAllByWalletIdMock, 'execute').mockResolvedValue({
+        transactions: [mockTransactionResponse],
+        balance: 50.0,
+      });
+
+      const response = await request(app.getHttpServer())
+        .get(`/transaction/summary/${validWalletId}`)
+        .expect(HttpStatus.OK);
+
+      expect(response.body.transactions).toEqual([
+        serializeTransaction(mockTransactionResponse),
+      ]);
+      expect(response.body.balance).toBe(50.0);
+    });
+
+    it('should return 404 if wallet is not found', async () => {
+      jest
+        .spyOn(findAllByWalletIdMock, 'execute')
+        .mockRejectedValue(new NotFoundException());
+
+      const response = await request(app.getHttpServer())
+        .get(`/transaction/summary/${invalidWalletId}`)
+        .expect(HttpStatus.NOT_FOUND);
+
+      expect(response.body.message).toBe('Wallet not found');
     });
   });
 
