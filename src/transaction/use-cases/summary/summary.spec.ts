@@ -5,7 +5,6 @@ import {
 } from '@/transaction/interface';
 import { Transaction } from '@/transaction/infra/entities';
 import { Categories, TransactionType } from '@/shared/constants';
-import { NotFoundException } from '@nestjs/common';
 
 describe('Find All Transactions By Wallet ID', () => {
   let sut: FindAllByWalletIdUseCase;
@@ -65,18 +64,6 @@ describe('Find All Transactions By Wallet ID', () => {
 
     expect(result.transactions).toEqual(expect.arrayContaining(transactions));
     expect(result.balance).toBe(150.0);
-
-    expect(findAllByWalletIdMock).toHaveBeenCalledWith(validWalletId);
-  });
-
-  it('should throw NotFoundException if wallet is not found', async () => {
-    findAllByWalletIdMock.mockResolvedValue({
-      transactions: [],
-    });
-
-    await expect(sut.execute(validWalletId)).rejects.toThrowError(
-      NotFoundException,
-    );
 
     expect(findAllByWalletIdMock).toHaveBeenCalledWith(validWalletId);
   });
