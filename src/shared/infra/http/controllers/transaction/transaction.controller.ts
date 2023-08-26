@@ -45,7 +45,7 @@ export class TransactionController {
 
   @Post(':id')
   @ApiOperation({
-    summary: 'Registrar uma transação.',
+    summary: 'Registra uma transação.',
     description: 'Esta rota permite registrar uma transação de um usuário.',
   })
   @ApiCreatedResponse(API_RESPONSES.CREATED)
