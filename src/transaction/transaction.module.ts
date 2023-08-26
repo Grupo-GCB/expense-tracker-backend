@@ -7,6 +7,7 @@ import {
   RegisterTransactionUseCase,
   UpdateTransactionUseCase,
   FindTransactionsByUserUseCase,
+  FindAllByWalletIdUseCase,
 } from '@/transaction/use-cases';
 import { ITransactionRepository } from '@/transaction/interface';
 import { TransactionRepository } from '@/transaction/infra/repositories';
@@ -18,7 +19,6 @@ import { IWalletRepository } from '@/wallet/interfaces';
 import { WalletRepository } from '@/wallet/infra/repositories';
 import { Wallet } from '@/wallet/infra/entities';
 import { TransactionController } from '@/shared/infra/http/controllers';
-import { FindAllByWalletIdUseCase } from '@/transaction/use-cases';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Transaction, User, Wallet])],
