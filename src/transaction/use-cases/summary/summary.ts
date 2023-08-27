@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { ISummaryResponse } from '@/transaction/interface';
-import { ITransactionRepository } from '@/transaction/interface';
+import {
+  ISummaryResponse,
+  ITransactionRepository,
+} from '@/transaction/interface';
 
 @Injectable()
 export class FindAllByWalletIdUseCase {
