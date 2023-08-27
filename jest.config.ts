@@ -3,7 +3,7 @@ import type { Config } from '@jest/types';
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ['**/*.spec.ts'],
+  testMatch: ['**/*.spec.ts', '**/*.controller.test.ts'],
   collectCoverage: true,
   coverageReporters: ['lcov', 'text'],
   moduleNameMapper: {
