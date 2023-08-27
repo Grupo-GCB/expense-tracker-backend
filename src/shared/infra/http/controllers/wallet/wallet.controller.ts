@@ -10,24 +10,29 @@ import {
   Put,
 } from '@nestjs/common';
 import {
-  ApiTags,
-  ApiOperation,
-  ApiOkResponse,
-  ApiNotFoundResponse,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 
+import { API_RESPONSES } from '@/shared/constants';
 import {
+  DeleteWalletDTO,
+  IdParameterDTO,
+  SaveWalletDTO,
+  UpdateWalletDTO,
+} from '@/wallet/dto';
+import { Wallet } from '@/wallet/infra/entities';
+import {
+  DeleteWalletUseCase,
   FindAllWalletsByUserIdUseCase,
   FindWalletByIdUseCase,
   RegisterWalletUseCase,
   UpdateWalletUseCase,
-  DeleteWalletUseCase,
 } from '@/wallet/use-cases';
-import { Wallet } from '@/wallet/infra/entities';
-import { DeleteWalletDTO, SaveWalletDTO, UpdateWalletDTO } from '@/wallet/dto';
-import { API_RESPONSES } from '@/shared/constants';
 
 @ApiTags('Wallet')
 @Controller('wallet')
@@ -60,7 +65,7 @@ export class WalletController {
   @ApiOkResponse(API_RESPONSES.OK)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async updateWallet(
-    @Param('id') id: string,
+    @Param() { id }: IdParameterDTO,
     @Body() data: UpdateWalletDTO,
   ): Promise<Wallet> {
     return await this.updateWalletUseCase.execute(id, data);
@@ -100,7 +105,7 @@ export class WalletController {
   })
   @ApiResponse(API_RESPONSES.OK)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
-  async listWallet(@Param('id') wallet_id: string): Promise<Wallet> {
+  async listWallet(@Param() wallet_id: IdParameterDTO): Promise<Wallet> {
     const { wallet } = await this.findWalletById.execute(wallet_id);
     return wallet;
   }
