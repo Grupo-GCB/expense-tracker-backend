@@ -27,6 +27,7 @@ import {
   UpdateTransactionUseCase,
 } from '@/transaction/use-cases';
 import { ITransactionResponse } from '@/transaction/interface';
+import { IdParameterDTO } from '@/shared/interfaces';
 
 @ApiTags('Transaction')
 @Controller('transaction')
@@ -41,15 +42,15 @@ export class TransactionController {
   @Post(':id')
   @ApiOperation({
     summary: 'Registrar uma transação.',
-    description: 'Esta rota permite registrar uma transação de um usuário.',
+    description: 'Esta rota permite registrar uma transação de um usuário atrelada a uma carteira.',
   })
   @ApiCreatedResponse(API_RESPONSES.CREATED)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async create(
-    @Param('id') wallet_id: string,
+    @Param() { id }: IdParameterDTO,
     @Body() data: CreateTransactionDTO,
   ): Promise<Transaction> {
-    return this.registerUseCase.execute(wallet_id, data);
+    return this.registerUseCase.execute(id, data);
   }
 
   @Put(':id')
@@ -60,7 +61,7 @@ export class TransactionController {
   @ApiCreatedResponse(API_RESPONSES.OK)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   async update(
-    @Param('id') id: string,
+    @Param() { id }: IdParameterDTO,
     @Body() data: UpdateTransactionDTO,
   ): Promise<Transaction> {
     return this.updateUseCase.execute(id, data);
