@@ -1,14 +1,15 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import {
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
-  ApiOkResponse,
-  ApiNotFoundResponse,
 } from '@nestjs/swagger';
 
-import { FindAllBanksUseCase, FindBankByIdUseCase } from '@/bank/use-cases';
 import { Bank } from '@/bank/infra/entities';
+import { FindAllBanksUseCase, FindBankByIdUseCase } from '@/bank/use-cases';
 import { API_RESPONSES } from '@/shared/constants';
+import { IdParameterDTO } from '@/shared/interfaces';
 
 @ApiTags('Bank')
 @Controller('bank')
@@ -37,8 +38,8 @@ export class BankController {
   @ApiOkResponse(API_RESPONSES.OK)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
   @Get(':id')
-  async listBank(@Param('id') bank_id: string): Promise<Bank> {
-    const { bank } = await this.findBankById.execute(bank_id);
+  async listBank(@Param() { id }: IdParameterDTO): Promise<Bank> {
+    const { bank } = await this.findBankById.execute(id);
     return bank;
   }
 }
