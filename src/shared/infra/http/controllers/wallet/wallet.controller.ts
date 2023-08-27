@@ -105,8 +105,8 @@ export class WalletController {
   })
   @ApiResponse(API_RESPONSES.OK)
   @ApiNotFoundResponse(API_RESPONSES.NOT_FOUND)
-  async listWallet(@Param() wallet_id: IdParameterDTO): Promise<Wallet> {
-    const { wallet } = await this.findWalletById.execute(wallet_id);
+  async listWallet(@Param() { id }: IdParameterDTO): Promise<Wallet> {
+    const { wallet } = await this.findWalletById.execute(id);
     return wallet;
   }
 }
