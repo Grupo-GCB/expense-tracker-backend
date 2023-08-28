@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 import { AccountType } from '@/shared/constants/enums';
 import { ENUM_ERROR } from '@/shared/constants';
@@ -30,6 +30,7 @@ export class SaveWalletDTO {
     description: 'Id do banco associado à carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id do banco.' })
+  @IsUUID('all', { message: 'Necessário que o id seja do tipo UUID.' })
   @IsString({ message: 'Id deve ser uma string.' })
   bank_id: string;
 
@@ -38,6 +39,7 @@ export class SaveWalletDTO {
     description: 'Id do usuário proprietário da carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id do usuário.' })
+  @IsUUID('all', { message: 'Necessário que o id seja do tipo UUID.' })
   @IsString({ message: 'Id deve ser uma string.' })
   user_id: string;
 }

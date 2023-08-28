@@ -9,7 +9,7 @@ export class UpdateWalletDTO {
     description: 'Id do banco associado à carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id do banco.' })
-  @IsUUID('all', { message: 'Necessário o id seja do tipo UUID.' })
+  @IsUUID('all', { message: 'Necessário que o id seja do tipo UUID.' })
   @IsString({ message: 'Bank id deve ser uma string.' })
   bank_id: string;
 

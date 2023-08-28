@@ -12,55 +12,31 @@ import { Wallet } from '@/wallet/infra/entities';
 
 describe('Update Wallet Use Case', () => {
   let sut: UpdateWalletUseCase;
-  let findBankByIdUseCase: FindBankByIdUseCase;
   let walletRepository: IWalletRepository;
+  let bankRepository: IBankRepository;
   let findByIdMock: jest.SpyInstance;
   let updateMock: jest.SpyInstance;
-  let findBankByIdMock: jest.SpyInstance;
-
-  beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        UpdateWalletUseCase,
-        FindBankByIdUseCase,
-        {
-          provide: IWalletRepository,
-          useFactory: () => ({
-            update: jest.fn(),
-            findById: jest.fn(),
-          }),
-        },
-        {
-          provide: IBankRepository,
-          useFactory: () => ({
-            findById: jest.fn(),
-          }),
-        },
-      ],
-    }).compile();
-
-    sut = module.get<UpdateWalletUseCase>(UpdateWalletUseCase);
-    findBankByIdUseCase = module.get<FindBankByIdUseCase>(FindBankByIdUseCase);
-    walletRepository = module.get<IWalletRepository>(IWalletRepository);
-
-    findByIdMock = jest.spyOn(walletRepository, 'findById');
-    updateMock = jest.spyOn(walletRepository, 'update');
-    findBankByIdMock = jest.spyOn(findBankByIdUseCase, 'execute');
-  });
-
-  beforeEach(async () => {
-    findBankByIdMock.mockResolvedValue(bank);
-    updateMock.mockResolvedValue(NotFoundException);
-  });
 
   const validId = '4e8b5d94-6b16-4a42-b6d1-dc58b553d109';
   const invalidId = 'invalid-id';
 
-  const updateData: UpdateWalletDTO = {
+  const updateDataDTO: UpdateWalletDTO = {
     bank_id: validId,
     account_type: AccountType.CHECKING_ACCOUNT,
     description: 'Nova descrição',
   };
+
+  const walletDataResponse = {
+    id: validId,
+    account_type: AccountType.CHECKING_ACCOUNT,
+    description: 'Nova descrição',
+  } as Wallet;
+
+  const updatedWallet = {
+    id: validId,
+    account_type: AccountType.CASH,
+    description: 'Nova descrição',
+  } as Wallet;
 
   const bank = {
     id: validId,
@@ -72,29 +48,52 @@ describe('Update Wallet Use Case', () => {
     id: validId,
   } as Wallet;
 
-  it.skip('should be able to update a wallet', async () => {
-    const updatedWallet = updateData as unknown as Wallet;
+  beforeAll(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        UpdateWalletUseCase,
+        FindBankByIdUseCase,
+        {
+          provide: IWalletRepository,
+          useFactory: () => ({
+            update: jest.fn().mockResolvedValue(updatedWallet),
+            findById: jest.fn().mockResolvedValue(walletDataResponse),
+          }),
+        },
+        {
+          provide: IBankRepository,
+          useFactory: () => ({
+            findById: jest.fn().mockResolvedValue(bank),
+          }),
+        },
+      ],
+    }).compile();
 
-    findByIdMock.mockResolvedValue(updatedWallet);
-    updateMock.mockResolvedValue(updatedWallet);
+    sut = module.get<UpdateWalletUseCase>(UpdateWalletUseCase);
+    walletRepository = module.get<IWalletRepository>(IWalletRepository);
+    bankRepository = module.get<IBankRepository>(IBankRepository);
 
-    const result = await sut.execute(wallet.id, updateData);
+    findByIdMock = jest.spyOn(walletRepository, 'findById');
+    updateMock = jest.spyOn(walletRepository, 'update');
+  });
 
-    expect(result).toEqual(updatedWallet);
+  it('should be able to update a wallet', async () => {
+    findByIdMock.mockResolvedValueOnce({
+      id: wallet.id,
+      bank: { id: validId },
+    });
 
-    expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
-    expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
-      updateData.bank_id,
-    );
+    const result = await sut.execute(validId, updateDataDTO);
 
-    expect(walletRepository.findById).toHaveBeenCalledTimes(1);
-    expect(walletRepository.findById).toHaveBeenCalledWith(wallet.id);
+    expect(result).toEqual(walletDataResponse);
 
-    expect(walletRepository.update).toHaveBeenCalledTimes(1);
-    expect(walletRepository.update).toHaveBeenCalledWith(updatedWallet);
+    expect(bankRepository.findById).toHaveBeenCalledTimes(1);
+    expect(bankRepository.findById).toHaveBeenCalledWith(updateDataDTO.bank_id);
   });
 
   it('should not be able to update a wallet if wallet does not exist', async () => {
+    updateMock.mockResolvedValueOnce(NotFoundException);
+
     const nonExistingWalletData: UpdateWalletDTO = {
       bank_id: validId,
       account_type: AccountType.CHECKING_ACCOUNT,
@@ -111,8 +110,8 @@ describe('Update Wallet Use Case', () => {
       sut.execute(nonExistingWallet.id, nonExistingWalletData),
     ).rejects.toBeInstanceOf(NotFoundException);
 
-    expect(findBankByIdUseCase.execute).toHaveBeenCalledTimes(1);
-    expect(findBankByIdUseCase.execute).toHaveBeenCalledWith(
+    expect(bankRepository.findById).toHaveBeenCalledTimes(1);
+    expect(bankRepository.findById).toHaveBeenCalledWith(
       nonExistingWalletData.bank_id,
     );
 
