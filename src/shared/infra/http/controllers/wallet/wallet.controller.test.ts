@@ -61,7 +61,7 @@ describe('Wallet Controller (E2E)', () => {
   const mockWallet = {
     id: 'existent-wallet-id',
     account_type: AccountType.CHECKING_ACCOUNT,
-    description: 'Descrição da carteira.',
+    description: 'Descrição da carteira',
   } as Wallet;
 
   const mockUser = {
