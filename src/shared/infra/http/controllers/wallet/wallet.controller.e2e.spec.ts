@@ -17,6 +17,7 @@ import { User } from '@/user/infra/entities';
 import { Bank } from '@/bank/infra/entities';
 import {
   DeleteWalletUseCase,
+  FindAllWalletsByUserIdUseCase,
   FindWalletByIdUseCase,
   RegisterWalletUseCase,
   UpdateWalletUseCase,
@@ -26,6 +27,7 @@ describe('Wallet Controller (E2E)', () => {
   let app: INestApplication;
   let testModule: TestingModule;
   let findAllMock: jest.SpyInstance;
+  let findAll: FindAllWalletsByUserIdUseCase;
   let findByIdMock: jest.SpyInstance;
   let walletRepository: IWalletRepository;
   let registerWallet: RegisterWalletUseCase;
@@ -111,6 +113,9 @@ describe('Wallet Controller (E2E)', () => {
     );
     updateWalletMock = testModule.get<UpdateWalletUseCase>(UpdateWalletUseCase);
     findById = testModule.get<FindWalletByIdUseCase>(FindWalletByIdUseCase);
+    findAll = testModule.get<FindAllWalletsByUserIdUseCase>(
+      FindAllWalletsByUserIdUseCase,
+    );
     deleteWallet = testModule.get<DeleteWalletUseCase>(DeleteWalletUseCase);
     findByIdMock = jest.spyOn(walletRepository, 'findById');
     findAllMock = jest.spyOn(walletRepository, 'findAllByUserId');
@@ -254,14 +259,15 @@ describe('Wallet Controller (E2E)', () => {
   describe('/wallet/all/:id (GET)', () => {
     it('should be able to return a list with all wallets', async () => {
       const wallets = [mockWallet, mockWallet];
-
-      findAllMock.mockResolvedValue({ wallets });
+      jest
+        .spyOn(findAll, 'execute')
+        .mockResolvedValueOnce({ wallets: wallets });
 
       const response = await request(app.getHttpServer())
         .get(`/wallet/all/${validUserId}`)
         .expect(HttpStatus.OK);
 
-      expect(response.body).toEqual({ wallets: wallets });
+      expect(response.body).toEqual(wallets);
     });
 
     it('should be able to return an empty wallet list', async () => {
