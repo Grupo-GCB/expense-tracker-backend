@@ -19,12 +19,7 @@ import {
 } from '@nestjs/swagger';
 
 import { API_RESPONSES } from '@/shared/constants';
-import {
-  DeleteWalletDTO,
-  IdParameterDTO,
-  SaveWalletDTO,
-  UpdateWalletDTO,
-} from '@/wallet/dto';
+import { DeleteWalletDTO, SaveWalletDTO, UpdateWalletDTO } from '@/wallet/dto';
 import { Wallet } from '@/wallet/infra/entities';
 import {
   DeleteWalletUseCase,
@@ -33,6 +28,7 @@ import {
   RegisterWalletUseCase,
   UpdateWalletUseCase,
 } from '@/wallet/use-cases';
+import { IdParameterDTO } from '@/shared/interfaces';
 
 @ApiTags('Wallet')
 @Controller('wallet')
