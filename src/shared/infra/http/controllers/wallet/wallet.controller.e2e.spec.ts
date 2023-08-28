@@ -198,7 +198,7 @@ describe('Wallet Controller (E2E)', () => {
           .get(`/wallet/all/${validUserId}`)
           .expect(HttpStatus.OK);
 
-        expect(response.body).toEqual({ wallets: [] });
+        expect(response.body).toEqual([]);
       });
     });
 

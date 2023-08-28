@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import {
-  ITransactionResponse,
+  ITransactionsResponse,
   ITransactionRepository,
 } from '@/transaction/interface';
 import { IUserRepository } from '@/user/interfaces';
@@ -13,7 +13,7 @@ export class FindTransactionsByUserUseCase {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(user_id: string): Promise<ITransactionResponse[]> {
+  async execute(user_id: string): Promise<ITransactionsResponse[]> {
     const user = await this.userRepository.findById(user_id);
 
     if (!user) throw new NotFoundException('Usuário não encontrado.');

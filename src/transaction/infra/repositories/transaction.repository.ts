@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateTransactionDTO } from '@/transaction/dto';
 import {
+  ISummaryResponse,
   ITransactionRepository,
-  ITransactionResponse,
+  ITransactionsResponse,
 } from '@/transaction/interface';
+import { CreateTransactionDTO } from '@/transaction/dto';
 import { Transaction } from '@/transaction/infra/entities';
 import { Wallet } from '@/wallet/infra/entities';
 import { Bank } from '@/bank/infra/entities';
@@ -44,23 +45,44 @@ export class TransactionRepository implements ITransactionRepository {
     return this.transactionRepository.save(transaction);
   }
 
-  async findAllByUserId(user_id: string): Promise<ITransactionResponse[]> {
+  async findAllByUserId(user_id: string): Promise<ITransactionsResponse[]> {
     const transactions = await this.transactionRepository
       .createQueryBuilder('transaction')
       .innerJoin('transaction.wallet', 'wallet')
+      .leftJoin('wallet.bank', 'bank')
       .where('wallet.user = :user_id', { user_id })
       .select([
-        'transaction.id',
-        'transaction.categories',
-        'transaction.description',
-        'transaction.value',
-        'transaction.type',
-        'transaction.date',
+        'transaction.id as id',
+        'transaction.categories as category',
+        'transaction.description as description',
+        'transaction.value as value',
+        'transaction.type as type',
+        'transaction.date as date',
         'wallet.id as wallet_id',
+        'bank.name as bank_name',
       ])
       .getRawMany();
 
     return transactions;
+  }
+
+  async findAllByWalletId(wallet_id: string): Promise<ISummaryResponse> {
+    const balance = 0;
+
+    const wallet = await this.walletRepository.findOne({
+      where: { id: wallet_id },
+    });
+
+    const transactions = await this.transactionRepository.find({
+      where: { wallet: { id: wallet_id } },
+    });
+
+    if (!wallet) throw new NotFoundException('Carteira não encontrada.');
+
+    return {
+      transactions,
+      balance,
+    };
   }
 
   async findById(id: string): Promise<Transaction> {
