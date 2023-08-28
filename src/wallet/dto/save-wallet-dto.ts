@@ -39,7 +39,6 @@ export class SaveWalletDTO {
     description: 'Id do usuário proprietário da carteira.',
   })
   @IsNotEmpty({ message: 'Necessário informar o id do usuário.' })
-  @IsUUID('all', { message: 'Necessário que o id seja do tipo UUID.' })
   @IsString({ message: 'Id deve ser uma string.' })
   user_id: string;
 }
