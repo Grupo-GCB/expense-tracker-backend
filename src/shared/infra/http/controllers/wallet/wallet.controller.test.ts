@@ -141,7 +141,7 @@ describe('Wallet Controller (E2E)', () => {
       expect(response.body).toEqual(
         expect.objectContaining({
           account_type: 'Conta-Corrente',
-          description: 'Descrição da carteira.',
+          description: 'Descrição da carteira',
           id: 'existent-wallet-id',
         }),
       );
