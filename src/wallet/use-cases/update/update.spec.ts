@@ -18,6 +18,29 @@ describe('Update Wallet Use Case', () => {
   let updateMock: jest.SpyInstance;
   let findBankByIdMock: jest.SpyInstance;
 
+  const validId = '4e8b5d94-6b16-4a42-b6d1-dc58b553d109';
+  const invalidId = 'invalid-id';
+
+  const updateData: UpdateWalletDTO = {
+    bank_id: validId,
+    account_type: AccountType.CHECKING_ACCOUNT,
+    description: 'Nova descrição',
+  };
+
+  const updatedWallet = {
+    id: validId,
+  } as Wallet;
+
+  const bank = {
+    id: validId,
+    name: 'anyBank',
+    logo_url: 'anyURL',
+  } as Bank;
+
+  const wallet = {
+    id: validId,
+  } as Wallet;
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -50,33 +73,15 @@ describe('Update Wallet Use Case', () => {
 
   beforeEach(async () => {
     findBankByIdMock.mockResolvedValue(bank);
-    updateMock.mockResolvedValue(NotFoundException);
   });
 
-  const validId = '4e8b5d94-6b16-4a42-b6d1-dc58b553d109';
-  const invalidId = 'invalid-id';
+  it('should be able to update a wallet', async () => {
+    findByIdMock.mockResolvedValueOnce({
+      id: wallet.id,
+      bank: { id: 'oldBankId' },
+    });
 
-  const updateData: UpdateWalletDTO = {
-    bank_id: validId,
-    account_type: AccountType.CHECKING_ACCOUNT,
-    description: 'Nova descrição',
-  };
-
-  const bank = {
-    id: validId,
-    name: 'anyBank',
-    logo_url: 'anyURL',
-  } as Bank;
-
-  const wallet = {
-    id: validId,
-  } as Wallet;
-
-  it.skip('should be able to update a wallet', async () => {
-    const updatedWallet = updateData as unknown as Wallet;
-
-    findByIdMock.mockResolvedValue(updatedWallet);
-    updateMock.mockResolvedValue(updatedWallet);
+    updateMock.mockResolvedValueOnce(updatedWallet);
 
     const result = await sut.execute(wallet.id, updateData);
 
@@ -95,6 +100,8 @@ describe('Update Wallet Use Case', () => {
   });
 
   it('should not be able to update a wallet if wallet does not exist', async () => {
+    updateMock.mockResolvedValueOnce(NotFoundException);
+
     const nonExistingWalletData: UpdateWalletDTO = {
       bank_id: validId,
       account_type: AccountType.CHECKING_ACCOUNT,
