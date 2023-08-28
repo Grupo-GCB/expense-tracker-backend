@@ -38,6 +38,12 @@ describe('Update Wallet Use Case', () => {
     description: 'Nova descrição',
   } as Wallet;
 
+  const bank = {
+    id: validId,
+    name: 'anyBank',
+    logo_url: 'anyURL',
+  } as Bank;
+
   const wallet = {
     id: validId,
   } as Wallet;
