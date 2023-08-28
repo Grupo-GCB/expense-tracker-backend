@@ -25,12 +25,12 @@ import {
   FindTransactionsByUserUseCase,
   RegisterTransactionUseCase,
   UpdateTransactionUseCase,
+  FindAllByWalletIdUseCase,
 } from '@/transaction/use-cases';
 import {
   ISummaryResponse,
   ITransactionsResponse,
 } from '@/transaction/interface';
-import { FindAllByWalletIdUseCase } from '@/transaction/use-cases/summary/summary';
 import { IdParameterDTO } from '@/shared/interfaces';
 
 @ApiTags('Transaction')
