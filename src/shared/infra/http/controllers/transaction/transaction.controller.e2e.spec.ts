@@ -18,11 +18,14 @@ import { ITransactionRepository } from '@/transaction/interface';
 import {
   DeleteTransactionUseCase,
   FindAllByWalletIdUseCase,
+  FindTransactionsByUserUseCase,
   RegisterTransactionUseCase,
   UpdateTransactionUseCase,
 } from '@/transaction/use-cases';
 import { Wallet } from '@/wallet/infra/entities';
 import { IWalletRepository } from '@/wallet/interfaces';
+import { IUserRepository } from '@/user/interfaces';
+import { User } from '@/user/infra/entities';
 
 describe('Transaction Controller (E2E)', () => {
   let app: INestApplication;
@@ -34,6 +37,7 @@ describe('Transaction Controller (E2E)', () => {
   let findAllByUserIdMock: jest.SpyInstance;
   let deleteTransactionMock: DeleteTransactionUseCase;
   let findAllByWalletIdMock: FindAllByWalletIdUseCase;
+  let findTransactionsByUserUseCase: FindTransactionsByUserUseCase;
 
   const validTransactionId = '5c20c7f5-26f2-4d36-bfa0-ad98795869ff';
   const invalidTransactionId = 'invalid-id';
@@ -84,6 +88,10 @@ describe('Transaction Controller (E2E)', () => {
     } as Wallet,
   } as Transaction;
 
+  const mockUser = {
+    id: validUserId,
+  } as User;
+
   beforeAll(async () => {
     const testModule: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -98,12 +106,19 @@ describe('Transaction Controller (E2E)', () => {
             findById: jest.fn(),
             delete: jest.fn(),
             findAllByWalletId: jest.fn(),
+            findTransactionsByUserUseCase: jest.fn(),
           },
         },
         {
           provide: IWalletRepository,
           useValue: {
             findById: jest.fn().mockResolvedValue(mockWallet),
+          },
+        },
+        {
+          provide: IUserRepository,
+          useValue: {
+            findById: jest.fn().mockResolvedValue(mockUser),
           },
         },
       ],
@@ -126,6 +141,10 @@ describe('Transaction Controller (E2E)', () => {
     findAllByWalletIdMock = testModule.get<FindAllByWalletIdUseCase>(
       FindAllByWalletIdUseCase,
     );
+    findTransactionsByUserUseCase =
+      testModule.get<FindTransactionsByUserUseCase>(
+        FindTransactionsByUserUseCase,
+      );
 
     findAllByUserIdMock = jest.spyOn(transactionRepository, 'findAllByUserId');
 
@@ -230,15 +249,16 @@ describe('Transaction Controller (E2E)', () => {
 
   describe('/transaction/:user_id (GET)', () => {
     it('should be able to return transactions for an user', async () => {
-      const mockTransactions: Transaction[] = [];
-
-      findAllByUserIdMock.mockResolvedValue(mockTransactions);
+      findAllByUserIdMock.mockResolvedValue([]);
+      jest
+        .spyOn(findTransactionsByUserUseCase, 'execute')
+        .mockResolvedValue([]);
 
       const response = await request(app.getHttpServer())
         .get(`/transaction/${validUserId}`)
         .expect(HttpStatus.OK);
 
-      const expectedResponse = mockTransactions;
+      const expectedResponse = [];
 
       expect(response.body).toEqual(expectedResponse);
     });
