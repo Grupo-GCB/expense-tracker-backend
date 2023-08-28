@@ -4,7 +4,7 @@ services:
   pg-prod:
     image: bitnami/postgresql
     ports:
-      - ${DB_PORT}:5432
+      - 5432:5432
     environment:
       - POSTGRESQL_USERNAME=${DB_USER}
       - POSTGRESQL_PASSWORD=${DB_PASSWORD}
@@ -13,7 +13,7 @@ services:
   pg-dev:
     image: bitnami/postgresql
     ports:
-      - ${DB_PORT_DEV}:5432
+      - 5431:5432
     environment:
       - POSTGRESQL_USERNAME=${DB_USER_DEV}
       - POSTGRESQL_PASSWORD=${DB_PASSWORD_DEV}
